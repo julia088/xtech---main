@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="barra.css">
+    <link rel="stylesheet" href="cursos.css">
+    <link rel="stylesheet" href="estrela.css">
+    <title>Curso CSS</title>
+</head>
+
+<body data-curso-id="css">
+    <header>
+        <nav class="container">
+            <button class="card-seta material-symbols-outlined" onclick="backToPage()">arrow_back</button>
+        </nav>
+    </header>
+
+    <div class="titulocurso"><h2>CAPS - Centro de Assistência a Programadores de Sistemas</h2></div>
+    <center>
+    <div class="backcont">
+        <br><br>
+        <h1>
+            
+            CSS
+            
+        </h1>
+        <br>
+        <br><br><br>
+        <div class="button-group"> 
+            <button onclick="css1()">Aula 1</button>
+            <button onclick="css2()">Aula 2</button>
+            <button onclick="css3()">Aula 3</button>
+            <button onclick="completeExercises()">Exercícios</button>
+        </div>
+
+        <br><br>
+
+        <div class="video-container">
+            <div class="click-overlay" onclick="advanceProgress(this)"></div>
+        </div>
+        <br><br>
+        <div class="bar">
+            <div class="progress">0%</div> 
+        </div>
+        <br><br>
+    </div>
+    </center>
+
+    <div class="container swiper" id="exercise-container" style="display: none;">
+        <br><br>
+        <div class="questionnaire">
+            <h3>Responda as perguntas a seguir:</h3>
+            <form id="quiz-form">
+                <div class="question">
+                    <label>1. O que significa a sigla CSS e qual é seu propósito em uma página web?</label><br>
+                    <input type="radio" name="q1" value="estrutura" required> CSS significa "Cascading Style Sheets" e é usado para descrever a apresentação e o layout de um documento HTML.<br>
+                    <input type="radio" name="q1" value="link"> CSS significa "Creative Style Sheets" e é usado apenas para criar links.<br>
+                    <input type="radio" name="q1" value="imagem"> CSS significa "Cascading Style Scripts" e é utilizado para inserir imagens.<br>
+                </div>
+                <br>
+                <div class="question">
+                    <label>2. Como você pode aplicar estilos CSS a um elemento HTML específico?</label><br>
+                    <input type="radio" name="q2" value="color" required> Você pode aplicar estilos CSS a um elemento usando seletores.<br>
+                    <input type="radio" name="q2" value="background-color"> Você pode aplicar estilos CSS apenas a elementos com IDs.<br>
+                    <input type="radio" name="q2" value="border"> Você pode aplicar estilos CSS apenas por meio de atributos HTML.<br>
+                </div>
+                <br>
+                <div class="question">
+                    <label>3. O que são seletores CSS e quais são os tipos mais comuns?</label><br>
+                    <input type="radio" name="q3" value="color" required> Seletores são maneiras de aplicar cores a elementos. Os tipos mais comuns incluem cores hexadecimais e RGB.<br>
+                    <input type="radio" name="q3" value="background-color"> Seletores são padrões usados para selecionar elementos HTML a serem estilizados. Os tipos mais comuns incluem seletores de tipo (ex: div), classe (ex: .classe) e ID (ex: #id).<br>
+                    <input type="radio" name="q3" value="border"> Seletores são scripts que ajudam a executar funções em JavaScript.<br>
+                </div>
+                <br>
+                <div class="question">
+                    <label>4. Como funciona o modelo de caixa (box model) em CSS?</label><br>
+                    <input type="radio" name="q4" value="color" required> O modelo de caixa representa cada elemento como uma caixa retangular composta por margens, bordas, preenchimento (padding) e o conteúdo em si.<br>
+                    <input type="radio" name="q4" value="background-color"> O modelo de caixa é uma técnica para aplicar cores de fundo aos elementos.<br>
+                    <input type="radio" name="q4" value="border"> O modelo de caixa define a posição de um elemento na página.<br>
+                </div>
+                <br>
+                <div class="question">
+                    <label>5. O que é uma folha de estilo externa e como ela difere de uma folha de estilo interna?</label><br>
+                    <input type="radio" name="q5" value="color" required> Uma folha de estilo externa é um arquivo CSS separado que pode ser linkado a múltiplas páginas HTML. Já a folha de estilo interna é definida dentro da tag "style" em um documento HTML.<br>
+                    <input type="radio" name="q5" value="background-color"> Uma folha de estilo externa é uma folha de cálculo para dados. A interna é apenas para cores.<br>
+                    <input type="radio" name="q5" value="border"> Folhas de estilo externas são usadas apenas para impressão, enquanto internas são para visualização na tela.<br>
+                </div>
+                <br>
+                <button type="submit">Enviar Respostas</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let progress = 0; 
+        const lessonsCompleted = {
+            lesson1: false,
+            lesson2: false,
+            lesson3: false,
+            exercises: false,
+        };
+
+        function css1() {
+            const videoContainer = document.querySelector('.video-container');
+            advanceProgress('lesson1');
+            videoContainer.innerHTML = `
+                <div class="click-overlay" onclick="advanceProgress('lesson1')"></div>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/HtVRRHoASes?si=2B5Lu77tH4RoXzU_"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            `;
+        }
+
+        function css2() {
+            const videoContainer = document.querySelector('.video-container');
+            advanceProgress('lesson2');
+            videoContainer.innerHTML = `
+                <div class="click-overlay" onclick="advanceProgress('lesson2')"></div>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/tspCQqKLTbY?si=Bb8UuhOyZku7n_ki"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            `;
+        }
+
+        function css3() {
+            const videoContainer = document.querySelector('.video-container');
+            advanceProgress('lesson3');
+            videoContainer.innerHTML = `
+                <div class="click-overlay" onclick="advanceProgress('lesson3')"></div>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/U4LdM3aXxeU?si=lQe4ImTSc_zI0men"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            `;
+        }
+
+        function completeExercises() {
+            const videoContainer = document.querySelector('.video-container');
+            document.getElementById('exercise-container').style.display = 'block'; 
+        }
+
+
+        document.getElementById('quiz-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            completeTheProgress();
+        });
+
+        function completeTheProgress() {
+            if (!lessonsCompleted.exercises) {
+                progress += 25; 
+                lessonsCompleted.exercises = true;
+                const progressBar = document.querySelector('.progress');
+            if (progress > 100) {
+                progress = 100;
+            }
+            progressBar.textContent = progress + '%'; 
+            progressBar.style.width = progress + '%'; 
+            }
+            alert('Respostas enviadas com sucesso!');
+        }
+
+
+
+        function advanceProgress(lesson) {
+            if (!lessonsCompleted[lesson]) {
+                progress += 25; 
+                lessonsCompleted[lesson] = true; 
+                const progressBar = document.querySelector('.progress');
+                if (progress > 100) {
+                    progress = 100;
+                }
+                progressBar.textContent = progress + '%'; 
+                progressBar.style.width = progress + '%';
+
+            }
+        }
+
+        function backToPage() {
+            window.location.href = 'portalAluno.html';
+        }
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="login.css">  
+    <script src="script.js"></script>
+    <title>Área do Aluno</title>
+</head>
+<body>
+    <header>
+        <nav class="navigation">
+            <a href="areaAluno.html">Home</a>
+            <a href="cursos.html">Cursos</a>
+            <a href="contato.html">Contato</a>
+            <button class="btnLogin-popup">Login</button>
+        </nav>
+    </header>
+
+<!--login-->
+<div class="overlay">
+    <div class="wrapper">
+        <span class="icon-close">
+            <ion-icon name="close"></ion-icon>
+        </span>
+
+        <div class="form-box login">
+            <h2>Login</h2>
+            <form action="#"> 
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input type="email" required>
+                    <label>Email</label>
+                </div>
+
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="lock"></ion-icon></span>
+                    <input type="password" required>
+                    <label>Senha</label>
+                </div>
+                <div class="lembrar-esquecer">
+                    <label><input type="checkbox"> Lembrar-me</label>
+                    <a href="#">Esqueceu sua senha?</a>
+                </div>
+                <button type="submit" class="btn">Login</button>
+                <div class="login-register">
+                    <p>Não tem uma conta?
+                    <a href="#" class="register-link">Cadastrar-me</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+
+        <div class="form-box register">
+            <h2>Cadastro</h2>
+            <form action="#">
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="person"></ion-icon></span>
+                    <input type="text" required>
+                    <label>Nome</label>
+                </div>
+
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input type="email" required>
+                    <label>Email</label>
+                </div>
+
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="lock"></ion-icon></span>
+                    <input type="password" required>
+                    <label>Senha</label>
+                </div>
+                <div class="lembrar-esquecer">
+                    <label><input type="checkbox"> Eu aceito os termos e condições</label>
+                </div>
+                <button type="submit" class="btn">Cadastrar</button>
+                <div class="login-register">
+                    <p>Já tem uma conta?
+                    <a href="#" class="login-link">Login</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--parte das seções-->
+    <main>
+        <section class="apresentacao">
+            <div class="home-container">
+                <h1>Bem-vindo ao CAPS</h1>
+                <p>Aqui você encontrará o suporte necessário para o seu crescimento profissional.</p>
+            </div>
+        </section>
+<!--catalogo-->
+        <div class="container swiper">
+            <div class="card-wrapper">
+                <ul class="card-list swiper-wrapper">
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/html.png" alt="Card Image" class="card-image">
+                            <p class="badge">HTML</p>
+                            <h2 class="card-title">Aprenda a criar páginas da web com nosso curso de HTML! Descubra os fundamentos da estruturação de conteúdo, como textos e imagens, em aulas práticas que vão te ajudar a desenvolver seus próprios projetos. Comece sua jornada na programação!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/css.jpg" alt="Card Image" class="card-image">
+                            <p class="badge">CSS</p>
+                            <h2 class="card-title">Transforme suas páginas da web com nosso curso de CSS! Aprenda a estilizar conteúdos, utilizando cores, fontes e layouts em aulas práticas. Desenvolva habilidades para criar designs atraentes e responsivos que se destacam na web. Dê vida aos seus projetos!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/js.png" alt="Card Image" class="card-image">
+                            <p class="badge">JAVA SCRIPT</p>
+                            <h2 class="card-title">Desperte a interatividade nas suas páginas com nosso curso de JavaScript! Aprenda a programar funcionalidades dinâmicas e criar experiências envolventes. Com exercícios práticos, você estará pronto para desenvolver projetos na web. Junte-se a nós!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/python.jpg" alt="Card Image" class="card-image">
+                            <p class="badge">PYTHON</p>
+                            <h2 class="card-title">Descubra o poder da programação com nosso curso de Python! Aprenda a resolver problemas e criar aplicações de forma eficaz. Com aulas práticas, você desenvolverá habilidades essenciais para projetos. Comece sua jornada na programação!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/ruby.png" alt="Card Image" class="card-image">
+                            <p class="badge">RUBY</p>
+                            <h2 class="card-title">Explore a elegância da programação com nosso curso de Ruby! Aprenda a construir aplicações de forma intuitiva. Com exercícios práticos, você dominará conceitos e estará preparado para desenvolver projetos inovadores. Venha descobrir o Ruby!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/git.png" alt="Card Image" class="card-image">
+                            <p class="badge">GIT</p>
+                            <h2 class="card-title">Domine o controle de versões com nosso curso de Git! Aprenda a gerenciar seu código de forma eficiente e a colaborar em projetos em equipe. Com aulas práticas, você ganhará confiança para trabalhar em qualquer projeto. Junte-se a nós!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/php.jpg" alt="Card Image" class="card-image">
+                            <p class="badge">PHP</p>
+                            <h2 class="card-title">Dê vida ao desenvolvimento web com nosso curso de PHP! Aprenda a criar aplicações dinâmicas e interativas, dominando os fundamentos. Com exercícios práticos, você estará pronto para desenvolver projetos. Venha explorar o mundo do PHP!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/sql.webp" alt="Card Image" class="card-image">
+                            <p class="badge">SQL</p>
+                            <h2 class="card-title">Desvende o poder dos dados com nosso curso de SQL! Aprenda a manipular e consultar bancos de dados de forma eficiente. Com aulas práticas, você desenvolverá habilidades essenciais para análise. Venha aprimorar sua carreira!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/crypto.jpg" alt="Card Image" class="card-image">
+                            <p class="badge">CRYPTO</p>
+                            <h2 class="card-title">Mergulhe no mundo das criptomoedas com nosso curso de Crypto! Aprenda sobre blockchain, investimentos e segurança neste universo inovador. Com aulas práticas, você ganhará confiança para navegar. Venha explorar as possibilidades!</h2>
+                            <button class="card-button material-symbols-rounded">arrow_forward</button>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="swiper-pagination"></div>
+                <div class="swiper-slide-button swiper-button-prev"></div>
+                <div class="swiper-slide-button swiper-button-next"></div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="card.js"></script>
+
+        <br>
+<!--sobre a equipe-->
+        <section class="vantagens">
+            <div class="interface">
+                <article class="itens-container">
+
+                    <div class="txt-itens">
+                        <h3>Resolução de problemas</h3>
+                        <p>A programação ajuda a desenvolver habilidades lógicas, permitindo dividir problemas complexos em partes menores.</p>
+                    </div>
+                    <div class="img-itens">
+                        <img src="img/resize.png" alt="">
+                    </div>
+
+                </article>
+
+                <article class="itens-container">
+
+                    <div class="img-itens">
+                        <img src="img/vantagem2.png" alt="">
+                    </div>
+                    <div class="txt-itens">
+                        <h3>Oportunidades na carreira</h3>
+                        <p>A demanda por programadores está em alta, oferecendo boas perspectivas de emprego e salários competitivos.</p>
+                    </div>
+
+                </article>
+
+                <article class="itens-container">
+
+                    <div class="txt-itens">
+                        <h3>Criatividade ativa</h3>
+                        <p>Programar permite transformar ideias em aplicativos ou sites, incentivando a inovação e a solução de problemas.</p>
+                    </div>
+                    <div class="img-itens">
+                        <img src="img/idea.jpg" alt="">
+                    </div>
+
+                </article>
+            </div>
+        </section>
+    </main>
+
+<!--rodapé-->
+    <footer>
+        <div class="interface">
+            <div class="line-footer1">
+                <h2>Quer receber atualizações sobre os cursos?</h2>
+                <p>Digite o seu e-mail abaixo para notificarmos</p>
+                <form action="">
+                    <input type="email" name="" id="">
+                    <input type="submit" value="Cadastrar">
+                </form>
+            </div>
+
+            <div class="line-footer2">
+                <div class="box-line-footer">
+                    <img src="" alt="Logotipo CAPS">
+                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
+                </div>
+
+                <div class="box-line-footer">
+                    <h3>Menu</h3>
+                    <div class="links-footer">
+                        <a href="areaAluno.html">Home</a>
+                        <a href="cursos.html">Cursos</a>
+                    </div>
+                </div>
+
+                <div class="box-line-footer">
+                    <h3>Fale conosco</h3>
+                    <div class="links-footer">
+                        <a href="contato.html">Contato</a>
+                    </div>
+                </div>
+
+                <div class="box-line-footer">
+                    <h3>Siga-nos</h3>
+                    <div class="btn-social">
+                        <a href="#" class="btnicon"><button><i class="bi bi-whatsapp"></i></button></a>
+                        <a href="#" class="btnicon"><button><i class="bi bi-instagram"></i></button></a>
+                    </div>
+                </div>
+            </div>
+            <div class="line-footer3">
+                <center>
+                    <p>CAPS 2024 &copy; Todos os direitos reservados</p>
+                </center>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <script src="login.js"></script>
+</body>
+
+<!--Login-->
+<script>
+    document.querySelector('.form-box.login form').addEventListener('submit', function(e) {
+        e.preventDefault();
+    
+        const email = this.querySelector('input[type="email"]').value;
+        const senha = this.querySelector('input[type="password"]').value;
+    
+        fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, senha }),
+        })
+        .then(response => {
+            if (response.ok) {
+                window.location.href = "portalAluno.html";
+            } else {
+                alert('E-mail ou senha incorretos!');
+            }
+        })
+        .catch(error => console.error('Erro:', error));
+    });
+    
+    document.querySelector('.form-box.register form').addEventListener('submit', function(e) {
+        e.preventDefault();
+    
+        const nome = this.querySelector('input[type="text"]').value;
+        const email = this.querySelector('input[type="email"]').value;
+        const senha = this.querySelector('input[type="password"]').value;
+    
+        fetch('/cadastro', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nome, email, senha }),
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('Cadastro realizado com sucesso! Você pode fazer login agora.');
+                location.reload();
+            } else {
+                alert('Erro ao cadastrar: ' + response.statusText);
+            }
+        })
+        .catch(error => console.error('Erro:', error));
+    });
+    </script>
+    
+
+<!--css da página-->
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: #102279;
+    background: linear-gradient(90deg, rgba(16,34,121,1) 20%, rgba(17,49,103,1) 49%, rgba(16,34,121,1) 80%);
+    font-family: sans-serif;
+}
+
+.navigation a{
+    position: relative;
+    font-size: 1.1em;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 40px;
+}
+
+.navigation a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 100%;
+    height: 3px;
+    background: white;
+    border-radius: 5px;
+    transform: scaleX(0);
+    transition: transform .5s;
+}
+
+.navigation a:hover::after {
+    transform: scaleX(1);
+}
+
+.navigation .btnLogin-popup {
+    width: 130px;
+    height: 50px;
+    background: transparent;
+    border: 2px solid white;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: white;
+    font-weight: 500;
+    margin-left: 1250px;
+    margin-top: -30px;
+    transition: .5s;
+}
+
+.navigation .btnLogin-popup:hover {
+    background: white;
+    color: #162938;
+}
+
+.flex{
+    display: flex;
+}
+
+h2.titulo{
+    color:white;
+    font-size: 38px;
+    text-align: center;
+}
+
+button:hover, form .btn-enviar input{
+    box-shadow: 0px 0px 0px rgb(255, 255, 255);
+    transform: scale(1.05);
+}
+
+header{
+    padding: 40px 4%;
+}
+
+header .interface{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header a{
+    color:#ffffff;
+    text-decoration: none;
+    display: inline-block;
+    transition: .2s;
+}
+
+header nav a:hover{
+    color:#ffffff;
+    transform: scale(1.05);
+}
+
+header nav ul{
+    list-style-type: none;
+}
+
+header nav ul li{
+    display: inline-block;
+    padding: 0 40px;
+}
+
+section.catalogo{
+    padding:40px 4%;
+}
+
+section.catalogo .flex{
+    gap:60px;
+}
+
+.catalogo .catalogo-box{
+    color: white; 
+    padding: 40px;
+    border-radius: 20px;
+    border: 2px solid #ffffff;
+    margin: 15px;
+    transition: .2s;
+    text-decoration: underline;
+    text-decoration-color: #ffffff;
+}
+
+.catalogo .catalogo-box:hover{
+    transform: scale(1.06);
+}
+
+.catalogo .catalogo-box i{
+    font-size: 70px;
+    color: #ffffff;
+}
+
+.catalogo .catalogo-box h3{
+    font-size: 28px;
+    margin: 15px 0;
+}
+
+.catalogo .btnInscreva {
+    width: 130px;
+    height: 50px;
+    background: transparent;
+    border: 2px solid white;
+    outline: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: white;
+    font-weight: 500;
+    margin-left: 40px;
+    transition: .5s;
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #fff;
+    padding: 50px;
+    width: 100%;
+    height: 80vh;
+    border-radius: 10px;
+}
+
+.home-container h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.home-container p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.home-container .btn {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 30px;
+    color: #fff;
+    background: rgb(11, 49, 155);
+    border: none;
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+.home-container .btn:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+<!--rodape-->
+.interface{
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+footer{
+    background-color: rgb(33, 61, 143);
+    color: white;
+    padding: 40px 0 ;
+    width: 100%;
+
+    }
+
+footer .line-footer1{
+    text-align: center;
+    border-bottom: 2px solid white;
+    padding-bottom: 30px;
+}
+
+.line-footer1 h2{
+    font-size: 2rem;   
+}
+
+.line-footer1 p{
+    font-size: 1.2rem;
+    margin: 10px 0 20px 0;
+}
+
+.line-footer1 form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.line-footer1 form input[type=email]{
+    width: 300px;
+    height: 30px;
+    border-radius: 10px 10px 10px 10px;
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 10px; 
+}
+
+.line-footer1 form input[type=submit]{
+    width: 80px;
+    height: 30px;
+    border-radius: 10px 10px 10px 10px;
+    background-color: #57a7ec;
+    border: 0;
+    color:rgb(255, 255, 255);
+    cursor: pointer;
+    transition: .2s;
+    margin: 5px;
+}
+
+.line-footer1 form input[type=submit]:hover{
+    background-color: #4687ff;
+    color: white;
+}
+
+footer .line-footer2{
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+footer .line-footer2 .box-line-footer{
+    max-width: calc(100%/4);
+}
+
+footer .box-line-footer img{
+    max-width: 200px;
+    margin-bottom: 10px;   
+}
+
+.line-footer2 .box-line-footer h3{
+    color: white;
+    margin-bottom: 20px;
+} 
+
+.line-footer2 .box-line-footer a{
+    color:white; 
+    display: block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    font-size: .9rem;
+}
+
+.line-footer2 .box-line-footer .btnicon {
+    display: inline-block;
+}
+
+
+.line-footer2 .box-line-footer a:hover{
+    color: #4687ff;
+}
+
+.borda{
+    border-top: 2px solid ;
+}
+
+.btn-social button{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border-color: white;
+    background: transparent;
+    font-size:22px;
+    cursor: pointer;
+    margin: 0 5px;
+    transition: .2s;
+}
+
+.card{
+    width: 400px;
+    background-color:transparent;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 0 8px black;
+    color: white;
+}
+
+.card i {
+    font-size: 3rem;
+}
+
+.card h3 {
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+
+.card i,
+.btn-social i,
+.line-footer i {
+    color: white;
+}
+
+.footertext {
+    margin-left: 100px;
+    font-size: large;
+    color: white;
+}
+
+section.vantagens{
+    padding: 80px 0;
+    background: rgb(16,34,121);
+    background: linear-gradient(90deg, rgba(16,34,121,1) 20%, rgba(17,49,103,1) 49%, rgba(16,34,121,1) 80%);
+}
+
+.vantagens .itens-container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10%;
+    margin-bottom: 80px;
+}
+
+.vantagens .itens-container .img-itens img{
+    max-width: 420px;
+    margin: 30px;
+}
+
+.vantagens .itens-container .txt-itens h3{
+    margin: 30px;
+    font-size: 2em;
+    line-height: 50px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.vantagens .itens-container .txt-itens p{
+    margin: 30px;
+    color: white;
+}
+
+.img-itens {
+    width: 100%; 
+    max-width: 400px; 
+    height: auto; 
+    padding: 40px;
+    margin: auto; 
+    border-radius: 15px; 
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    border: 2px solid #ddd; 
+    transition: transform 0.3s ease; 
+    background-color: white;
+    object-fit: cover;
+}
+
+.img-itens:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.6);
+}
+
+</style>
+</html>

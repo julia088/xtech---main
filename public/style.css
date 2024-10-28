@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+    
+}
+
+body{
+    background: rgb(16,34,121);
+    background: linear-gradient(90deg, rgba(16,34,121,1) 20%, rgba(17,49,103,1) 49%, rgba(16,34,121,1) 80%);
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(white);
+}
+
+.card-link {
+    text-align: justify;
+}
+
+.card-list .card-item{
+    list-style: none;
+}
+
+.card-list .card-item .card-link{
+    user-select: none;
+    display: block;
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    text-decoration: none;
+    border: 2px solid transparent;
+    box-shadow: 0 10px 10px black;
+    transition: 0.2s ease;
+}
+
+.card-list .card-item .card-link:active {
+    cursor: grabbing;
+}
+
+.card-list .card-item .card-link:hover{
+    border-color: #00218d;
+}
+
+.card-list .card-link .card-image{
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.card-list .card-link .badge{
+    color: white;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 300;
+    margin: 16px 0 18px;
+    background: rgb(51, 113, 228);
+    width: fit-content;
+    border-radius: 25px;
+}
+
+.card-list .card-link .card-title{
+    font-size: 1.19rem;
+    color: black;
+    font-weight: 600;
+}
+
+.card-list .card-link .card-button{
+    height: 35px;
+    width: 35px;
+    color:#00218d;
+    border-radius: 50%;
+    margin: 30px 0 5px;
+    background: none;
+    cursor: pointer;
+    border: 2px solid #00218d;
+    transform: rotate(-30deg);
+    transition: 0.4s ease;
+}
+
+.card-list .card-link:hover .card-button{
+    color:white;
+    background: #00218d;
+}
+
+.card-wrapper {
+    max-width: 1450px;
+    margin: 0 60px 35px;
+    padding: 20px 10px;
+    overflow: hidden;
+}
+
+.card-wrapper .swiper-pagination-bullet {
+    height: 13px;
+    width: 13px;
+    opacity: 0.5;
+    background: #ffffff;
+}
+
+.card-wrapper .swiper-pagination-bullet-active {
+    opacity: 1;
+}
+
+.card-wrapper .swiper-slide-button {
+    color: #ffffff;
+    margin-top: -35px;
+
+}
+
+@media screen and (max-width: 768px) {
+    .card-wrapper {
+        margin: 0 10px 25px;
+
+    }
+
+    .card-wrapper .swiper-slide-button {
+        display: none;
+
+    }
+}
+
+.container {
+    display: flex;
+}

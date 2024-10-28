@@ -1,0 +1,97 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: #34495e;
+}
+
+.rating {
+    display: flex;
+    justify-content: center;
+    margin-top: 5px; 
+    transform: rotateY(180deg);
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    display: block;
+    cursor: pointer;
+    width: 50px;
+    padding-left: 10px;
+}
+
+.rating label::before {
+    content: '\f005';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    position: relative;
+    display: block;
+    font-size: 50px;
+    color: #1d1c1c;
+}
+
+.rating label::after {
+    content: '\f005';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    font-size: 50px;
+    position: absolute;
+    top: 0;
+    opacity: 0;
+    display: block;
+    color: rgb(255, 222, 73);
+    transition: 0.5s;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.rating label:hover::after,
+.rating label:hover ~ label::after,
+.rating input:checked ~ label::after {
+    opacity: 1;
+}
+
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-content {
+    background-color: rgb(255, 255, 255);
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    position: relative;
+    width: 60%; /* Reduz a largura do popup */
+    max-width: 450px; /* Limita o tamanho máximo */
+    max-height: 75%; /* Limita a altura máxima para evitar que ultrapasse a tela */
+    overflow-y: auto; /* Adiciona barra de rolagem se o conteúdo for maior que a altura */
+}
+
+.popup-content h2{
+    color: black;
+    margin:0;
+}
+
+.hidden {
+    display: none;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}

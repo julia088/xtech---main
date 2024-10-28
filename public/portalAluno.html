@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>Portal do Aluno</title>
+</head>
+<body>
+    <nav id="menu-lateral">
+        <div id="menu-content">
+            <div id="user">
+            <a href="perfilAluno.html">
+                <img id="profilePic" alt="Foto de Perfil">
+            </a>
+            </div>
+            <ul id="side-items">
+                <li class="item-menu active">
+                    <a href="areaAluno.html">
+                        <span class="icon"><i class="bi bi-house-door"></i></span>
+                        <span class="item-description">Home</span>
+                    </a>
+                </li>
+     
+                <li class="item-menu">
+                    <a href="cursos.html">
+                        <span class="icon"><i class="bi bi-columns-gap"></i></span>
+                        <span class="item-description">Cursos</span>
+                    </a>
+                </li>
+    
+                <li class="item-menu">
+                    <a href="perfilAluno.html">
+                        <span class="icon"><i class="bi bi-person-vcard"></i></span>
+                        <span class="item-description">Perfil</span>
+                    </a>
+                </li>
+            </ul>
+
+            <button id="open-btn">
+                <i id="open-btn-icon" class="bi bi-chevron-compact-right"></i>
+            </button>
+        </div>
+
+        <div id="logout">
+            <button id="logout-btn">
+                <i class="bi bi-box-arrow-left"></i>
+                <span class="item-description">Logout</span>
+            </button>
+        </div>
+    </nav>
+
+     <!-- Seção de Conteúdo Principal -->
+     <main id="main-content">
+        <div class="main-titulo">
+        <h1>Bem-vindo ao Portal do Aluno!</h1>
+        <p>Esta é a seção onde você pode adicionar conteúdos relevantes, como informações sobre cursos, atualizações ou qualquer outro conteúdo necessário.</p>
+        </div>
+        <br><br><br>
+        <div class="container swiper">
+            <div class="card-wrapper">
+                <ul class="card-list swiper-wrapper">
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/html.png" alt="Card Image" class="card-image">
+                            <p class="badge">HTML</p>
+                            <h2 class="card-title">Aprenda a criar páginas da web com nosso curso de HTML! Descubra os fundamentos da estruturação de conteúdo.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso1.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="1">0%</div>
+                            </div>                                                      
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/css.jpg" alt="Card Image" class="card-image">
+                            <p class="badge">CSS</p>
+                            <h2 class="card-title">Transforme suas páginas com nosso curso de CSS! Aprenda a estilizar conteúdos e criar designs atraentes.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso2.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="2">0%</div>
+                            </div>                            
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/js.png" alt="Card Image" class="card-image">
+                            <p class="badge">JAVA SCRIPT</p>
+                            <h2 class="card-title">Desperte a interatividade com nosso curso de JavaScript! Aprenda a programar funcionalidades dinâmicas.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso3.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="3">0%</div>
+                            </div> 
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/python.jpg" alt="Card Image" class="card-image">
+                            <p class="badge">PYTHON</p>
+                            <h2 class="card-title">Descubra o poder da programação com nosso curso de Python! Aprenda a resolver problemas de forma eficaz.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso4.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="4">0%</div>
+                            </div> 
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/ruby.png" alt="Card Image" class="card-image">
+                            <p class="badge">RUBY</p>
+                            <h2 class="card-title">Explore a elegância da programação com nosso curso de Ruby! Aprenda a construir aplicações de forma intuitiva.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso5.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="5">0%</div>
+                            </div> 
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/git.png" alt="Card Image" class="card-image">
+                            <p class="badge">GIT</p>
+                            <h2 class="card-title">Domine o controle de versões com nosso curso de Git! Aprenda a gerenciar seu código de forma eficiente.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso6.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="6">0%</div>
+                            </div> 
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/php.jpg" alt="Card Image" class="card-image">
+                            <p class="badge">PHP</p>
+                            <h2 class="card-title">Dê vida ao desenvolvimento web com nosso curso de PHP! Aprenda a criar aplicações dinâmicas e interativas.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso7.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="7">0%</div>
+                            </div> 
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/sql.webp" alt="Card Image" class="card-image">
+                            <p class="badge">SQL</p>
+                            <h2 class="card-title">Desvende o poder dos dados com nosso curso de SQL! Aprenda a manipular e consultar bancos de dados de forma eficiente.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso8.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="8">0%</div>
+                            </div> 
+                        </a>
+                    </li>
+                    <li class="card-item swiper-slide">
+                        <a class="card-link">
+                            <img src="img/crypto.jpg" alt="Card Image" class="card-image">
+                            <p class="badge">CRYPTO</p>
+                            <h2 class="card-title">Mergulhe no mundo das criptomoedas com nosso curso de Crypto! Aprenda sobre blockchain e segurança neste universo inovador.</h2>
+                            <button class="card-button material-symbols-rounded" data-url="curso9.html">arrow_forward</button>
+                            <div class="bar">
+                                <div class="progress" data-curso-id="9">0%</div>
+                            </div> 
+                        </a>
+                    </li>
+                </ul>
+        
+                <div class="swiper-pagination"></div>
+                <div class="swiper-slide-button swiper-button-prev"></div>
+                <div class="swiper-slide-button swiper-button-next"></div>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+        <script src="card.js"></script>
+        <br>
+
+        <footer>
+            <div class="interface">
+                <div class="line-footer1">
+                    <h2>Quer receber atualizações sobre os cursos?</h2>
+                    <p>Digite o seu e-mail abaixo para notificarmos</p>
+                    <form action="">
+                        <input type="email" name="" id="">
+                        <input type="submit" value="Cadastrar">
+                    </form>
+                </div>
+    
+                <div class="line-footer2">
+                    <div class="box-line-footer">
+                        <img src="" alt="Logotipo CAPS">
+                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
+                    </div>
+    
+                    <div class="box-line-footer">
+                        <h3>Menu</h3>
+                        <div class="links-footer">
+                            <a href="areaAluno.html">Home</a>
+                            <a href="cursos.html">Cursos</a>
+                        </div>
+                    </div>
+    
+                    <div class="box-line-footer">
+                        <h3>Fale conosco</h3>
+                        <div class="links-footer">
+                            <a href="contato.html">Contato</a>
+                        </div>
+                    </div>
+    
+                    <div class="box-line-footer">
+                        <h3>Siga-nos</h3>
+                        <div class="btn-social">
+                            <a href="#" class="btnicon"><button><i class="bi bi-whatsapp"></i></button></a>
+                            <a href="#" class="btnicon"><button><i class="bi bi-instagram"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="line-footer3">
+                    <center>
+                        <p>CAPS 2024 &copy; Todos os direitos reservados</p>
+                    </center>
+                </div>
+            </div>
+        </footer>
+        <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    </main>
+
+</body>
+<script>
+    document.getElementById('open-btn').addEventListener('click', function(){
+    document.getElementById('menu-lateral').classList.toggle('open-menu');
+});
+
+window.onload = function() {
+    const profilePic = localStorage.getItem('profilePic');
+    if (profilePic) {
+        document.getElementById('profilePic').src = profilePic;
+    } else {
+        document.getElementById('profilePic').src = 'img/default.jpg'; // Use a extensão correta
+    }
+}
+
+</script>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        display: flex;
+        min-height: 100vh;
+        background-color: #e3e9f7;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    #user-avatar {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    #menu-lateral {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background-color: white;
+        height: 186.5vh;
+        border-radius: 0px 18px ;
+        position:relative;
+        transition: all .5s;
+        min-width: 82px;
+    }
+
+    #side-items {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        list-style: none;
+    }
+
+    .item-menu {
+        padding: 14px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+
+    .item-menu.active {
+        background-color: rgb(16, 34, 121);
+    }
+
+    .item-menu:hover:not(.active),
+    #logout-btn {
+        background-color: #e3e9f7;
+    }
+
+    .item-menu a {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #0a0a0a;
+    }
+
+    .item-menu.active a {
+        color: #e3e9f7;
+    }
+
+    .item-menu a i {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+    }
+
+    #logout {
+        border-top: 1px solid #e3e9f7;
+        padding: 17px;
+    }
+
+    #logout-btn {
+        border: none;
+        padding: 12px;
+        font-size: 14px;
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        border-radius: 8px;
+        text-align: start;
+        cursor: pointer;
+        background-color: transparent;
+    }
+
+    #open-btn {
+        position: absolute;
+        top: 30px;
+        right: -10px;
+        background-color: rgb(16, 34, 121);
+        color: #e3e9f7;
+        border-radius: 100%;
+        width: 20px;
+        height: 20px;
+        border: none;
+        cursor: pointer;
+    }
+
+    #open-btn-icon {
+        transition: transform .3s ease;
+    }
+
+    .open-menu #open-btn-icon {
+        transform: rotate(180deg);
+    }
+
+    .item-description {
+        width: 0px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        transition: width .6s;
+        height: 0px;
+    }
+
+    #menu-lateral.open-menu {
+        min-width: 15%;
+    }
+
+    #menu-lateral.open-menu .item-description {
+        width: 150px;
+        height: auto;
+    }
+
+    #menu-lateral.open-menu .item-menu {
+        justify-content: flex-start;
+        gap: 14px;
+    }
+
+    #menu-content {
+        padding: 12px;
+    }
+
+    #user {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+
+    #user-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #user-info span:last-child {
+        color: grey;
+        font-size: 12px;
+    }
+
+    #main-content {
+        flex: 1;
+        background-color: #deebff;
+        border-radius: 0 18px 18px 0;
+    }
+
+    .main-titulo{
+        color:black;
+        padding: 20px;
+        margin: 45px;
+    }
+
+/*css do carrosel*/
+    .card-list .card-item {
+list-style: none;
+}
+
+.card-list .card-item .card-link {
+user-select: none;
+display: block;
+background: white;
+padding: 12px;
+border-radius: 12px;
+text-decoration: none;
+border: 2px solid transparent;
+box-shadow: 0 10px 10px black;
+transition: 0.2s ease;
+height: 470px; 
+}
+
+.card-list .card-item .card-link:active {
+cursor: grabbing;
+}
+
+.card-list .card-item .card-link:hover {
+border-color: #00218d;
+}
+
+.card-list .card-link .card-image {
+width: 100%;
+aspect-ratio: 16/9;
+object-fit: cover;
+border-radius: 10px;
+}
+
+.card-list .card-link .badge {
+color: white;
+padding: 8px 16px;
+font-size: 0.85rem;
+font-weight: 300;
+margin: 16px 0 18px;
+background: #3371e4;
+width: fit-content;
+border-radius: 25px;
+}
+
+.card-list .card-link .card-title {
+font-size: 1.19rem;
+color: black;
+font-weight: 600;
+}
+
+.card-list .card-link .card-button {
+height: 35px;
+width: 35px;
+color: #00218d;
+border-radius: 50%;
+margin: 30px 0 5px;
+background: none;
+cursor: pointer;
+border: 2px solid #00218d;
+transform: rotate(-30deg);
+transition: 0.4s ease;
+}
+
+.card-list .card-link:hover .card-button {
+color: white;
+background: #00218d;
+}
+
+.card-wrapper {
+max-width: 1100px;
+margin: 0 60px 35px;
+padding: 10px 10px;
+overflow: hidden;
+}
+
+.card-wrapper .swiper-pagination-bullet {
+height: 13px;
+width: 13px;
+opacity: 0.5;
+background: #ffffff;
+}
+
+.card-wrapper .swiper-pagination-bullet-active {
+opacity: 1;
+}
+
+.card-wrapper .swiper-slide-button {
+color: #ffffff;
+margin-top: -35px;
+}
+
+@media screen and (max-width: 768px) {
+.card-wrapper {
+    margin: 0 10px 25px;
+}
+
+.card-wrapper .swiper-slide-button {
+    display: none;
+}
+}
+
+.container {
+display: flex;
+}
+
+/* css da barra*/
+.bar{
+background-color: #bed5ff;
+width: 100%;
+margin: 20px auto;
+height: 20px;
+overflow: hidden;
+border-radius: 15px;
+}
+
+.progress{
+width: 1%;
+background-color: #3371e4;
+color: #000000;
+text-align: center;
+height: 100%;
+line-height: 20px;
+transition: width 0.5s ease-in-out;
+}
+
+.video-container {
+position: relative;
+display: inline-block;
+}
+
+.click-overlay {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+/* background-color: rgba(0, 0, 0, 0.5);*/
+z-index: 10;
+cursor: pointer;
+}
+
+.questionnaire {
+color: white;
+text-align: left;
+max-width: 600px;
+margin: 20px auto;
+padding: 30px;
+background-color: rgba(255, 255, 255, 0.055);
+width: 70%;
+border-radius: 10px;
+}
+
+.question {
+margin-bottom: 20px;
+}
+
+.questionnaire h3 {
+color: white;
+}
+
+.questionnaire button {
+background-color: #4682B4;
+color: white;
+border: none;
+padding: 10px 20px;
+cursor: pointer;
+border-radius: 5px;
+}
+
+.questionnaire button:hover {
+background-color: #3b6a9b;
+}
+
+/*rodapé*/
+footer{
+background-color: rgb(97, 137, 255);
+color: white;
+padding: 40px 0 ;
+width: 100%;
+bottom: 0;
+z-index: 10;
+position: relative;
+}
+
+footer .line-footer1{
+text-align: center;
+border-bottom: 2px solid white;
+padding-bottom: 30px;
+}
+
+.line-footer1 h2{
+font-size: 2rem;   
+}
+
+.line-footer1 p{
+font-size: 1.2rem;
+margin: 10px 0 20px 0;
+}
+
+.line-footer1 form{
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.line-footer1 form input[type=email]{
+width: 300px;
+height: 30px;
+border-radius: 10px 10px 10px 10px;
+background: transparent;
+border: 2px solid white;
+color: white;
+padding: 10px; 
+}
+
+.line-footer1 form input[type=submit]{
+width: 80px;
+height: 30px;
+border-radius: 10px 10px 10px 10px;
+background-color: #57a7ec;
+border: 0;
+color:rgb(255, 255, 255);
+cursor: pointer;
+transition: .2s;
+margin: 5px;
+}
+
+.line-footer1 form input[type=submit]:hover{
+background-color: #4687ff;
+color: white;
+}
+
+footer .line-footer2{
+padding: 20px 0;
+display: flex;
+justify-content: space-evenly;
+}
+
+footer .line-footer2 .box-line-footer{
+max-width: calc(100%/4);
+}
+
+footer .box-line-footer img{
+max-width: 200px;
+margin-bottom: 10px;   
+}
+
+.line-footer2 .box-line-footer h3{
+color: white;
+margin-bottom: 20px;
+} 
+
+.line-footer2 .box-line-footer a{
+color:white; 
+display: block;
+margin-bottom: 20px;
+text-decoration: none;
+font-size: .9rem;
+}
+
+.line-footer2 .box-line-footer .btnicon {
+display: inline-block;
+}
+
+
+.line-footer2 .box-line-footer a:hover{
+color: #4687ff;
+}
+
+#profilePic {
+    width: 150px; /* Defina a largura desejada */
+    height: 150px; /* Defina a altura desejada */
+    object-fit: cover; /* Ajuste para manter a proporção e preencher o container */
+    border-radius: 50%; /* Torna a imagem circular */
+    display: block;
+    margin: 0 auto; /* Centraliza a imagem horizontalmente */
+    max-width: 100%;
+    height: auto;
+}
+
+</style>
+</html>

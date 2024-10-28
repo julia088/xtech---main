@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="barra.css">
+    <link rel="stylesheet" href="estrela.css">
+    <link rel="stylesheet" href="cursos.css">
+    <title>Curso Git</title>
+</head>
+
+<body data-curso-id="git">
+    <header>
+        <nav class="container">
+            <button class="card-seta material-symbols-outlined" onclick="backToPage()">arrow_back</button>
+        </nav>
+    </header>
+
+    <div class="titulocurso"><h2>CAPS - Centro de Assistência a Programadores de Sistemas</h2></div>
+    <center>
+    <div class="backcont">
+        <br><br>
+        <h1>
+            
+            GIT
+            
+        </h1>
+        <br>
+        <br><br><br>
+        <div class="button-group"> 
+            <button onclick="git1()">Aula 1</button>
+            <button onclick="git2()">Aula 2</button>
+            <button onclick="git3()">Aula 3</button>
+            <button onclick="completeExercises()">Exercícios</button>
+        </div>
+
+        <br><br>
+
+        <div class="video-container">
+            <div class="click-overlay" onclick="advanceProgress(this)"></div>
+        </div>
+        <br><br>
+        <div class="bar">
+            <div class="progress">0%</div> 
+        </div>
+        <br><br>
+    </div>
+    </center>
+
+    <div class="container swiper" id="exercise-container" style="display: none;">
+        <br><br>
+        <div class="questionnaire">
+            <h3>Responda as perguntas a seguir:</h3>
+            <form id="quiz-form">
+                <div class="question">
+                    <label>1. O que é Git e para que ele é utilizado?</label><br>
+                    <input type="radio" name="q1" value="estrutura" required> Git é um sistema de controle de versão distribuído usado para rastrear mudanças no código fonte durante o desenvolvimento de software.<br>
+                    <input type="radio" name="q1" value="link"> Git é um programa de edição de texto usado para escrever código.<br>
+                    <input type="radio" name="q1" value="imagem"> Git é uma ferramenta para gerenciar banco de dados.<br>
+                </div>
+                <br>
+                <div class="question">
+                    <label>2. Como você pode clonar um repositório existente usando Git?</label><br>
+                    <input type="radio" name="q2" value="color" required> Você pode usar o comando git clone seguido da URL do repositório: git clone https://github.com/usuario/repositorio.git.<br>
+                    <input type="radio" name="q2" value="background-color"> Você deve usar o comando git copy seguido do caminho do repositório.<br>
+                    <input type="radio" name="q2" value="border"> Para clonar um repositório, você precisa baixar um arquivo ZIP do GitHub.<br>
+                </div>
+                <br>
+                <div class="question">
+                    <label>3. O que é um commit em Git e como você pode fazer um?</label><br>
+                    <input type="radio" name="q3" value="color" required> Um commit é uma alteração registrada no repositório. Para fazer um commit, você deve usar os comandos git add . para adicionar as mudanças e git commit -m "mensagem" para registrar.<br>
+                    <input type="radio" name="q3" value="background-color"> Um commit é um tipo de backup. Você pode fazer um usando o comando git backup.<br>
+                    <input type="radio" name="q3" value="border"> Commits são usados para apagar arquivos do repositório.<br>
+                </div>
+                <br>
+                <div class="question">
+                    <label>4. O que são branches em Git e por que elas são importantes?</label><br>
+                    <input type="radio" name="q4" value="color" required> Branches são ramificações do código que permitem desenvolver funcionalidades de forma isolada. Elas ajudam a manter o código organizado e facilitam o trabalho em equipe.<br>
+                    <input type="radio" name="q4" value="background-color"> Branches são cópias do repositório que não podem ser alteradas.<br>
+                    <input type="radio" name="q4" value="border"> Branches são usados para organizar a documentação do projeto.<br>
+                </div>
+                <br>
+                <div class="question">
+                    <label>5. Como você pode resolver conflitos durante um merge em Git?</label><br>
+                    <input type="radio" name="q5" value="color" required> Conflitos ocorrem quando duas branches têm mudanças incompatíveis. Para resolver, você deve editar os arquivos em conflito, selecionar as alterações que deseja manter e depois realizar um commit.<br>
+                    <input type="radio" name="q5" value="background-color"> Você pode simplesmente descartar todas as mudanças e continuar com o merge.<br>
+                    <input type="radio" name="q5" value="border"> Conflitos são resolvidos automaticamente pelo Git e não precisam de intervenção.<br>
+                </div>
+                <br>
+                <button type="submit">Enviar Respostas</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let progress = 0; 
+        const lessonsCompleted = {
+            lesson1: false,
+            lesson2: false,
+            lesson3: false,
+            exercises: false,
+        };
+
+        function git1() {
+            const videoContainer = document.querySelector('.video-container');
+            advanceProgress('lesson1');
+            videoContainer.innerHTML = `
+                <div class="click-overlay" onclick="advanceProgress('lesson1')"></div>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/_q5k1lJWnvg?si=NmRSVco2ZyUSJEH1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            `;
+        }
+
+        function git2() {
+            const videoContainer = document.querySelector('.video-container');
+            advanceProgress('lesson2');
+            videoContainer.innerHTML = `
+                <div class="click-overlay" onclick="advanceProgress('lesson2')"></div>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/u4XE4Vc-hno?si=L7ZOMuC462i_g-xr" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            `;
+        }
+
+        function git3() {
+            const videoContainer = document.querySelector('.video-container');
+            advanceProgress('lesson3');
+            videoContainer.innerHTML = `
+                <div class="click-overlay" onclick="advanceProgress('lesson3')"></div>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/tY5uol1AIPo?si=sW1CjPjaVb3ijA7Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            `;
+        }
+
+        function completeExercises() {
+            const videoContainer = document.querySelector('.video-container');
+            document.getElementById('exercise-container').style.display = 'block'; 
+        }
+
+
+        document.getElementById('quiz-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            completeTheProgress();
+        });
+
+        function completeTheProgress() {
+            if (!lessonsCompleted.exercises) {
+                progress += 25; 
+                lessonsCompleted.exercises = true;
+                const progressBar = document.querySelector('.progress');
+            if (progress > 100) {
+                progress = 100;
+            }
+            progressBar.textContent = progress + '%'; 
+            progressBar.style.width = progress + '%'; 
+            }
+            alert('Respostas enviadas com sucesso!');
+        }
+
+
+
+        function advanceProgress(lesson) {
+            if (!lessonsCompleted[lesson]) {
+                progress += 25; 
+                lessonsCompleted[lesson] = true; 
+                const progressBar = document.querySelector('.progress');
+                if (progress > 100) {
+                    progress = 100;
+                }
+                progressBar.textContent = progress + '%'; 
+                progressBar.style.width = progress + '%';
+
+            }
+        }
+
+        function backToPage() {
+            window.location.href = 'portalAluno.html';
+        }
+    </script>
+    
+</body>
+</html>
