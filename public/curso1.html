@@ -186,6 +186,9 @@
             const progressBar = document.querySelector('.progress');
             progressBar.style.width = progress + '%';
             progressBar.textContent = progress + '%';
+
+            const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+            salvarProgresso(cursoId, progress);
         }
 
         alert(`Você acertou ${acertos} de ${totalQuestoes} perguntas e errou ${erros}.`);
@@ -203,6 +206,8 @@
                 progressBar.textContent = progress + '%'; 
                 progressBar.style.width = progress + '%';
 
+                const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+                salvarProgresso(cursoId, progress);
             }
         }
 
@@ -235,17 +240,17 @@
         });
         
         function rateCourse(rating) {
-    const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
-    console.log('ID do curso:', cursoId); // Para verificar se está funcionando
+          const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+          console.log('ID do curso:', cursoId); // Para verificar se está funcionando
 
-    // Enviar a avaliação para o backend
-    fetch('/avaliacao', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ curso_id: cursoId, rating })
-    })
+          // Enviar a avaliação para o backend
+          fetch('/avaliacao', {
+             method: 'POST',
+             headers: {
+              'Content-Type': 'application/json'
+             },
+            body: JSON.stringify({ curso_id: cursoId, rating })
+          })
     .then(response => response.text())
     .then(data => {
         console.log(data); 
@@ -254,7 +259,7 @@
         window.location.href = "portalAluno.html";
     })
     .catch(error => console.error('Erro ao salvar a avaliação:', error));
-}
+    }
 
     function salvarAvaliacao(cursoId, rating) {
     fetch('/avaliacao', {
@@ -272,26 +277,25 @@
     .catch((error) => {
         console.error('Erro ao salvar avaliação:', error);
     });
-}
+    }
 
-function salvarProgresso(cursoId, progresso) {
-    fetch('/salvarProgresso', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ curso_id: cursoId, progresso: progresso }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        // Redirecionar ou fazer outras ações
-    })
-    .catch((error) => {
-        console.error('Erro ao salvar progresso:', error);
-    });
-}
-
+    function salvarProgresso(cursoId, progresso) {
+        fetch('/salvarProgresso', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ curso_id: cursoId, progresso: progresso }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            // Redirecionar ou fazer outras ações
+        })
+        .catch((error) => {
+            console.error('Erro ao salvar progresso:', error);
+        });
+    }
     </script>
     
 </body>

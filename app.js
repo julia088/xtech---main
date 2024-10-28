@@ -114,6 +114,18 @@ app.post('/uploadFoto', upload.single('photo'), (req, res) => {
     });
 });
 
+app.get('/progresso', (req, res) => {
+    const usuarioId = req.session.usuario_id; // Assumindo que você armazena o id do usuário na sessão
+    const sql = `SELECT curso_id, progresso FROM progresso WHERE usuario_id = ?`;
+
+    db.query(sql, [usuarioId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Erro ao buscar progresso' });
+        }
+        res.json(results);
+    });
+});
+
 app.post('/avaliacao', (req, res) => {
     const { curso_id, rating } = req.body;
     const usuario_id = req.session.user.id; // Obtém o ID do usuário logado da sessão
@@ -150,7 +162,14 @@ app.post('/salvarProgresso', (req, res) => {
                     console.error('Erro ao atualizar progresso:', error);
                     return res.status(500).json({ message: 'Erro ao atualizar progresso' });
                 }
-                res.status(200).json({ message: 'Progresso atualizado com sucesso' });
+
+                // Atualiza o progresso na sessão
+                if (!req.session.progresso) {
+                    req.session.progresso = {};
+                }
+                req.session.progresso[curso_id] = progresso; // Atualiza o progresso na sessão
+
+                res.status(200).json({ message: 'Progresso atualizado com sucesso', progresso: req.session.progresso });
             });
         } else {
             // Inserir novo progresso
@@ -160,7 +179,13 @@ app.post('/salvarProgresso', (req, res) => {
                     console.error('Erro ao salvar progresso:', error);
                     return res.status(500).json({ message: 'Erro ao salvar progresso' });
                 }
-                res.status(200).json({ message: 'Progresso salvo com sucesso' });
+                // Salva o progresso na sessão
+                if (!req.session.progresso) {
+                    req.session.progresso = {};
+                }
+                req.session.progresso[curso_id] = progresso; // Atualiza o progresso na sessão
+
+                res.status(200).json({ message: 'Progresso salvo com sucesso', progresso: req.session.progresso });
             });
         }
     });
