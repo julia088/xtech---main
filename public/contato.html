@@ -94,10 +94,10 @@
             <div class="interface">
                 <h2 class="titulo">Fale conosco</h2>
                 <form method="post" action="/submit-form" class="contact-form">
-                    <input type="text" name="name" id="" placeholder=" Seu nome completo:" required>
-                    <input type="text" name="email" id="" placeholder=" Seu e-mail:" required>
-                    <input type="text" name="phone" id="" placeholder=" Seu telefone:">
-                    <textarea name="" id="" name="message" placeholder="Sua mensagem é: " required></textarea>
+                    <input type="text" name="name" id="name" placeholder=" Seu nome completo:" required>
+                    <input type="text" name="email" id="email" placeholder=" Seu e-mail:" required>
+                    <input type="text" name="phone" id="phone" placeholder=" Seu telefone:">
+                    <textarea name="message" id="message" placeholder="Sua mensagem é: " required></textarea>
                     <div class="submit-form"><input type="submit" value="ENVIAR"></div>
                 </form>
             </div>
@@ -109,11 +109,11 @@
             <div class="line-footer1">
                 <h2>Quer receber atualizações sobre os cursos?</h2>
                 <p>Digite o seu e-mail abaixo para notificarmos</p>
-                <form action="">
-                    <input type="email" name="" id="">
+                <form method="POST" action="/newsletter">
+                    <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required>
                     <input type="submit" value="Cadastrar">
                 </form>
-            </div>
+            </div>   
 
             <div class="line-footer2">
                 <div class="box-line-footer">
@@ -202,51 +202,6 @@
         })
         .catch(error => console.error('Erro:', error));
     });
-
-    function updateUser() {
-    const confirmation = confirm("Você tem certeza que deseja salvar as alterações? Você será direcionado para a tela de login");
-
-    if (!confirmation) {
-        return;
-    }
-
-    const name = document.getElementById('nameEdit').value.trim();
-    const email = document.getElementById('emailEdit').value.trim();
-    const password = document.getElementById('passwordEdit').value.trim();
-    const userId = localStorage.getItem('userId');
-    const profilePicInput = document.getElementById('profilePicInput');
-
-    if (!userId || !name || !email || !password) {
-        alert("Todos os campos são obrigatórios.");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('id', userId);
-    formData.append('nome', name);
-    formData.append('email', email);
-    formData.append('password', password);
-    if (profilePicInput.files.length > 0) {
-        formData.append('profilePic', profilePicInput.files[0]); // Adiciona o arquivo da imagem
-    }
-
-    fetch('/user/update', {
-        method: 'POST',
-        body: formData, // Envia os dados do formulário
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert(data.message);
-        loadUserInfo();
-        toggleEditMode();
-        localStorage.clear();
-        window.location.href = " portalAluno.html";
-        history.replaceState(null, null, window.location.href);
-    })
-    .catch((error) => {
-        console.error('Erro:', error);
-    });
-}
 
     </script>
     <script src="login.js"></script>

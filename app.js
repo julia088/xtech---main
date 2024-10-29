@@ -77,18 +77,32 @@ app.post('/cadastro', (req, res) => {
 });
 
      // salva as informaçõs de contato
-     app.post('/submit-form', (req, res) => {
+app.post('/submit-form', (req, res) => {
         const { name, email, phone, message } = req.body;
-           
-        const sql = 'INSERT INTO contatos (nome, email, telefone, mensagem) VALUES (?, ?, ?, ?)';
+        const sql = 'INSERT INTO contato (nome, email, telefone, mensagem) VALUES (?, ?, ?, ?)';
         const values = [name, email, phone, message];
             
-        db.query(sql, values, (err, result) => {
+        connection.query(sql, values, (err, result) => {
             if (err) throw err;
             console.log('Dados inseridos no banco');
             res.send('Formulário enviado com sucesso!');
             });
-        });
+});
+
+app.post('/newsletter', (req, res) => {
+    const { email } = req.body;
+
+    const sql = 'INSERT INTO newsletter (email) VALUES (?)';
+    
+    connection.query(sql, [email], (err, result) => {
+        if (err) {
+            console.error('Erro ao salvar o e-mail no banco:', err);
+            return res.status(500).send('Erro ao cadastrar e-mail.');
+        }
+        console.log('E-mail cadastrado com sucesso!');
+        res.send('Cadastro realizado com sucesso!');
+    });
+});
 
 // Rota para upload de foto (apenas para usuários logados)
 app.post('/uploadFoto', upload.single('photo'), (req, res) => {

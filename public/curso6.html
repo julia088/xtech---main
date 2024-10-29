@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="stylesheet" href="barra.css">
     <link rel="stylesheet" href="estrela.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
     <link rel="stylesheet" href="cursos.css">
     <title>Curso Git</title>
 </head>
@@ -92,6 +93,22 @@
                 <button type="submit">Enviar Respostas</button>
             </form>
         </div>
+
+        <div id="popup" class="popup hidden">
+            <div class="popup-content">
+                <span class="close-btn" onclick="closePopup()">&times;</span>
+                <h2>Obrigado por enviar suas respostas!</h2>
+                <h2>Gostaria de avaliar nosso curso?</h2>
+                <div class="rating">
+                    <input type="radio" id="star1" name="rating" value="1" onclick="rateCourse(1)"><label for="star1"></label>
+                    <input type="radio" id="star2" name="rating" value="2" onclick="rateCourse(2)"><label for="star2"></label>
+                    <input type="radio" id="star3" name="rating" value="3" onclick="rateCourse(3)"><label for="star3"></label>
+                    <input type="radio" id="star4" name="rating" value="4" onclick="rateCourse(4)"><label for="star4"></label>
+                    <input type="radio" id="star5" name="rating" value="5" onclick="rateCourse(5)"><label for="star5"></label>
+                </div>                             
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -138,24 +155,39 @@
 
         document.getElementById('quiz-form').addEventListener('submit', function(event) {
             event.preventDefault();
-            completeTheProgress();
+            verificarRespostas();
         });
 
-        function completeTheProgress() {
-            if (!lessonsCompleted.exercises) {
-                progress += 25; 
-                lessonsCompleted.exercises = true;
-                const progressBar = document.querySelector('.progress');
-            if (progress > 100) {
-                progress = 100;
+        function verificarRespostas() {
+        let acertos = 0;
+        let totalQuestoes = Object.keys(respostasCorretas).length;
+
+        for (let pergunta in respostasCorretas) {
+            const respostaSelecionada = document.querySelector(`input[name="${pergunta}"]:checked`);
+            if (respostaSelecionada && respostaSelecionada.value === respostasCorretas[pergunta]) {
+                acertos++;
             }
-            progressBar.textContent = progress + '%'; 
-            progressBar.style.width = progress + '%'; 
-            }
-            alert('Respostas enviadas com sucesso!');
         }
 
+        const erros = totalQuestoes - acertos;
 
+        // Atualizar progresso com base nos acertos
+        if (acertos > 0) {
+            progress += acertos * 5; // Avança 5% para cada resposta correta
+            if (progress > 100) {
+                progress = 100; // Limita o progresso a 100%
+            }
+            const progressBar = document.querySelector('.progress');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = progress + '%';
+
+            const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+            salvarProgresso(cursoId, progress);
+        }
+
+        alert(`Você acertou ${acertos} de ${totalQuestoes} perguntas e errou ${erros}.`);
+        openPopup(); // Abre o popup após verificar as respostas
+    }
 
         function advanceProgress(lesson) {
             if (!lessonsCompleted[lesson]) {
@@ -168,12 +200,96 @@
                 progressBar.textContent = progress + '%'; 
                 progressBar.style.width = progress + '%';
 
+                const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+                salvarProgresso(cursoId, progress);
             }
         }
 
-        function backToPage() {
-            window.location.href = 'portalAluno.html';
+        const respostasCorretas = {
+            q1: "correta",
+            q2: "correta",
+            q3: "correta",
+            q4: "correta",
+            q5: "correta"
+        };
+
+        function openPopup() {
+            document.getElementById("popup").classList.remove("hidden");
         }
+    
+        function closePopup() {
+            document.getElementById("popup").classList.add("hidden");
+        }
+    
+        window.onclick = function(event) {
+            var popup = document.getElementById('popup');
+            if (event.target === popup) {
+                closePopup();
+            }
+        }
+    
+        document.getElementById("quiz-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            openPopup();
+        });
+        
+        function rateCourse(rating) {
+          const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+          console.log('ID do curso:', cursoId); // Para verificar se está funcionando
+
+          // Enviar a avaliação para o backend
+          fetch('/avaliacao', {
+             method: 'POST',
+             headers: {
+              'Content-Type': 'application/json'
+             },
+            body: JSON.stringify({ curso_id: cursoId, rating })
+          })
+    .then(response => response.text())
+    .then(data => {
+        console.log(data); 
+        
+        // Redirecionar para portalAluno.html após salvar a avaliação
+        window.location.href = "portalAluno.html";
+    })
+    .catch(error => console.error('Erro ao salvar a avaliação:', error));
+    }
+
+    function salvarAvaliacao(cursoId, rating) {
+    fetch('/avaliacao', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ curso_id: cursoId, rating: rating }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+        // Redirecionar ou fazer outras ações
+    })
+    .catch((error) => {
+        console.error('Erro ao salvar avaliação:', error);
+    });
+    }
+
+    function salvarProgresso(cursoId, progresso) {
+        fetch('/salvarProgresso', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ curso_id: cursoId, progresso: progresso }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            // Redirecionar ou fazer outras ações
+        })
+        .catch((error) => {
+            console.error('Erro ao salvar progresso:', error);
+        });
+    }
     </script>
     
 </body>
