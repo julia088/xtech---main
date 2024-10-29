@@ -12,7 +12,7 @@
     <title>Curso Crypto</title>
 </head>
 
-<body data-curso-id="crypto">
+<body data-curso-id="9">
     <header>
         <nav class="container">
             <button class="card-seta material-symbols-outlined" onclick="backToPage()">arrow_back</button>
@@ -57,35 +57,35 @@
             <form id="quiz-form">
                 <div class="question">
                     <label>1. O que é uma criptomoeda?</label><br>
-                    <input type="radio" name="q1" value="estrutura" required> Uma criptomoeda é uma moeda digital que utiliza criptografia para segurança.<br>
+                    <input type="radio" name="q1" value="correta" required> Uma criptomoeda é uma moeda digital que utiliza criptografia para segurança.<br>
                     <input type="radio" name="q1" value="link"> Uma criptomoeda é um tipo de ativo físico.<br>
                     <input type="radio" name="q1" value="imagem"> Uma criptomoeda é uma moeda emitida por bancos centrais.<br>
                 </div>
                 <br>
                 <div class="question">
                     <label>2. O que é blockchain e como ela está relacionada às criptomoedas?</label><br>
-                    <input type="radio" name="q2" value="color" required> Blockchain é uma tecnologia que permite o registro seguro e transparente de transações em um livro-razão digital. É a base para a maioria das criptomoedas, garantindo sua segurança e integridade.<br>
+                    <input type="radio" name="q2" value="correta" required> Blockchain é uma tecnologia que permite o registro seguro e transparente de transações em um livro-razão digital. É a base para a maioria das criptomoedas, garantindo sua segurança e integridade.<br>
                     <input type="radio" name="q2" value="background-color"> Blockchain é um sistema de pagamento tradicional.<br>
                     <input type="radio" name="q2" value="border"> Blockchain é uma forma de moeda digital.<br>
                 </div>
                 <br>
                 <div class="question">
                     <label>3. Como funciona o processo de mineração de criptomoedas?</label><br>
-                    <input type="radio" name="q3" value="color" required> Mineração é o processo de validar transações e adicioná-las ao blockchain. Os mineradores usam poder computacional para resolver problemas matemáticos complexos e, em troca, recebem recompensas em criptomoedas.<br>
+                    <input type="radio" name="q3" value="correta" required> Mineração é o processo de validar transações e adicioná-las ao blockchain. Os mineradores usam poder computacional para resolver problemas matemáticos complexos e, em troca, recebem recompensas em criptomoedas.<br>
                     <input type="radio" name="q3" value="background-color"> Mineração é o processo de criar novas criptomoedas sem validação.<br>
                     <input type="radio" name="q3" value="border"> Mineração é a compra direta de criptomoedas em exchanges.<br>
                 </div>
                 <br>
                 <div class="question">
                     <label>4. O que é uma carteira de criptomoedas e como ela é utilizada?</label><br>
-                    <input type="radio" name="q4" value="color" required> Uma carteira de criptomoedas é um software ou dispositivo que permite armazenar, enviar e receber criptomoedas. Ela contém chaves públicas e privadas que permitem acesso às criptomoedas.<br>
+                    <input type="radio" name="q4" value="correta" required> Uma carteira de criptomoedas é um software ou dispositivo que permite armazenar, enviar e receber criptomoedas. Ela contém chaves públicas e privadas que permitem acesso às criptomoedas.<br>
                     <input type="radio" name="q4" value="background-color"> Uma carteira de criptomoedas é uma plataforma de negociação.<br>
                     <input type="radio" name="q4" value="border"> Uma carteira de criptomoedas é um tipo de moeda física.<br>
                 </div>
                 <br>
                 <div class="question">
                     <label>5. Quais são os principais riscos associados ao investimento em criptomoedas?</label><br>
-                    <input type="radio" name="q5" value="color" required> Os principais riscos incluem alta volatilidade, falta de regulamentação, possibilidade de fraudes e hacks, e a complexidade do mercado que pode levar a decisões de investimento ruins.<br>
+                    <input type="radio" name="q5" value="correta" required> Os principais riscos incluem alta volatilidade, falta de regulamentação, possibilidade de fraudes e hacks, e a complexidade do mercado que pode levar a decisões de investimento ruins.<br>
                     <input type="radio" name="q5" value="background-color"> Os principais riscos incluem a garantia de retorno fixo e a proteção do governo.<br>
                     <input type="radio" name="q5" value="border"> Os principais riscos incluem a inflação controlada e a estabilidade do mercado.<br>
                 </div>
@@ -254,9 +254,13 @@
              },
             body: JSON.stringify({ curso_id: cursoId, rating })
           })
-    .then(response => response.text())
+    .then(response => response.json())
     .then(data => {
-        console.log(data); 
+        console.log(data.message); 
+
+        alert("Avaliação salva com sucesso!");
+
+        closePopup();
         
         // Redirecionar para portalAluno.html após salvar a avaliação
         window.location.href = "portalAluno.html";

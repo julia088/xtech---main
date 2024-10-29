@@ -141,6 +141,10 @@ app.get('/progresso', (req, res) => {
 });
 
 app.post('/avaliacao', (req, res) => {
+    if (!req.session.user || !req.session.user.id) {
+        return res.status(401).json({ message: 'Usuário não autenticado' });
+    }
+    
     const { curso_id, rating } = req.body;
     const usuario_id = req.session.user.id; // Obtém o ID do usuário logado da sessão
 
@@ -213,9 +217,9 @@ app.get('/api/user', (req, res) => {
 
     // Retorna os dados do usuário que estão armazenados na sessão
     res.json({
-        userId: req.session.userId,
-        userName: req.session.userName,
-        userEmail: req.session.userEmail,
+        userId: req.session.user.id,
+        userName: req.session.user.name,
+        userEmail: req.session.user.email,
         profilePic: req.session.profilePic
     });
 });
