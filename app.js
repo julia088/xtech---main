@@ -2,7 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const connection = require('./db');
 const path = require('path');
-const session = require('express-session');
 const multer = require('multer'); // Importa multer
 
 const app = express();
@@ -10,17 +9,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
-
-app.use(session({
-    secret: 'seuSegredoAqui',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false }
-}));
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/areaAluno.html'));
-});
 
 // Configuração do multer para salvar as fotos na pasta 'uploads'
 const storage = multer.diskStorage({
@@ -34,204 +22,183 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage }); // Inicializa o multer com a configuração de armazenamento
 
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/areaAluno.html'));
+});
+
 // Rota de login
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { email, senha } = req.body;
 
-    const query = 'SELECT * FROM usuario WHERE email = ? AND senha = ?';
-    connection.query(query, [email, senha], (err, results) => {
-        if (err) {
-            console.error('Erro na consulta ao banco de dados:', err);
-            return res.status(500).send('Erro no servidor');
-        }
+    try {
+        const query = 'SELECT * FROM usuario WHERE email = ?';
+        const [results] = await connection.promise().query(query, [email]);
 
         if (results.length > 0) {
             const user = results[0];
+            const isPasswordValid = await bcrypt.compare(senha, user.senha);
 
-            // Salva as informações do usuário na sessão
-            req.session.user = {
-              id: user.id,
-              username: user.nome,
-              photo: user.foto // Aqui a foto já teria sido salva no upload posterior
-            };
-
-            return res.status(200).send('Login bem-sucedido!');
-        } else {
-            return res.status(401).send('E-mail ou senha incorretos!');
+            if (isPasswordValid) {
+                return res.status(200).json({
+                    message: 'Login bem-sucedido!',
+                    userEmail: user.email,
+                    userName: user.nome,
+                    photo: user.foto
+                });
+            }
         }
-    });
+        res.status(401).send('E-mail ou senha incorretos!');
+    } catch (err) {
+        console.error('Erro na consulta ao banco de dados:', err);
+        res.status(500).send('Erro no servidor');
+    }
 });
 
 // Rota de cadastro
-app.post('/cadastro', (req, res) => {
+app.post('/cadastro', async (req, res) => {
     const { nome, email, senha } = req.body;
-    const query = 'INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)';
 
-    connection.query(query, [nome, email, senha], (err, result) => {
-        if (err) {
-            console.error('Erro ao inserir no banco de dados: ' + err.stack);
-            return res.status(500).send('Erro ao cadastrar o usuário.');
+    try {
+        const queryCheck = 'SELECT * FROM usuario WHERE nome = ? OR email = ?';
+        const [results] = await connection.promise().query(queryCheck, [nome, email]);
+
+        if (results.length > 0) {
+            return res.status(400).json({ message: "Nome ou e-mail já estão cadastrados" });
         }
-        res.status(201).send('Cadastro realizado com sucesso!');
-    });
+
+        const hashedPassword = await bcrypt.hash(senha, 10);
+        const profilePic = 'imagens/default.jpg';
+
+        const queryInsert = 'INSERT INTO usuario (nome, email, senha, profile_pic) VALUES (?, ?, ?, ?)';
+        await connection.promise().query(queryInsert, [nome, email, hashedPassword, profilePic]);
+
+        res.json({ message: "Usuário cadastrado com sucesso!" });
+    } catch (err) {
+        console.error('Erro ao cadastrar usuário:', err);
+        res.status(500).json({ message: "Erro ao cadastrar usuário" });
+    }
 });
 
-     // salva as informaçõs de contato
-app.post('/submit-form', (req, res) => {
-        const { name, email, phone, message } = req.body;
+// salva as informaçõs de contato
+app.post('/submit-form', async (req, res) => {
+    const { name, email, phone, message } = req.body;
+
+    try {
         const sql = 'INSERT INTO contato (nome, email, telefone, mensagem) VALUES (?, ?, ?, ?)';
-        const values = [name, email, phone, message];
-            
-        connection.query(sql, values, (err, result) => {
-            if (err) throw err;
-            console.log('Dados inseridos no banco');
-            res.send('Formulário enviado com sucesso!');
-            });
+        await connection.promise().query(sql, [name, email, phone, message]);
+        console.log('Dados inseridos no banco');
+        res.send('Mensagem enviada com sucesso!');
+    } catch (err) {
+        console.error('Erro ao salvar contato:', err);
+        res.status(500).send('Erro ao enviar mensagem.');
+    }
 });
 
-app.post('/newsletter', (req, res) => {
+app.post('/newsletter', async (req, res) => {
     const { email } = req.body;
 
-    const sql = 'INSERT INTO newsletter (email) VALUES (?)';
-    
-    connection.query(sql, [email], (err, result) => {
-        if (err) {
-            console.error('Erro ao salvar o e-mail no banco:', err);
-            return res.status(500).send('Erro ao cadastrar e-mail.');
-        }
+    try {
+        const sql = 'INSERT INTO newsletter (email) VALUES (?)';
+        await connection.promise().query(sql, [email]);
         console.log('E-mail cadastrado com sucesso!');
-        res.send('Cadastro realizado com sucesso!');
-    });
+        res.status(201).send('E-mail cadastrado com sucesso!');
+    } catch (err) {
+        console.error('Erro ao salvar o e-mail no banco:', err);
+        res.status(500).send('Erro ao cadastrar e-mail.');
+    }
 });
 
 // Rota para upload de foto (apenas para usuários logados)
-app.post('/uploadFoto', upload.single('photo'), (req, res) => {
-    if (!req.session.user) {
-        return res.status(401).send('Você precisa estar logado para fazer upload de uma foto.');
-    }
-//
-    const userId = req.session.user.id;
+app.post('/uploadFoto', upload.single('photo'), async (req, res) => {
+    const userEmail = req.body.userEmail;
     const foto = req.file ? req.file.path : null;
 
-    // Atualiza o campo 'foto' do usuário no banco de dados
-    const query = 'UPDATE usuario SET foto = ? WHERE id = ?';
-    connection.query(query, [foto, userId], (err, result) => {
-        if (err) {
-            console.error('Erro ao atualizar a foto do usuário: ' + err.stack);
-            return res.status(500).send('Erro ao fazer upload da foto.');
-        }
-
-        // Atualiza a sessão com o novo caminho da foto
-        req.session.user.photo = foto;
-
+    try {
+        const query = 'UPDATE usuario SET foto = ? WHERE email = ?';
+        await connection.promise().query(query, [foto, userEmail]);
         res.status(200).send('Foto enviada com sucesso!');
-    });
-});
-
-app.get('/progresso', (req, res) => {
-    const usuarioId = req.session.usuario_id; // Assumindo que você armazena o id do usuário na sessão
-    const sql = `SELECT curso_id, progresso FROM progresso WHERE usuario_id = ?`;
-
-    db.query(sql, [usuarioId], (err, results) => {
-        if (err) {
-            return res.status(500).json({ error: 'Erro ao buscar progresso' });
-        }
-        res.json(results);
-    });
-});
-
-app.post('/avaliacao', (req, res) => {
-    if (!req.session.user || !req.session.user.id) {
-        return res.status(401).json({ message: 'Usuário não autenticado' });
+    } catch (err) {
+        console.error('Erro ao atualizar a foto do usuário:', err);
+        res.status(500).send('Erro ao fazer upload da foto.');
     }
-    
-    const { curso_id, rating } = req.body;
-    const usuario_id = req.session.user.id; // Obtém o ID do usuário logado da sessão
+});
 
-    // Salvar a avaliação no banco de dados
-    const query = 'INSERT INTO avaliacao (usuario_id, curso_id, rating) VALUES (?, ?, ?)';
-    connection.query(query, [usuario_id, curso_id, rating], (error, results) => {
-        if (error) {
-            console.error('Erro ao salvar a avaliação:', error);
-            return res.status(500).json({ message: 'Erro ao salvar a avaliação' });
-        }
+app.get('/progresso', async (req, res) => {
+    const usuarioEmail = req.session.usuario_email;
+
+    try {
+        const sql = 'SELECT curso_id, progresso FROM progresso WHERE usuario_email = ?';
+        const [results] = await connection.promise().query(sql, [usuarioEmail]);
+        res.json(results);
+    } catch (err) {
+        console.error('Erro ao buscar progresso:', err);
+        res.status(500).json({ error: 'Erro ao buscar progresso' });
+    }
+});
+
+app.post('/avaliacao', async (req, res) => {
+    const { curso_id, rating, userEmail } = req.body;
+
+    try {
+        const query = 'INSERT INTO avaliacao (usuario_email, curso_id, rating) VALUES (?, ?, ?)';
+        await connection.promise().query(query, [userEmail, curso_id, rating]);
         res.status(200).json({ message: 'Avaliação salva com sucesso' });
-    });
+    } catch (err) {
+        console.error('Erro ao salvar a avaliação:', err);
+        res.status(500).json({ message: 'Erro ao salvar a avaliação' });
+    }
 });
 
 // Rota para salvar progresso
-app.post('/salvarProgresso', (req, res) => {
-    const { curso_id, progresso } = req.body;
-    const usuario_id = req.session.user.id; // Obtém o ID do usuário logado da sessão
+app.post('/salvarProgresso', async (req, res) => {
+    const { curso_id, progresso, userEmail } = req.body;
 
-    // Verificar se o progresso já existe
-    const querySelect = 'SELECT * FROM progresso WHERE usuario_id = ? AND curso_id = ?';
-    connection.query(querySelect, [usuario_id, curso_id], (error, results) => {
-        if (error) {
-            console.error('Erro ao verificar progresso:', error);
-            return res.status(500).json({ message: 'Erro ao verificar progresso' });
-        }
+    try {
+        const querySelect = 'SELECT * FROM progresso WHERE usuario_email = ? AND curso_id = ?';
+        const [results] = await connection.promise().query(querySelect, [userEmail, curso_id]);
 
         if (results.length > 0) {
-            // Atualizar o progresso existente
-            const queryUpdate = 'UPDATE progresso SET progresso = ? WHERE usuario_id = ? AND curso_id = ?';
-            connection.query(queryUpdate, [progresso, usuario_id, curso_id], (error, results) => {
-                if (error) {
-                    console.error('Erro ao atualizar progresso:', error);
-                    return res.status(500).json({ message: 'Erro ao atualizar progresso' });
-                }
-
-                // Atualiza o progresso na sessão
-                if (!req.session.progresso) {
-                    req.session.progresso = {};
-                }
-                req.session.progresso[curso_id] = progresso; // Atualiza o progresso na sessão
-
-                res.status(200).json({ message: 'Progresso atualizado com sucesso', progresso: req.session.progresso });
-            });
+            const queryUpdate = 'UPDATE progresso SET progresso = ? WHERE usuario_email = ? AND curso_id = ?';
+            await connection.promise().query(queryUpdate, [progresso, userEmail, curso_id]);
+            res.status(200).json({ message: 'Progresso atualizado com sucesso' });
         } else {
-            // Inserir novo progresso
-            const queryInsert = 'INSERT INTO progresso (usuario_id, curso_id, progresso) VALUES (?, ?, ?)';
-            connection.query(queryInsert, [usuario_id, curso_id, progresso], (error, results) => {
-                if (error) {
-                    console.error('Erro ao salvar progresso:', error);
-                    return res.status(500).json({ message: 'Erro ao salvar progresso' });
-                }
-                // Salva o progresso na sessão
-                if (!req.session.progresso) {
-                    req.session.progresso = {};
-                }
-                req.session.progresso[curso_id] = progresso; // Atualiza o progresso na sessão
-
-                res.status(200).json({ message: 'Progresso salvo com sucesso', progresso: req.session.progresso });
-            });
+            const queryInsert = 'INSERT INTO progresso (usuario_email, curso_id, progresso) VALUES (?, ?, ?)';
+            await connection.promise().query(queryInsert, [userEmail, curso_id, progresso]);
+            res.status(200).json({ message: 'Progresso salvo com sucesso' });
         }
-    });
+    } catch (err) {
+        console.error('Erro ao salvar progresso:', err);
+        res.status(500).json({ message: 'Erro ao salvar progresso' });
+    }
 });
 
 // Rota para obter dados do usuário logado
-app.get('/api/user', (req, res) => {
-    if (!req.session.userId) {
-        return res.status(401).json({ message: 'Usuário não autenticado' });
-    }
+app.get('/api/user/:userEmail', async (req, res) => {
+    const userEmail = req.params.userEmail;
 
-    // Retorna os dados do usuário que estão armazenados na sessão
-    res.json({
-        userId: req.session.user.id,
-        userName: req.session.user.name,
-        userEmail: req.session.user.email,
-        profilePic: req.session.profilePic
-    });
+    try {
+        const query = 'SELECT * FROM usuario WHERE email = ?';
+        const [results] = await connection.promise().query(query, [userEmail]);
+
+        if (results.length > 0) {
+            const user = results[0];
+            res.json({
+                userName: user.nome,
+                userEmail: user.email,
+                profilePic: user.foto
+            });
+        } else {
+            res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+    } catch (err) {
+        console.error('Erro ao buscar dados do usuário:', err);
+        res.status(500).json({ message: 'Erro ao buscar dados do usuário.' });
+    }
 });
 
 // Rota de logout
 app.post('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).json({ message: 'Erro ao encerrar sessão.' });
-        }
-        res.status(200).json({ message: 'Logout realizado com sucesso!' });
-    });
+    res.status(200).json({ message: 'Logout realizado com sucesso!' });
 });
 
 app.use('/uploads', express.static('uploads'));

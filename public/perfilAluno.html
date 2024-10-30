@@ -216,42 +216,28 @@
             <input class="save-perfil" type="submit" value="Salvar Alterações">
         </form>
 
-        <div class="settings-section">
-            <h3>Configurações de Conta</h3>
-
-            <div class="settings-options">
-                <span>Privacidade da Conta</span>
-                <button onclick="togglePrivacy()">Pública/Privada</button>
-            </div>
-
-            <div class="settings-options">
-                <span>Notificações</span>
-                <button onclick="editNotifications()">Gerenciar Notificações</button>
-            </div>
-
-        </div>
-
         <div class="danger-zone">
+            <center>
             <h3>Área de Risco</h3>
             <button onclick="deactivateAccount()">Desativar Conta</button>
+            </center>
         </div>
     </div>
 
     <script>
         function loadUserInfo() {
-        const userId = localStorage.getItem('userId');
         const name = localStorage.getItem('user');
-        const email = localStorage.getItem('userEmail');
+        const userEmail = localStorage.getItem('userEmail');
         const password = localStorage.getItem('senha'); 
         const profilePic = localStorage.getItem('profilePic') || 'img/default.jpg';
 
-        if (!userId) {
+        if (!userEmail) {
             alert('Usuário não autenticado');
             return;
         }
 
         // Faz uma requisição para o servidor para buscar os dados do usuário
-        fetch(`/user/${userId}`)
+        fetch(`/user/${userEmail}`)
             .then(response => response.json())
             .then(data => {
                 // Preenche os campos do formulário com os dados recebidos

@@ -20,7 +20,7 @@ function openLoginPopup(link) {
     wrapper.querySelector('.form-box.login').style.display = 'block'; // Mostra o formulário de login
     wrapper.querySelector('.form-box.register').style.display = 'none'; // Oculta o formulário de registro
     // Opcional: Salvar o link do curso para redirecionar após o login
-    sessionStorage.setItem('redirectLink', link);
+    localStorage.setItem('redirectLink', link);
 }
 
 

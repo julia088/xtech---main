@@ -78,10 +78,10 @@
                 </div>
                 <br>
                 <div class="question">
-                    <label>4. Como você pode criar um link para uma outra página web usando HTML?</label><br>
-                    <input type="radio" name="q4" value="correta" required> < a href="pagina.html">Clique aqui< /a><br>
-                    <input type="radio" name="q4" value="background-color"> < link href="pagina.html">Clique aqui< /link><br>
-                    <input type="radio" name="q4" value="border"> < url href="pagina.html">Clique aqui< /url><br>
+                    <label>4. Como você pode criar um link para outra página web usando HTML?</label><br>
+                    <input type="radio" name="q4" value="correta" required> &lt;a href="pagina.html"&gt;Clique aqui&lt;/a&gt;<br>
+                    <input type="radio" name="q4" value="background-color"> &lt;link href="pagina.html"&gt;Clique aqui&lt;/link&gt;<br>
+                    <input type="radio" name="q4" value="border"> &lt;url href="pagina.html"&gt;Clique aqui&lt;/url&gt;<br>
                 </div>
                 <br>
                 <div class="question">
@@ -177,7 +177,7 @@
         }
 
         const erros = totalQuestoes - acertos;
-
+        
         // Atualizar progresso com base nos acertos
         if (acertos > 0) {
             progress += acertos * 5; // Avança 5% para cada resposta correta
@@ -188,7 +188,7 @@
             progressBar.style.width = progress + '%';
             progressBar.textContent = progress + '%';
 
-            const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+            const cursoId = document.body.getAttribute('data-curso-id');
             salvarProgresso(cursoId, progress);
         }
 

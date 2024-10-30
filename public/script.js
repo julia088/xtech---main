@@ -1,7 +1,3 @@
-function myFunction() {
-    window.location.href = "login.html";
-}
-
 function redirectToPage() {
     window.location.href = '';
 }
