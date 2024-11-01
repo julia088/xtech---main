@@ -239,10 +239,8 @@ window.onload = function() {
 
 document.querySelectorAll('.card-button').forEach(button => {
     button.addEventListener('click', function() {
-        const url = this.getAttribute('data-url');
-        if (url) {
-            window.location.href = url;
-        }
+        const cursoId = this.parentElement.querySelector('.progress').getAttribute('data-curso-id');
+        window.location.href = `curso.html?cursoId=${cursoId}`; // Redireciona para a página do curso com o ID
     });
 });
 

@@ -191,102 +191,97 @@
     <div class="container">
         <h2>Editar Perfil</h2>
         <div class="profile-section">
-            <img src="profile-picture.jpg" alt="Foto de Perfil" id="profile-pic">
+            <img src="profile-picture.jpg" alt="Foto de Perfil" id="profilePic">
             <button onclick="uploadImage()">Alterar Foto de Perfil</button>
             <input type="file" id="upload-input" style="display:none;" accept="image/*">
         </div>
 
-        <form>
-            <label for="name">Nome</label>
-            <input type="text" id="name" placeholder="Nome" required>
+        <form id="editProfileForm" onsubmit="return saveChanges(event)">
+            <label for="nome">Nome</label>
+            <input type="text" id="nome" placeholder="Nome" required>
 
             <label for="email">E-mail</label>
             <input type="email" id="email" placeholder="E-mail" required>
 
-            <label for="password">Nova Senha</label>
-            <input type="password" id="password" placeholder="Senha" required>
+            <label for="senha">Nova Senha</label>
+            <input type="password" id="senha" placeholder="Senha" required>
 
-            <label for="gender">Gênero</label>
-            <select id="gender" required>
-                <option value="male">Masculino</option>
-                <option value="female">Feminino</option>
-                <option value="other">Outro</option>
-            </select>
-
-            <input class="save-perfil" type="submit" value="Salvar Alterações">
+            <input type="submit" value="Salvar Alterações">
         </form>
-
-        <div class="danger-zone">
-            <center>
-            <h3>Área de Risco</h3>
-            <button onclick="deactivateAccount()">Desativar Conta</button>
-            </center>
-        </div>
     </div>
 
     <script>
-        function loadUserInfo() {
-        const name = localStorage.getItem('user');
-        const userEmail = localStorage.getItem('userEmail');
-        const password = localStorage.getItem('senha'); 
-        const profilePic = localStorage.getItem('profilePic') || 'img/default.jpg';
+           function loadUserInfo() {
 
-        if (!userEmail) {
+fetch('/user')
+    .then(response => {
+        if (!response.ok) {
             alert('Usuário não autenticado');
-            return;
+            throw new Error('Usuário não autenticado');
         }
+        return response.json();
+    })
+    .then(data => {
 
-        // Faz uma requisição para o servidor para buscar os dados do usuário
-        fetch(`/user/${userEmail}`)
-            .then(response => response.json())
-            .then(data => {
-                // Preenche os campos do formulário com os dados recebidos
-                document.getElementById('name').value = data.name || '';
-                document.getElementById('email').value = data.email || '';
-                document.getElementById('phone').value = data.phone || '';
-                document.getElementById('gender').value = data.gender || 'male';
-            })
-            .catch(error => {
-                console.error('Erro ao carregar os dados do usuário:', error);
-            });
-    }
+        document.getElementById('nome').value = data.nome || '';
+        document.getElementById('email').value = data.email || '';
+        document.getElementById('senha').value = data.senha || '';
+        document.getElementById('profilePic').src = data.profilePic || 'img/default.jpg';
+    })
+    .catch(error => {
+        console.error('Erro ao carregar os dados do usuário:', error);
+    });
+}
 
-    window.onload = loadUserInfo;
+window.onload = loadUserInfo;
 
-        function uploadImage() {
+function uploadImage() {
             document.getElementById("upload-input").click();
         }
 
+        // Manipula o upload e atualização de imagem de perfil
         document.getElementById("upload-input").addEventListener("change", function(event) {
             const file = event.target.files[0];
             const reader = new FileReader();
+
             reader.onload = function(e) {
-                document.getElementById("profile-pic").src = e.target.result;
+                // Atualiza a imagem de perfil na interface
+                document.getElementById("profilePic").src = e.target.result;
+
+                // Envia a imagem ao servidor
+                const formData = {
+                    profilePic: e.target.result // Base64 da imagem
+                };
+
+                fetch('/atualizarFoto', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro ao atualizar foto');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert(data.message); // Mensagem de sucesso
+                })
+                .catch((error) => {
+                    console.error('Erro:', error);
+                    alert('Houve um erro ao atualizar a foto.');
+                });
             }
+
             reader.readAsDataURL(file);
         });
 
-        function togglePrivacy() {
-            alert("Privacidade da conta alterada.");
+        function backToPortal() {
+            window.location.href = 'portalAluno.html';
         }
-
-        function editNotifications() {
-            alert("Página de gerenciamento de notificações aberta.");
-        }
-
-        function manage2FA() {
-            alert("Configurações de autenticação de dois fatores.");
-        }
-
-        function deactivateAccount() {
-            if (confirm("Tem certeza que deseja desativar sua conta?")) {
-                alert("Conta desativada com sucesso.");
-            }
-        }
-
-        function backToPortal(){
-        window.location.href = 'portalAluno.html';
-        }
+        
     </script>
 </body>
 </html>

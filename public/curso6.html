@@ -149,9 +149,8 @@
 
         function completeExercises() {
             const videoContainer = document.querySelector('.video-container');
-            document.getElementById('exercise-container').style.display = 'block'; 
+            document.getElementById('exercise-container').style.display = 'block';
         }
-
 
         document.getElementById('quiz-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -161,6 +160,7 @@
         function verificarRespostas() {
         let acertos = 0;
         let totalQuestoes = Object.keys(respostasCorretas).length;
+
 
         for (let pergunta in respostasCorretas) {
             const respostaSelecionada = document.querySelector(`input[name="${pergunta}"]:checked`);
@@ -180,9 +180,6 @@
             const progressBar = document.querySelector('.progress');
             progressBar.style.width = progress + '%';
             progressBar.textContent = progress + '%';
-
-            const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
-            salvarProgresso(cursoId, progress);
         }
 
         alert(`Você acertou ${acertos} de ${totalQuestoes} perguntas e errou ${erros}.`);
@@ -191,17 +188,15 @@
 
         function advanceProgress(lesson) {
             if (!lessonsCompleted[lesson]) {
-                progress += 25; 
-                lessonsCompleted[lesson] = true; 
+                progress += 25;
+                lessonsCompleted[lesson] = true;
                 const progressBar = document.querySelector('.progress');
                 if (progress > 100) {
                     progress = 100;
                 }
-                progressBar.textContent = progress + '%'; 
+                progressBar.textContent = progress + '%';
                 progressBar.style.width = progress + '%';
 
-                const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
-                salvarProgresso(cursoId, progress);
             }
         }
 
@@ -213,47 +208,50 @@
             q5: "correta"
         };
 
+
         function openPopup() {
             document.getElementById("popup").classList.remove("hidden");
         }
-    
+   
         function closePopup() {
             document.getElementById("popup").classList.add("hidden");
         }
-    
+   
         window.onclick = function(event) {
             var popup = document.getElementById('popup');
             if (event.target === popup) {
                 closePopup();
             }
         }
-    
+   
         document.getElementById("quiz-form").addEventListener("submit", function(event) {
             event.preventDefault();
             openPopup();
         });
-        
+       
         function rateCourse(rating) {
-          const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
-          console.log('ID do curso:', cursoId); // Para verificar se está funcionando
+    const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+    console.log('ID do curso:', cursoId); // Para verificar se está funcionando
 
-          // Enviar a avaliação para o backend
-          fetch('/avaliacao', {
-             method: 'POST',
-             headers: {
-              'Content-Type': 'application/json'
-             },
-            body: JSON.stringify({ curso_id: cursoId, rating })
-          })
+
+    // Enviar a avaliação para o backend
+    fetch('/avaliacao', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ curso_id: cursoId, rating })
+    })
     .then(response => response.text())
     .then(data => {
-        console.log(data); 
-        
+        console.log(data);
+       
         // Redirecionar para portalAluno.html após salvar a avaliação
         window.location.href = "portalAluno.html";
     })
     .catch(error => console.error('Erro ao salvar a avaliação:', error));
-    }
+}
+
 
     function salvarAvaliacao(cursoId, rating) {
     fetch('/avaliacao', {
@@ -271,25 +269,26 @@
     .catch((error) => {
         console.error('Erro ao salvar avaliação:', error);
     });
-    }
+}
 
-    function salvarProgresso(cursoId, progresso) {
-        fetch('/salvarProgresso', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ curso_id: cursoId, progresso: progresso }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-            // Redirecionar ou fazer outras ações
-        })
-        .catch((error) => {
-            console.error('Erro ao salvar progresso:', error);
-        });
-    }
+
+function salvarProgresso(cursoId, progresso) {
+    fetch('/salvarProgresso', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ curso_id: cursoId, progresso: progresso }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+        // Redirecionar ou fazer outras ações
+    })
+    .catch((error) => {
+        console.error('Erro ao salvar progresso:', error);
+    });
+}
     </script>
     
 </body>

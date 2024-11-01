@@ -13,6 +13,7 @@
     <title>Curso HTML</title>
 </head>
 
+
 <body data-curso-id="1">
     <header>
         <nav class="container">
@@ -20,36 +21,40 @@
         </nav>
     </header>
 
+
     <div class="titulocurso"><h2>CAPS - Centro de Assistência a Programadores de Sistemas</h2></div>
     <center>
     <div class="backcont">
         <br><br>
         <h1>
-            
+           
             HTML
-            
+           
         </h1>
         <br>
         <br><br><br>
-        <div class="button-group"> 
+        <div class="button-group">
             <button onclick="html1()">Aula 1</button>
             <button onclick="html2()">Aula 2</button>
             <button onclick="html3()">Aula 3</button>
             <button onclick="completeExercises()">Exercícios</button>
         </div>
 
+
         <br><br>
+
 
         <div class="video-container">
             <div class="click-overlay" onclick="advanceProgress(this)"></div>
         </div>
         <br><br>
         <div class="bar">
-            <div class="progress">0%</div> 
+            <div class="progress">0%</div>
         </div>
         <br><br>
     </div>
     </center>
+
 
     <div class="container swiper" id="exercise-container" style="display: none;">
         <br><br>
@@ -78,10 +83,10 @@
                 </div>
                 <br>
                 <div class="question">
-                    <label>4. Como você pode criar um link para outra página web usando HTML?</label><br>
-                    <input type="radio" name="q4" value="correta" required> &lt;a href="pagina.html"&gt;Clique aqui&lt;/a&gt;<br>
-                    <input type="radio" name="q4" value="background-color"> &lt;link href="pagina.html"&gt;Clique aqui&lt;/link&gt;<br>
-                    <input type="radio" name="q4" value="border"> &lt;url href="pagina.html"&gt;Clique aqui&lt;/url&gt;<br>
+                    <label>4. Como você pode criar um link para uma outra página web usando HTML?</label><br>
+                    <input type="radio" name="q4" value="correta" required> < a href="pagina.html">Clique aqui< /a><br>
+                    <input type="radio" name="q4" value="background-color"> < link href="pagina.html">Clique aqui< /link><br>
+                    <input type="radio" name="q4" value="border"> < url href="pagina.html">Clique aqui< /url><br>
                 </div>
                 <br>
                 <div class="question">
@@ -95,6 +100,7 @@
             </form>
         </div>
 
+
         <div id="popup" class="popup hidden">
             <div class="popup-content">
                 <span class="close-btn" onclick="closePopup()">&times;</span>
@@ -106,20 +112,57 @@
                     <input type="radio" id="star3" name="rating" value="3" onclick="rateCourse(3)"><label for="star3"></label>
                     <input type="radio" id="star4" name="rating" value="4" onclick="rateCourse(4)"><label for="star4"></label>
                     <input type="radio" id="star5" name="rating" value="5" onclick="rateCourse(5)"><label for="star5"></label>
-                </div>                             
+                </div>                            
             </div>
         </div>
 
     </div>
 
     <script>
-        let progress = 0; 
+        // Captura o id do curso do atributo data-curso-id
+    const cursoId = document.body.getAttribute('data-curso-id');
+
+    // Função para enviar o ID do curso ao backend (exemplo usando fetch)
+    function enviarCursoId() {
+    fetch('/api/curso/' + cursoId)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Dados do curso:', data);
+            // Aqui você pode manipular os dados recebidos
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+        });
+        }
+        // Chame a função quando necessário, por exemplo, ao carregar a página
+        window.onload = enviarCursoId;
+
+
+        let progress = 0;
         const lessonsCompleted = {
             lesson1: false,
             lesson2: false,
             lesson3: false,
             exercises: false,
         };
+
+        // Função para calcular e enviar o progresso atualizado ao backend
+        function updateAndSaveProgress() {
+        const cursoId = document.body.getAttribute('data-curso-id');
+        
+        // Limitar o progresso a 100%
+        if (progress > 100) {
+            progress = 100;
+        }
+
+        // Atualizar a barra de progresso
+        const progressBar = document.querySelector('.progress');
+        progressBar.style.width = progress + '%';
+        progressBar.textContent = progress + '%';
+
+        // Enviar o progresso atualizado para o backend
+        salvarProgresso(cursoId, progress);
+        }
 
         function html1() {
             const videoContainer = document.querySelector('.video-container');
@@ -132,6 +175,7 @@
             `;
         }
 
+
         function html2() {
             const videoContainer = document.querySelector('.video-container');
             advanceProgress('lesson2');
@@ -142,6 +186,7 @@
                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             `;
         }
+
 
         function html3() {
             const videoContainer = document.querySelector('.video-container');
@@ -154,11 +199,11 @@
             `;
         }
 
+
         function completeExercises() {
             const videoContainer = document.querySelector('.video-container');
-            document.getElementById('exercise-container').style.display = 'block'; 
+            document.getElementById('exercise-container').style.display = 'block';
         }
-
 
         document.getElementById('quiz-form').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -169,6 +214,7 @@
         let acertos = 0;
         let totalQuestoes = Object.keys(respostasCorretas).length;
 
+
         for (let pergunta in respostasCorretas) {
             const respostaSelecionada = document.querySelector(`input[name="${pergunta}"]:checked`);
             if (respostaSelecionada && respostaSelecionada.value === respostasCorretas[pergunta]) {
@@ -177,19 +223,17 @@
         }
 
         const erros = totalQuestoes - acertos;
-        
+
         // Atualizar progresso com base nos acertos
         if (acertos > 0) {
             progress += acertos * 5; // Avança 5% para cada resposta correta
+            updateAndSaveProgress(); 
             if (progress > 100) {
                 progress = 100; // Limita o progresso a 100%
             }
             const progressBar = document.querySelector('.progress');
             progressBar.style.width = progress + '%';
             progressBar.textContent = progress + '%';
-
-            const cursoId = document.body.getAttribute('data-curso-id');
-            salvarProgresso(cursoId, progress);
         }
 
         alert(`Você acertou ${acertos} de ${totalQuestoes} perguntas e errou ${erros}.`);
@@ -198,17 +242,16 @@
 
         function advanceProgress(lesson) {
             if (!lessonsCompleted[lesson]) {
-                progress += 25; 
-                lessonsCompleted[lesson] = true; 
+                progress += 25;
+                lessonsCompleted[lesson] = true;
+                updateAndSaveProgress(); 
                 const progressBar = document.querySelector('.progress');
                 if (progress > 100) {
                     progress = 100;
                 }
-                progressBar.textContent = progress + '%'; 
+                progressBar.textContent = progress + '%';
                 progressBar.style.width = progress + '%';
 
-                const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
-                salvarProgresso(cursoId, progress);
             }
         }
 
@@ -220,47 +263,50 @@
             q5: "correta"
         };
 
+
         function openPopup() {
             document.getElementById("popup").classList.remove("hidden");
         }
-    
+   
         function closePopup() {
             document.getElementById("popup").classList.add("hidden");
         }
-    
+   
         window.onclick = function(event) {
             var popup = document.getElementById('popup');
             if (event.target === popup) {
                 closePopup();
             }
         }
-    
+   
         document.getElementById("quiz-form").addEventListener("submit", function(event) {
             event.preventDefault();
             openPopup();
         });
-        
+       
         function rateCourse(rating) {
-          const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
-          console.log('ID do curso:', cursoId); // Para verificar se está funcionando
+    const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
+    console.log('ID do curso:', cursoId); // Para verificar se está funcionando
 
-          // Enviar a avaliação para o backend
-          fetch('/avaliacao', {
-             method: 'POST',
-             headers: {
-              'Content-Type': 'application/json'
-             },
-            body: JSON.stringify({ curso_id: cursoId, rating })
-          })
+
+    // Enviar a avaliação para o backend
+    fetch('/avaliacao', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ curso_id: cursoId, rating })
+    })
     .then(response => response.text())
     .then(data => {
-        console.log(data); 
-        
+        console.log(data);
+       
         // Redirecionar para portalAluno.html após salvar a avaliação
         window.location.href = "portalAluno.html";
     })
     .catch(error => console.error('Erro ao salvar a avaliação:', error));
-    }
+}
+
 
     function salvarAvaliacao(cursoId, rating) {
     fetch('/avaliacao', {
@@ -278,26 +324,29 @@
     .catch((error) => {
         console.error('Erro ao salvar avaliação:', error);
     });
-    }
+}
 
-    function salvarProgresso(cursoId, progresso) {
-        fetch('/salvarProgresso', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ curso_id: cursoId, progresso: progresso }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.message);
-            // Redirecionar ou fazer outras ações
-        })
-        .catch((error) => {
-            console.error('Erro ao salvar progresso:', error);
-        });
-    }
+
+function salvarProgresso(cursoId, progresso) {
+
+    const usuarioId = sessionStorage.getItem('usuarioId');
+    fetch('/salvarProgresso', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ usuario_id: usuarioId, curso_id: cursoId, progresso: progresso }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data.message);
+        // Redirecionar ou fazer outras ações
+    })
+    .catch((error) => {
+        console.error('Erro ao salvar progresso:', error);
+    });
+}
     </script>
-    
+   
 </body>
 </html>
