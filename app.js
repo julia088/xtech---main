@@ -135,6 +135,22 @@ app.get('/user', (req, res) => {
     }
 });
 
+//rota para iniciar o curso, salvando apenas o curso_id
+app.post('/iniciarCurso', verificarAutenticacao, (req, res) => {
+    const usuarioId = req.session.user.id;
+    const { curso_id } = req.body;
+
+    const query = 'INSERT INTO progresso (usuario_id, curso_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE curso_id = curso_id';
+    connection.query(query, [usuarioId, curso_id], (err, results) => {
+        if (err) {
+            console.error('Erro ao iniciar curso:', err);
+            return res.status(500).json({ message: 'Erro ao iniciar curso' });
+        }
+        res.status(200).json({ message: 'Curso iniciado com sucesso!' });
+    });
+});
+
+//busca informações sobre o curso pelo id
 app.get('/api/curso/:id', (req, res) => {
     const cursoId = req.params.id;
     

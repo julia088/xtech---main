@@ -67,7 +67,7 @@
                             <img src="img/html.png" alt="Card Image" class="card-image">
                             <p class="badge">HTML</p>
                             <h2 class="card-title">Aprenda a criar páginas da web com nosso curso de HTML! Descubra os fundamentos da estruturação de conteúdo.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso1.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso1.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="1">0%</div>
                             </div>                                                      
@@ -78,7 +78,7 @@
                             <img src="img/css.jpg" alt="Card Image" class="card-image">
                             <p class="badge">CSS</p>
                             <h2 class="card-title">Transforme suas páginas com nosso curso de CSS! Aprenda a estilizar conteúdos e criar designs atraentes.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso2.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso2.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="2">0%</div>
                             </div>                            
@@ -89,7 +89,7 @@
                             <img src="img/js.png" alt="Card Image" class="card-image">
                             <p class="badge">JAVA SCRIPT</p>
                             <h2 class="card-title">Desperte a interatividade com nosso curso de JavaScript! Aprenda a programar funcionalidades dinâmicas.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso3.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso3.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="3">0%</div>
                             </div> 
@@ -100,7 +100,7 @@
                             <img src="img/python.jpg" alt="Card Image" class="card-image">
                             <p class="badge">PYTHON</p>
                             <h2 class="card-title">Descubra o poder da programação com nosso curso de Python! Aprenda a resolver problemas de forma eficaz.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso4.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso4.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="4">0%</div>
                             </div> 
@@ -111,7 +111,7 @@
                             <img src="img/ruby.png" alt="Card Image" class="card-image">
                             <p class="badge">RUBY</p>
                             <h2 class="card-title">Explore a elegância da programação com nosso curso de Ruby! Aprenda a construir aplicações de forma intuitiva.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso5.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso5.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="5">0%</div>
                             </div> 
@@ -122,7 +122,7 @@
                             <img src="img/git.png" alt="Card Image" class="card-image">
                             <p class="badge">GIT</p>
                             <h2 class="card-title">Domine o controle de versões com nosso curso de Git! Aprenda a gerenciar seu código de forma eficiente.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso6.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso6.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="6">0%</div>
                             </div> 
@@ -133,7 +133,7 @@
                             <img src="img/php.jpg" alt="Card Image" class="card-image">
                             <p class="badge">PHP</p>
                             <h2 class="card-title">Dê vida ao desenvolvimento web com nosso curso de PHP! Aprenda a criar aplicações dinâmicas e interativas.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso7.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso7.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="7">0%</div>
                             </div> 
@@ -144,7 +144,7 @@
                             <img src="img/sql.webp" alt="Card Image" class="card-image">
                             <p class="badge">SQL</p>
                             <h2 class="card-title">Desvende o poder dos dados com nosso curso de SQL! Aprenda a manipular e consultar bancos de dados de forma eficiente.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso8.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso8.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="8">0%</div>
                             </div> 
@@ -155,7 +155,7 @@
                             <img src="img/crypto.jpg" alt="Card Image" class="card-image">
                             <p class="badge">CRYPTO</p>
                             <h2 class="card-title">Mergulhe no mundo das criptomoedas com nosso curso de Crypto! Aprenda sobre blockchain e segurança neste universo inovador.</h2>
-                            <button class="card-button material-symbols-rounded" data-url="curso9.html">arrow_forward</button>
+                            <button class="card-button material-symbols-rounded" data-url="curso9.html" id="iniciar-curso">arrow_forward</button>
                             <div class="bar">
                                 <div class="progress" data-curso-id="9">0%</div>
                             </div> 
@@ -237,12 +237,32 @@ window.onload = function() {
     }
 }
 
+function redirectToCourse(button) {
+    // Captura o cursoId e o data-url do botão clicado
+    const cursoId = button.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
+    const url = button.getAttribute('data-url');
+    
+    // Redireciona para a página do curso com o cursoId como parâmetro
+    window.location.href = `${url}?cursoId=${cursoId}`;
+}
+
+// Adiciona o evento de clique a todos os botões com a classe 'card-button'
 document.querySelectorAll('.card-button').forEach(button => {
     button.addEventListener('click', function() {
-        const cursoId = this.parentElement.querySelector('.progress').getAttribute('data-curso-id');
-        window.location.href = `curso.html?cursoId=${cursoId}`; // Redireciona para a página do curso com o ID
+        redirectToCourse(this);
     });
 });
+
+function iniciarCurso(usuarioId, cursoId) {
+    fetch('/api/iniciar-curso', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuarioId, cursoId })
+    })
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(error => console.error('Erro:', error));
+}
 
 </script>
 
