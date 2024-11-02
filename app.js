@@ -135,19 +135,29 @@ app.get('/user', (req, res) => {
     }
 });
 
-//rota para iniciar o curso, salvando apenas o curso_id
-app.post('/iniciarCurso', verificarAutenticacao, (req, res) => {
-    const usuarioId = req.session.user.id;
-    const { curso_id } = req.body;
+app.post('/api/iniciar-curso', async (req, res) => {
+    try {
+        const { usuarioId, cursoId } = req.body;
 
-    const query = 'INSERT INTO progresso (usuario_id, curso_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE curso_id = curso_id';
-    connection.query(query, [usuarioId, curso_id], (err, results) => {
-        if (err) {
-            console.error('Erro ao iniciar curso:', err);
-            return res.status(500).json({ message: 'Erro ao iniciar curso' });
+        // Verifique se o progresso já existe para o usuário e o curso
+        const [resultado] = await db.execute(
+            'SELECT id FROM progresso WHERE usuario_id = ? AND curso_id = ?',
+            [usuarioId, cursoId]
+        );
+
+        if (resultado.length === 0) {
+            // Se não existe, insere um novo registro com progresso inicial de 0%
+            await db.execute(
+                'INSERT INTO progresso (usuario_id, curso_id, progresso) VALUES (?, ?, ?)',
+                [usuarioId, cursoId, 0]
+            );
         }
-        res.status(200).json({ message: 'Curso iniciado com sucesso!' });
-    });
+
+        res.status(200).send('Curso iniciado com sucesso');
+    } catch (error) {
+        console.error('Erro ao iniciar o curso:', error);
+        res.status(500).send('Erro ao iniciar o curso');
+    }
 });
 
 //busca informações sobre o curso pelo id
@@ -197,13 +207,36 @@ app.post('/avaliacao', verificarAutenticacao, (req, res) => {
     const { curso_id, rating } = req.body;
     const usuario_id = req.session.user.id;
 
-    const query = 'INSERT INTO avaliacao (usuario_id, curso_id, rating) VALUES (?, ?, ?)';
-    connection.query(query, [usuario_id, curso_id, rating], (error, results) => {
+    // Validação do rating e curso_id
+    if (!curso_id || !rating) {
+        return res.status(400).json({ message: 'Curso ID e rating são obrigatórios.' });
+    }
+    if (rating < 1 || rating > 5) {
+        return res.status(400).json({ message: 'Rating deve estar entre 1 e 5.' });
+    }
+
+    const querySelect = 'SELECT * FROM avaliacao WHERE usuario_id = ? AND curso_id = ?';
+    connection.query(querySelect, [usuario_id, curso_id], (error, results) => {
         if (error) {
-            console.error('Erro ao salvar a avaliação:', error);
-            return res.status(500).json({ message: 'Erro ao salvar a avaliação' });
+            console.error('Erro ao verificar avaliação:', error);
+            return res.status(500).json({ message: 'Erro ao verificar avaliação.' });
         }
-        res.status(200).json({ message: 'Avaliação salva com sucesso' });
+
+        const query = results.length > 0
+            ? 'UPDATE avaliacao SET rating = ? WHERE usuario_id = ? AND curso_id = ?'
+            : 'INSERT INTO avaliacao (usuario_id, curso_id, rating) VALUES (?, ?, ?)';
+
+        const params = results.length > 0
+            ? [rating, usuario_id, curso_id]
+            : [usuario_id, curso_id, rating];
+
+        connection.query(query, params, (error) => {
+            if (error) {
+                console.error('Erro ao salvar a avaliação:', error);
+                return res.status(500).json({ message: 'Erro ao salvar a avaliação.' });
+            }
+            res.status(200).json({ message: results.length > 0 ? 'Avaliação atualizada com sucesso.' : 'Avaliação salva com sucesso.' });
+        });
     });
 });
 
@@ -212,31 +245,38 @@ app.post('/salvarProgresso', verificarAutenticacao, (req, res) => {
     const { curso_id, progresso } = req.body;
     const usuario_id = req.session.user.id;
 
-    const querySelect = 'SELECT * FROM progresso WHERE usuario_id = ? AND curso_id = ?';
+    const querySelect = 'SELECT progresso FROM progresso WHERE usuario_id = ? AND curso_id = ?';
     connection.query(querySelect, [usuario_id, curso_id], (error, results) => {
         if (error) {
             console.error('Erro ao verificar progresso:', error);
             return res.status(500).json({ message: 'Erro ao verificar progresso' });
         }
 
-        if (results.length > 0) {
-            const queryUpdate = 'UPDATE progresso SET progresso = ? WHERE usuario_id = ? AND curso_id = ?';
-            connection.query(queryUpdate, [progresso, usuario_id, curso_id], (error) => {
-                if (error) {
-                    console.error('Erro ao atualizar progresso:', error);
-                    return res.status(500).json({ message: 'Erro ao atualizar progresso' });
-                }
-                res.status(200).json({ message: 'Progresso atualizado com sucesso' });
-            });
+        const currentProgress = results.length > 0 ? results[0].progresso : 0;
+
+        // Somente atualizar se o novo progresso for maior que o atual
+        if (progresso > currentProgress) {
+            if (results.length > 0) {
+                const queryUpdate = 'UPDATE progresso SET progresso = ? WHERE usuario_id = ? AND curso_id = ?';
+                connection.query(queryUpdate, [progresso, usuario_id, curso_id], (error) => {
+                    if (error) {
+                        console.error('Erro ao atualizar progresso:', error);
+                        return res.status(500).json({ message: 'Erro ao atualizar progresso' });
+                    }
+                    res.status(200).json({ message: 'Progresso atualizado com sucesso' });
+                });
+            } else {
+                const queryInsert = 'INSERT INTO progresso (usuario_id, curso_id, progresso) VALUES (?, ?, ?)';
+                connection.query(queryInsert, [usuario_id, curso_id, progresso], (error) => {
+                    if (error) {
+                        console.error('Erro ao salvar progresso:', error);
+                        return res.status(500).json({ message: 'Erro ao salvar progresso' });
+                    }
+                    res.status(200).json({ message: 'Progresso salvo com sucesso' });
+                });
+            }
         } else {
-            const queryInsert = 'INSERT INTO progresso (usuario_id, curso_id, progresso) VALUES (?, ?, ?)';
-            connection.query(queryInsert, [usuario_id, curso_id, progresso], (error) => {
-                if (error) {
-                    console.error('Erro ao salvar progresso:', error);
-                    return res.status(500).json({ message: 'Erro ao salvar progresso' });
-                }
-                res.status(200).json({ message: 'Progresso salvo com sucesso' });
-            });
+            res.status(200).json({ message: 'Progresso já está atualizado' });
         }
     });
 });

@@ -113,13 +113,50 @@
     </div>
 
     <script>
-        let progress = 0; 
-        const lessonsCompleted = {
-            lesson1: false,
-            lesson2: false,
-            lesson3: false,
-            exercises: false,
-        };
+        // Captura o id do curso do atributo data-curso-id
+    const cursoId = document.body.getAttribute('data-curso-id');
+
+// Função para enviar o ID do curso ao backend (exemplo usando fetch)
+function enviarCursoId() {
+fetch('/api/curso/' + cursoId)
+    .then(response => response.json())
+    .then(data => {
+        console.log('Dados do curso:', data);
+        // Aqui você pode manipular os dados recebidos
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+    });
+    }
+    // Chame a função quando necessário, por exemplo, ao carregar a página
+    window.onload = enviarCursoId;
+
+
+    let progress = 0;
+    const lessonsCompleted = {
+        lesson1: false,
+        lesson2: false,
+        lesson3: false,
+        exercises: false,
+    };
+
+    // Função para calcular e enviar o progresso atualizado ao backend
+    function updateAndSaveProgress() {
+    const cursoId = document.body.getAttribute('data-curso-id');
+    
+    // Limitar o progresso a 100%
+    if (progress > 100) {
+        progress = 100;
+    }
+
+    // Atualizar a barra de progresso
+    const progressBar = document.querySelector('.progress');
+    progressBar.style.width = progress + '%';
+    progressBar.textContent = progress + '%';
+
+    // Enviar o progresso atualizado para o backend
+    salvarProgresso(cursoId, progress);
+    }
 
         function git1() {
             const videoContainer = document.querySelector('.video-container');
@@ -175,6 +212,7 @@
         // Atualizar progresso com base nos acertos
         if (acertos > 0) {
             progress += acertos * 5; // Avança 5% para cada resposta correta
+            updateAndSaveProgress(); 
             if (progress > 100) {
                 progress = 100; // Limita o progresso a 100%
             }
@@ -191,6 +229,7 @@
             if (!lessonsCompleted[lesson]) {
                 progress += 25;
                 lessonsCompleted[lesson] = true;
+                updateAndSaveProgress(); 
                 const progressBar = document.querySelector('.progress');
                 if (progress > 100) {
                     progress = 100;
@@ -274,12 +313,14 @@
 
 
 function salvarProgresso(cursoId, progresso) {
+
+    const usuarioId = sessionStorage.getItem('usuarioId');
     fetch('/salvarProgresso', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ curso_id: cursoId, progresso: progresso }),
+        body: JSON.stringify({ usuario_id: usuarioId, curso_id: cursoId, progresso: progresso }),
     })
     .then(response => response.json())
     .then(data => {

@@ -264,6 +264,15 @@ function iniciarCurso(usuarioId, cursoId) {
     .catch(error => console.error('Erro:', error));
 }
 
+// Adiciona o evento de clique a todos os botões com a classe 'card-button'
+document.querySelectorAll('.card-button').forEach(button => {
+    button.addEventListener('click', function() {
+        const cursoId = this.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
+        iniciarCurso( usuarioId , cursoId);
+        redirectToCourse(this);
+    });
+});
+
 </script>
 
 <style>

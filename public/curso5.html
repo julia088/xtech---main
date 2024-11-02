@@ -113,13 +113,50 @@
     </div>
 
     <script>
-        let progress = 0; 
+        // Captura o id do curso do atributo data-curso-id
+    const cursoId = document.body.getAttribute('data-curso-id');
+
+    // Função para enviar o ID do curso ao backend (exemplo usando fetch)
+    function enviarCursoId() {
+    fetch('/api/curso/' + cursoId)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Dados do curso:', data);
+            // Aqui você pode manipular os dados recebidos
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+        });
+        }
+        // Chame a função quando necessário, por exemplo, ao carregar a página
+        window.onload = enviarCursoId;
+
+
+        let progress = 0;
         const lessonsCompleted = {
             lesson1: false,
             lesson2: false,
             lesson3: false,
             exercises: false,
         };
+
+        // Função para calcular e enviar o progresso atualizado ao backend
+        function updateAndSaveProgress() {
+        const cursoId = document.body.getAttribute('data-curso-id');
+        
+        // Limitar o progresso a 100%
+        if (progress > 100) {
+            progress = 100;
+        }
+
+        // Atualizar a barra de progresso
+        const progressBar = document.querySelector('.progress');
+        progressBar.style.width = progress + '%';
+        progressBar.textContent = progress + '%';
+
+        // Enviar o progresso atualizado para o backend
+        salvarProgresso(cursoId, progress);
+        }
 
         function ruby1() {
             const videoContainer = document.querySelector('.video-container');
@@ -181,25 +218,25 @@
 
         const erros = totalQuestoes - acertos;
 
-        // Atualizar progresso com base nos acertos
-        if (acertos > 0) {
-            progress += acertos * 5; // Avança 5% para cada resposta correta
-            if (progress > 100) {
-                progress = 100; // Limita o progresso a 100%
-            }
-            const progressBar = document.querySelector('.progress');
-            progressBar.style.width = progress + '%';
-            progressBar.textContent = progress + '%';
+        // Atualizar progresso com base nos acertos, evitando retrocesso
+    if (acertos > 0) {
+        const progressoAdicional = acertos * 5; // Avança 5% para cada resposta correta
+        if (progress + progressoAdicional <= 100) { 
+            progress += progressoAdicional;
+        } else {
+            progress = 100; // Garante que o progresso não ultrapasse 100%
         }
-
+        
+        updateAndSaveProgress(); 
+    }
         alert(`Você acertou ${acertos} de ${totalQuestoes} perguntas e errou ${erros}.`);
-        openPopup(); // Abre o popup após verificar as respostas
     }
 
         function advanceProgress(lesson) {
             if (!lessonsCompleted[lesson]) {
                 progress += 25;
                 lessonsCompleted[lesson] = true;
+                updateAndSaveProgress(); 
                 const progressBar = document.querySelector('.progress');
                 if (progress > 100) {
                     progress = 100;
@@ -207,6 +244,9 @@
                 progressBar.textContent = progress + '%';
                 progressBar.style.width = progress + '%';
 
+                if (progress === 100) {
+                openPopup();
+                }
             }
         }
 
@@ -240,6 +280,9 @@
         });
        
         function rateCourse(rating) {
+            const ratingInputs = document.querySelectorAll('input[name="rating"]');//desabilitando botões de ava
+    ratingInputs.forEach(input => input.disabled = true);
+
     const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
     console.log('ID do curso:', cursoId); // Para verificar se está funcionando
 
@@ -252,43 +295,31 @@
         },
         body: JSON.stringify({ curso_id: cursoId, rating })
     })
-    .then(response => response.text())
+    .then(response => {
+        if (!response.ok) {
+        throw new Error('Erro ao salvar a avaliação.');
+    }
+    return response.text();
+    })
     .then(data => {
         console.log(data);
-       
         // Redirecionar para portalAluno.html após salvar a avaliação
         window.location.href = "portalAluno.html";
     })
     .catch(error => console.error('Erro ao salvar a avaliação:', error));
-}
-
-
-    function salvarAvaliacao(cursoId, rating) {
-    fetch('/avaliacao', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ curso_id: cursoId, rating: rating }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        // Redirecionar ou fazer outras ações
-    })
-    .catch((error) => {
-        console.error('Erro ao salvar avaliação:', error);
-    });
+    alert('Houve um erro ao salvar sua avaliação. Tente novamente.');
 }
 
 
 function salvarProgresso(cursoId, progresso) {
+
+    const usuarioId = sessionStorage.getItem('usuarioId');
     fetch('/salvarProgresso', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ curso_id: cursoId, progresso: progresso }),
+        body: JSON.stringify({ usuario_id: usuarioId, curso_id: cursoId, progresso: progresso }),
     })
     .then(response => response.json())
     .then(data => {
