@@ -107,11 +107,11 @@
                 <h2>Obrigado por enviar suas respostas!</h2>
                 <h2>Gostaria de avaliar nosso curso?</h2>
                 <div class="rating">
-                    <input type="radio" id="star1" name="rating" value="1" onclick="rateCourse(1)"><label for="star1"></label>
-                    <input type="radio" id="star2" name="rating" value="2" onclick="rateCourse(2)"><label for="star2"></label>
+                    <input type="radio" id="star1" name="rating" value="1" onclick="rateCourse(5)"><label for="star1"></label>
+                    <input type="radio" id="star2" name="rating" value="2" onclick="rateCourse(4)"><label for="star2"></label>
                     <input type="radio" id="star3" name="rating" value="3" onclick="rateCourse(3)"><label for="star3"></label>
-                    <input type="radio" id="star4" name="rating" value="4" onclick="rateCourse(4)"><label for="star4"></label>
-                    <input type="radio" id="star5" name="rating" value="5" onclick="rateCourse(5)"><label for="star5"></label>
+                    <input type="radio" id="star4" name="rating" value="4" onclick="rateCourse(2)"><label for="star4"></label>
+                    <input type="radio" id="star5" name="rating" value="5" onclick="rateCourse(1)"><label for="star5"></label>
                 </div>                            
             </div>
         </div>
@@ -283,13 +283,20 @@
             openPopup();
         });
        
-        function rateCourse(rating) {
-            const ratingInputs = document.querySelectorAll('input[name="rating"]');//desabilitando botões de ava
+    function rateCourse(rating) {
+    const ratingInputs = document.querySelectorAll('input[name="rating"]');
     ratingInputs.forEach(input => input.disabled = true);
 
-    const cursoId = document.querySelector('.container.swiper').getAttribute('data-curso-id');
-    console.log('ID do curso:', cursoId); // Para verificar se está funcionando
+    // Extraindo o cursoId do body
+    const cursoId = document.body.getAttribute('data-curso-id');
 
+    // Validando o rating
+    if (rating < 1 || rating > 5) {
+        alert('Rating deve estar entre 1 e 5.');
+        return;
+    }
+
+    console.log('Enviando avaliação:', { curso_id: cursoId, rating });
 
     // Enviar a avaliação para o backend
     fetch('/avaliacao', {
@@ -301,19 +308,24 @@
     })
     .then(response => {
         if (!response.ok) {
-        throw new Error('Erro ao salvar a avaliação.');
-    }
-    return response.text();
+            return response.json().then(err => {
+                console.error('Erro ao salvar a avaliação:', err.message);
+                alert(`Erro: ${err.message}`); // Alerta ao usuário
+                throw new Error(err.message);
+            });
+        }
+        return response.json();
     })
     .then(data => {
         console.log(data);
         // Redirecionar para portalAluno.html após salvar a avaliação
         window.location.href = "portalAluno.html";
     })
-    .catch(error => console.error('Erro ao salvar a avaliação:', error));
-    alert('Houve um erro ao salvar sua avaliação. Tente novamente.');
+    .catch(error => {
+        console.error('Erro ao salvar a avaliação:', error);
+        alert('Houve um erro ao salvar sua avaliação. Tente novamente.');
+    });
 }
-
 
 function salvarProgresso(cursoId, progresso) {
 

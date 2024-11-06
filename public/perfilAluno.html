@@ -211,77 +211,98 @@
     </div>
 
     <script>
-           function loadUserInfo() {
-
-fetch('/user')
-    .then(response => {
+        function loadUserInfo() {
+        fetch('/user')
+        .then(response => {
         if (!response.ok) {
-            alert('Usuário não autenticado');
-            throw new Error('Usuário não autenticado');
+        alert('Usuário não autenticado');
+        throw new Error('Usuário não autenticado');
         }
         return response.json();
-    })
-    .then(data => {
-
+        })
+        .then(data => {
+        // Atualiza os campos com os dados recebidos do servidor
         document.getElementById('nome').value = data.nome || '';
         document.getElementById('email').value = data.email || '';
         document.getElementById('senha').value = data.senha || '';
-        document.getElementById('profilePic').src = data.profilePic || 'img/default.jpg';
-    })
-    .catch(error => {
+        
+        // Atualiza o caminho da imagem de perfil, usando um fallback para 'default.jpg' caso não exista
+        const profilePicPath = data.profilePic ? `img/${data.profilePic}` : 'img/default.jpg';
+        document.getElementById('profilePic').src = profilePicPath;
+        })
+
+        .catch(error => {
         console.error('Erro ao carregar os dados do usuário:', error);
-    });
-}
-
-window.onload = loadUserInfo;
-
-function uploadImage() {
-            document.getElementById("upload-input").click();
-        }
-
-        // Manipula o upload e atualização de imagem de perfil
-        document.getElementById("upload-input").addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                // Atualiza a imagem de perfil na interface
-                document.getElementById("profilePic").src = e.target.result;
-
-                // Envia a imagem ao servidor
-                const formData = {
-                    profilePic: e.target.result // Base64 da imagem
-                };
-
-                fetch('/atualizarFoto', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData),
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro ao atualizar foto');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    alert(data.message); // Mensagem de sucesso
-                })
-                .catch((error) => {
-                    console.error('Erro:', error);
-                    alert('Houve um erro ao atualizar a foto.');
-                });
-            }
-
-            reader.readAsDataURL(file);
         });
-
-        function backToPortal() {
-            window.location.href = 'portalAluno.html';
         }
         
-    </script>
+        window.onload = loadUserInfo;
+        
+        function uploadImage() {
+        document.getElementById("upload-input").click();
+        }
+        
+        document.getElementById("upload-input").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        const formData = new FormData();
+        formData.append('profilePic', file); // Adiciona o arquivo ao FormData
+        
+        // Envia a imagem para o servidor
+        fetch('/upload-profile-image', {
+        method: 'POST',
+        body: formData
+        })
+
+        .then(response => {
+        if (!response.ok) throw new Error('Erro ao atualizar foto');
+        return response.json();
+        })
+
+        .then(data => {
+        alert(data.message); // Exibe mensagem de sucesso
+        // Atualiza a imagem de perfil exibida na página
+        document.getElementById("profilePic").src = `img/${data.filename}`;
+        })
+
+        .catch(error => {
+        console.error('Erro:', error);
+        alert('Houve um erro ao atualizar a foto.');
+        });
+        });
+        
+        function salvarAlt(event) {
+        event.preventDefault(); // Previne o envio padrão do formulário
+        
+        // Captura os dados do formulário
+        const formData = {
+        nome: document.getElementById('nome').value,
+        email: document.getElementById('email').value,
+        senha: document.getElementById('senha').value
+        };
+        
+        // Envia os dados para a rota de atualização no backend
+        fetch('/atualizarPerfil', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData) // Transforma os dados em JSON
+        })
+        .then(response => {
+        if (!response.ok) throw new Error('Erro ao salvar alterações');
+        return response.json();
+        })
+        .then(data => {
+        // Exibe mensagem de sucesso
+        alert(data.message || 'Perfil atualizado com sucesso!');
+        loadUserInfo();
+        })
+        }
+
+        function backToPortal() {
+        window.location.href = 'portalAluno.html';
+        }
+        
+        </script>
 </body>
 </html>

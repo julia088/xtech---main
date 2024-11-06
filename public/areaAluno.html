@@ -235,8 +235,8 @@
             <div class="line-footer1">
                 <h2>Quer receber atualizações sobre os cursos?</h2>
                 <p>Digite o seu e-mail abaixo para notificarmos</p>
-                <form method="POST" action="/newsletter">
-                    <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required>
+                <form id="form-newsletter">
+                    <input type="email" name="email" id="email-newsletter" required placeholder="Digite seu e-mail">
                     <input type="submit" value="Cadastrar">
                 </form>
             </div>            
@@ -333,7 +333,36 @@
         .catch(error => console.error('Erro:', error));
     });
     </script>
-    
+
+<!--Email cadastrado para mensganes footer-->
+   <script>
+       document.getElementById('form-newsletter').addEventListener('submit', function(event) {
+   event.preventDefault();
+
+   const email = document.getElementById('email-newsletter').value;
+
+   fetch('/newsletter', {
+       method: 'POST',
+       headers: {
+           'Content-Type': 'application/json'
+       },
+       body: JSON.stringify({ email: email })
+   })
+   .then(response => response.json())
+   .then(data => {
+       if (data.success) {
+           alert('Email cadastrado com sucesso!');
+           document.getElementById('email-newsletter').value = '';
+       } else {
+           alert('Erro ao cadastrar e-mail: ' + data.message);
+       }
+   })
+   .catch(error => {
+       console.error('Erro ao cadastrar e-mail:', error);
+       alert('Erro ao cadastrar e-mail.');
+   });
+});
+   </script>
 
 <!--css da página-->
 <style>

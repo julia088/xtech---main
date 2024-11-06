@@ -25,9 +25,9 @@
                 </li>
      
                 <li class="item-menu">
-                    <a href="cursos.html">
+                    <a href="certificado.html">
                         <span class="icon"><i class="bi bi-columns-gap"></i></span>
-                        <span class="item-description">Cursos</span>
+                        <span class="item-description">Certificados</span>
                     </a>
                 </li>
     
@@ -47,7 +47,7 @@
         <div id="logout">
             <button id="logout-btn">
                 <i class="bi bi-box-arrow-left"></i>
-                <span class="item-description">Logout</span>
+                <span class="item-description" onclic="handleLogout()">Logout</span>
             </button>
         </div>
     </nav>
@@ -177,8 +177,8 @@
                 <div class="line-footer1">
                     <h2>Quer receber atualizações sobre os cursos?</h2>
                     <p>Digite o seu e-mail abaixo para notificarmos</p>
-                    <form method="POST" action="/newsletter">
-                        <input type="email" name="email" id="email" placeholder="Digite seu e-mail" required>
+                    <form id="form-newsletter">
+                        <input type="email" name="email" id="email-newsletter" required placeholder="Digite seu e-mail">
                         <input type="submit" value="Cadastrar">
                     </form>
                 </div>   
@@ -226,53 +226,106 @@
 <script>
     document.getElementById('open-btn').addEventListener('click', function(){
     document.getElementById('menu-lateral').classList.toggle('open-menu');
-});
-
-window.onload = function() {
+    });
+    
+    window.onload = function() {
     const profilePic = localStorage.getItem('profilePic');
     if (profilePic) {
-        document.getElementById('profilePic').src = profilePic;
+    document.getElementById('profilePic').src = profilePic;
     } else {
-        document.getElementById('profilePic').src = 'img/default.jpg'; // Use a extensão correta
+    document.getElementById('profilePic').src = 'img/default.jpg'; // Use a extensão correta
     }
-}
-
-function redirectToCourse(button) {
+    }
+    
+    function redirectToCourse(button) {
     // Captura o cursoId e o data-url do botão clicado
     const cursoId = button.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
     const url = button.getAttribute('data-url');
     
     // Redireciona para a página do curso com o cursoId como parâmetro
     window.location.href = `${url}?cursoId=${cursoId}`;
-}
-
-// Adiciona o evento de clique a todos os botões com a classe 'card-button'
-document.querySelectorAll('.card-button').forEach(button => {
+    }
+    
+    // Adiciona o evento de clique a todos os botões com a classe 'card-button'
+    document.querySelectorAll('.card-button').forEach(button => {
     button.addEventListener('click', function() {
-        redirectToCourse(this);
+    redirectToCourse(this);
     });
-});
-
-function iniciarCurso(usuarioId, cursoId) {
+    });
+    
+    function iniciarCurso(usuarioId, cursoId) {
     fetch('/api/iniciar-curso', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuarioId, cursoId })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ usuarioId, cursoId })
     })
     .then(response => response.text())
     .then(data => console.log(data))
     .catch(error => console.error('Erro:', error));
-}
-
-// Adiciona o evento de clique a todos os botões com a classe 'card-button'
-document.querySelectorAll('.card-button').forEach(button => {
+    }
+    
+    // Adiciona o evento de clique a todos os botões com a classe 'card-button'
+    document.querySelectorAll('.card-button').forEach(button => {
     button.addEventListener('click', function() {
-        const cursoId = this.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
-        iniciarCurso( usuarioId , cursoId);
-        redirectToCourse(this);
+    const cursoId = this.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
+    iniciarCurso( usuarioId , cursoId);
+    redirectToCourse(this);
     });
-});
+    });
+    
+    async function handleLogout() {
+    if (confirm('Tem certeza que deseja sair?')) {
+    try {
+    const response = await fetch('/logout', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+    'Content-Type': 'application/json'
+    }
+    });
+    
+    if (response.ok) {
+    window.location.href = 'areaAluno.html';
+    } else {
+    throw new Error('Falha no logout');
+    }
+    } catch (error) {
+    console.error('Erro durante o logout:', error);
+    alert('Erro ao fazer logout. Por favor, tente novamente.');
+    }
+    }
+    }
+    
+    </script>
 
+<!--Email cadastrado para mensganes footer-->
+<script>
+    document.getElementById('form-newsletter').addEventListener('submit', function(event) {
+event.preventDefault();
+
+const email = document.getElementById('email-newsletter').value;
+
+fetch('/newsletter', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email: email })
+})
+.then(response => response.json())
+.then(data => {
+    if (data.success) {
+        alert('Email cadastrado com sucesso!');
+        document.getElementById('email-newsletter').value = '';
+    } else {
+        alert('Erro ao cadastrar e-mail: ' + data.message);
+    }
+})
+.catch(error => {
+    console.error('Erro ao cadastrar e-mail:', error);
+    alert('Erro ao cadastrar e-mail.');
+});
+});
 </script>
 
 <style>

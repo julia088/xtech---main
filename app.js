@@ -4,12 +4,17 @@ const connection = require('./db');
 const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
+const fs = require('fs');
+const { PDFDocument } = require('pdf-lib');
+const { rgb } = require('pdf-lib');
 
 const app = express();
 
 app.use(bodyParser.json({limit: '50mb'}));
+app.use(express.json());
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static('public'));
+
 
 // Configuração da sessão
 app.use(session({
@@ -37,11 +42,10 @@ const upload = multer({ storage: storage });
 
 // middleware para verificar autenticação em rotas protegidas
 function verificarAutenticacao(req, res, next) {
-    if (req.session.user) {
-        next(); // usuário autenticado, segue para a rota
-    } else {
-        res.redirect('/'); // redireciona para a página inicial se não estiver autenticado
+    if (!req.session.user) {
+        return res.status(403).send('Usuário não autenticado');
     }
+    next();
 }
 
 // rota inicial
@@ -95,6 +99,39 @@ app.post('/cadastro', (req, res) => {
     });
 });
 
+//rota de contato
+app.post('/contato', (req, res) => {
+    const { nome, email, telefone, mensagem } = req.body; 
+
+    if (!nome || !email || !mensagem) {
+        return res.status(400).send('Nome, email e mensagem são obrigatórios.');
+    }
+
+    const query = 'INSERT INTO contato (nome, email, telefone, mensagem) VALUES (?, ?, ?, ?)';
+    connection.query(query, [nome, email, telefone, mensagem], (err, result) => {
+        if (err) {
+            console.error('Erro ao salvar a mensagem de contato: ' + err.stack);
+            return res.status(500).send('Erro ao enviar a mensagem.');
+        }
+        res.status(201).send('Mensagem enviada com sucesso!');
+    });
+});
+
+//rota para enviar e-mail
+app.post('/newsletter', (req, res) => {
+    const { email } = req.body;
+
+    const query = 'INSERT INTO newsletter (email) VALUES (?)'; 
+
+    connection.query(query, [email], (err, result) => {
+        if (err) {
+            console.error('Erro ao inserir no banco de dados: ' + err.stack);
+            return res.status(500).send({ success: false, message: 'Erro ao cadastrar o e-mail.' });
+        }
+        res.status(201).send({ success: true, message: 'E-mail cadastrado com sucesso!' });
+    });
+});
+
 //rota protegida - portal do aluno
 app.get('/portalAluno', verificarAutenticacao, (req, res) => {
     res.sendFile(path.join(__dirname, 'public/portalAluno.html'));
@@ -114,6 +151,7 @@ app.post('/atualizarFoto', verificarAutenticacao, (req, res) => {
     });
 });
 
+//rota para verificar autenticação do usuário
 app.get('/getUserData', verificarAutenticacao, (req, res) => {
     const usuarioId = req.session.user.id;
 
@@ -135,6 +173,7 @@ app.get('/user', (req, res) => {
     }
 });
 
+//api para inicio do cursos, através da session do usuário e id do curso
 app.post('/api/iniciar-curso', async (req, res) => {
     try {
         const { usuarioId, cursoId } = req.body;
@@ -177,18 +216,6 @@ app.get('/api/curso/:id', (req, res) => {
     });
 });
 
-// rota para salvar formulário de contato
-app.post('/submit-form', (req, res) => {
-    const { nome, email, telefone, mensagem } = req.body;
-
-    const sql = 'INSERT INTO contato (nome, email, telefone, mensagem) VALUES (?, ?, ?, ?)';
-    connection.query(sql, [nome, email, telefone, mensagem], (err, result) => {
-        if (err) throw err;
-        console.log('Dados inseridos no banco');
-        res.send('Formulário enviado com sucesso!');
-    });
-});
-
 // rota para progresso (proteção incluída)
 app.get('/progresso', verificarAutenticacao, (req, res) => {
     const usuarioId = req.session.user.id;
@@ -204,6 +231,7 @@ app.get('/progresso', verificarAutenticacao, (req, res) => {
 
 // rota para avaliação
 app.post('/avaliacao', verificarAutenticacao, (req, res) => {
+    console.log('Dados recebidos:', req.body); // Adicione esta linha
     const { curso_id, rating } = req.body;
     const usuario_id = req.session.user.id;
 
@@ -278,6 +306,66 @@ app.post('/salvarProgresso', verificarAutenticacao, (req, res) => {
         } else {
             res.status(200).json({ message: 'Progresso já está atualizado' });
         }
+    });
+});
+
+// Função para gerar certificado PDF
+app.post('/gerar-certificado', verificarAutenticacao, async (req, res) => {
+    try {
+        const usuarioId = req.session.user.id;
+        const cursoId = req.body.cursoId;
+
+        // Verifica se o progresso é 100%
+        const query = 'SELECT progresso FROM progresso WHERE usuario_id = ? AND curso_id = ?';
+        connection.query(query, [usuarioId, cursoId], async (err, results) => {
+            if (err) {
+                return res.status(500).send('Erro ao verificar progresso');
+            }
+
+            const progresso = results[0].progresso;
+            if (progresso < 100) {
+                return res.status(400).send('Progresso do curso não atingiu 100%.');
+            }
+
+            // Criando o PDF
+            const pdfDoc = await PDFDocument.create();
+            const page = pdfDoc.addPage([600, 400]);
+            const { width, height } = page.getSize();
+            const font = await pdfDoc.embedFont(PDFDocument.Font.Helvetica);
+            const fontSize = 24;
+            const text = 'Certificado de Conclusão';
+            const userName = req.session.user.nome;
+
+            page.drawText(text, { x: width / 2 - 100, y: height - 100, size: 30, font });
+            page.drawText(`Este certificado é concedido a: ${userName}`, { x: width / 2 - 150, y: height - 150, size: fontSize, font });
+            
+            // Caminho para salvar o arquivo PDF
+            const pdfBytes = await pdfDoc.save();
+            const pdfPath = path.join(__dirname, 'public', 'certificados', `certificado_${usuarioId}_${cursoId}.pdf`);
+            fs.writeFileSync(pdfPath, pdfBytes);
+
+            res.status(200).json({
+                message: 'Certificado gerado com sucesso!',
+                downloadLink: `/certificados/certificado_${usuarioId}_${cursoId}.pdf`
+            });
+        });
+    } catch (error) {
+        console.error('Erro ao gerar certificado:', error);
+        res.status(500).send('Erro ao gerar certificado');
+    }
+});
+
+// Rota para servir o certificado gerado
+app.get('/certificados/:filename', (req, res) => {
+    const { filename } = req.params;
+    const filePath = path.join(__dirname, 'public', 'certificados', filename);
+
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            return res.status(404).send('Certificado não encontrado');
+        }
+
+        res.sendFile(filePath);
     });
 });
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Certificado</title>
+</head>
+<body>
+    <h2>Formulário de Certificado</h2>
+    <form id="certForm">
+        <!-- Botões ocultos inicialmente -->
+        <button type="button" data-curso-id="1" style="display:none;">Gerar Certificado HTML</button>
+        <button type="button" data-curso-id="2" style="display:none;">Gerar Certificado CSS</button>
+        <button type="button" data-curso-id="3" style="display:none;">Gerar Certificado JavaScript</button>
+        <button type="button" data-curso-id="4" style="display:none;">Gerar Certificado Python</button>
+        <button type="button" data-curso-id="5" style="display:none;">Gerar Certificado Ruby</button>
+        <button type="button" data-curso-id="6" style="display:none;">Gerar Certificado Git</button>
+        <button type="button" data-curso-id="7" style="display:none;">Gerar Certificado PHP</button>
+        <button type="button" data-curso-id="8" style="display:none;">Gerar Certificado SQL</button>
+        <button type="button" data-curso-id="9" style="display:none;">Gerar Certificado Crypto</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Função para verificar o progresso do curso
+            function verificarProgresso(cursoId) {
+                fetch('/progresso')  // Certifique-se que esse endpoint retorna o progresso do usuário
+                    .then(response => response.json())
+                    .then(data => {
+                        const progressoCurso = data.find(item => item.curso_id === parseInt(cursoId));
+                        if (progressoCurso && progressoCurso.progresso === 100) {
+                            document.querySelector(`button[data-curso-id="${cursoId}"]`).style.display = 'inline-block';
+                        } else {
+                            document.querySelector(`button[data-curso-id="${cursoId}"]`).style.display = 'none';
+                        }
+                    })
+                    .catch(error => console.error('Erro ao verificar progresso:', error));
+            }
+
+            // Verificar progresso para cada curso
+            const cursoIds = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            cursoIds.forEach(cursoId => verificarProgresso(cursoId));
+
+            // Evento para gerar certificado ao clicar
+            document.getElementById('certForm').addEventListener('click', function(e) {
+                if (e.target.tagName === 'BUTTON') {
+                    const cursoId = e.target.getAttribute('data-curso-id');
+                    
+                    fetch('/gerar-certificado', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ cursoId: cursoId })
+                    })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = `certificado_${cursoId}.pdf`;
+                        link.click();
+                    })
+                    .catch(error => {
+                        alert("Erro ao gerar o certificado. " + error);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+<style>
+    body {
+        font-family: 'Helvetica', sans-serif;
+    }
+</style>
+</html>
