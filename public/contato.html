@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <!--Main-->
+    <!--Main/Formulário de Contato-->
     <main>
         <section class="formulario">
             <div class="interface">
@@ -102,6 +102,16 @@
                         <input type="submit" value="ENVIAR"
                     </div>
                 </form>
+
+                    <input type="text" name="nome" id="nome" placeholder="Seu nome completo:" required>
+                    <input type="email" name="email" id="email" placeholder="Seu e-mail:" required>
+                    <input type="tel" name="telefone" id="telefone" placeholder="Seu telefone:">
+                    <textarea name="mensagem" id="mensagem" placeholder="Sua mensagem é:" required></textarea>
+                    <div class="btn-enviar">
+                        <input type="submit" value="ENVIAR" class="btn-contato">
+                    </div>
+                </form>                              
+
             </div>
         </section>
     </main>
@@ -112,10 +122,17 @@
                 <h2>Quer receber atualizações sobre os cursos?</h2>
                 <p>Digite o seu e-mail abaixo para notificarmos</p>
                 <form id="form-newsletter">
+<<<<<<< HEAD
                     <input type="email" name="email" id="email-newsletter" required placeholder="Digite seu e-mail">
                     <input type="submit" value="Cadastrar">
                 </form>
             </div>   
+=======
+                    <input type="email" name="email" id="email-newsletter" required placeholder="Seu e-mail">
+                    <input type="submit" value="Cadastrar" type="submit">
+                </form>                
+            </div>
+>>>>>>> 05a860118717a40e374ffa15e7d7984f5051229b
 
             <div class="line-footer2">
                 <div class="box-line-footer">
@@ -204,10 +221,13 @@
         })
         .catch(error => console.error('Erro:', error));
     });
-
     </script>
 
+<<<<<<< HEAD
     <!--Contato-->
+=======
+<!--Contato-->
+>>>>>>> 05a860118717a40e374ffa15e7d7984f5051229b
     <script>
         document.querySelector('.contact-form').addEventListener('submit', function(e) {
        e.preventDefault();
@@ -267,7 +287,11 @@
    });
 });
    </script>
+<<<<<<< HEAD
    
+=======
+
+>>>>>>> 05a860118717a40e374ffa15e7d7984f5051229b
     <script src="login.js"></script>
 
 <style>
@@ -471,6 +495,7 @@ form .submit-form input{
     margin: 0 auto;
 }
 
+/*rodapé*/
 footer{
     background-color: rgb(33, 61, 143);
     color: white;
