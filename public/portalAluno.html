@@ -13,14 +13,14 @@
         <div id="menu-content">
             <div id="user">
             <a href="perfilAluno.html">
-                <img id="profilePic" alt="Foto de Perfil">
+                <img src="profile-picture.jpg" alt="Foto de Perfil" id="profilePic">
             </a>
             </div>
             <ul id="side-items">
                 <li class="item-menu active">
                     <a href="areaAluno.html">
                         <span class="icon"><i class="bi bi-house-door"></i></span>
-                        <span class="item-description">Home</span>
+                        <span class="item-description" onclick="handleLogout()">Home</span>
                     </a>
                 </li>
      
@@ -47,7 +47,7 @@
         <div id="logout">
             <button id="logout-btn">
                 <i class="bi bi-box-arrow-left"></i>
-                <span class="item-description" onclic="handleLogout()">Logout</span>
+                <span class="item-description" onclick="handleLogout()">Logout</span>
             </button>
         </div>
     </nav>
@@ -55,7 +55,7 @@
      <!-- Seção de Conteúdo Principal -->
      <main id="main-content">
         <div class="main-titulo">
-        <h1>Bem-vindo ao Portal do Aluno!</h1>
+        <h1><span id="userName">Usuário</span>, Bem-vindo(a) ao Portal do Aluno!</h1>
         <p>Esteja por dentro do seu progresso em nossos cursos!</p>
         </div>
         <br><br><br>
@@ -223,80 +223,102 @@
     </main>
 
 </body>
+
+<!--Funções de foto, curso e logoutS-->
 <script>
     document.getElementById('open-btn').addEventListener('click', function(){
     document.getElementById('menu-lateral').classList.toggle('open-menu');
-    });
-    
-    window.onload = function() {
-    const profilePic = localStorage.getItem('profilePic');
-    if (profilePic) {
-    document.getElementById('profilePic').src = profilePic;
-    } else {
-    document.getElementById('profilePic').src = 'img/default.jpg'; // Use a extensão correta
-    }
-    }
-    
-    function redirectToCourse(button) {
+});
+
+window.onload = function() {
+    // Faz uma requisição ao backend para obter os dados do usuário logado
+    fetch('/user')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Usuário não autenticado');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Define o caminho da imagem de perfil; usa default se profilePic não estiver disponível
+            const profilePicPath = data.profilePic ? `img/${data.profilePic}` : 'img/default.jpg';
+            const profilePicElement = document.getElementById('profilePic');
+        
+            document.getElementById('userName').textContent = data.nome || 'Usuário';
+
+            // Define o caminho da imagem no elemento
+            profilePicElement.src = profilePicPath;
+
+            // Garante que o elemento seja visível
+            profilePicElement.style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Erro ao carregar os dados do usuário:', error);
+            // Define uma imagem padrão caso ocorra um erro
+            document.getElementById('profilePic').src = 'img/default.jpg';
+            document.getElementById('userName').textContent = 'Usuário';
+        });
+};
+
+function redirectToCourse(button) {
     // Captura o cursoId e o data-url do botão clicado
     const cursoId = button.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
     const url = button.getAttribute('data-url');
     
     // Redireciona para a página do curso com o cursoId como parâmetro
     window.location.href = `${url}?cursoId=${cursoId}`;
-    }
-    
-    // Adiciona o evento de clique a todos os botões com a classe 'card-button'
-    document.querySelectorAll('.card-button').forEach(button => {
+}
+
+// Adiciona o evento de clique a todos os botões com a classe 'card-button'
+document.querySelectorAll('.card-button').forEach(button => {
     button.addEventListener('click', function() {
-    redirectToCourse(this);
+        redirectToCourse(this);
     });
-    });
-    
-    function iniciarCurso(usuarioId, cursoId) {
+});
+
+function iniciarCurso(usuarioId, cursoId) {
     fetch('/api/iniciar-curso', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ usuarioId, cursoId })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuarioId, cursoId })
     })
     .then(response => response.text())
     .then(data => console.log(data))
     .catch(error => console.error('Erro:', error));
-    }
-    
-    // Adiciona o evento de clique a todos os botões com a classe 'card-button'
-    document.querySelectorAll('.card-button').forEach(button => {
+}
+
+// Adiciona o evento de clique a todos os botões com a classe 'card-button'
+document.querySelectorAll('.card-button').forEach(button => {
     button.addEventListener('click', function() {
-    const cursoId = this.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
-    iniciarCurso( usuarioId , cursoId);
-    redirectToCourse(this);
+        const cursoId = this.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
+        iniciarCurso( usuarioId , cursoId);
+        redirectToCourse(this);
     });
-    });
-    
-    async function handleLogout() {
+});
+
+async function handleLogout() {
     if (confirm('Tem certeza que deseja sair?')) {
-    try {
-    const response = await fetch('/logout', {
-    method: 'POST',
-    credentials: 'include',
-    headers: {
-    'Content-Type': 'application/json'
+        try {
+            const response = await fetch('/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                window.location.href = 'areaAluno.html';
+            } else {
+                throw new Error('Falha no logout');
+            }
+        } catch (error) {
+            console.error('Erro durante o logout:', error);
+            alert('Erro ao fazer logout. Por favor, tente novamente.');
+        }
     }
-    });
-    
-    if (response.ok) {
-    window.location.href = 'areaAluno.html';
-    } else {
-    throw new Error('Falha no logout');
-    }
-    } catch (error) {
-    console.error('Erro durante o logout:', error);
-    alert('Erro ao fazer logout. Por favor, tente novamente.');
-    }
-    }
-    }
-    
-    </script>
+}
+</script>
 
 <!--Email cadastrado para mensganes footer-->
 <script>
@@ -354,7 +376,7 @@ fetch('/newsletter', {
         flex-direction: column;
         justify-content: space-between;
         background-color: white;
-        height: 186.5vh;
+        height: 105vh;
         border-radius: 0px 18px ;
         position:relative;
         transition: all .5s;
@@ -769,14 +791,11 @@ color: #4687ff;
 }
 
 #profilePic {
-    width: 150px; /* Defina a largura desejada */
-    height: 150px; /* Defina a altura desejada */
-    object-fit: cover; /* Ajuste para manter a proporção e preencher o container */
-    border-radius: 50%; /* Torna a imagem circular */
-    display: block;
-    margin: 0 auto; /* Centraliza a imagem horizontalmente */
-    max-width: 100%;
-    height: auto;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+   margin-bottom: 15px;
 }
 
 </style>

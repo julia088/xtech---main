@@ -4,13 +4,18 @@ const connection = require('./db');
 const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
+const fs = require('fs');
+const { promisify } = require('util');
+const pdf = require('html-pdf');  // Instale a biblioteca 'html-pdf'
+const certificadoPath = path.join(__dirname, 'img', 'certificado_1.png');
 
 const app = express();
 
-app.use(bodyParser.json({limit: '50mb'}));
 app.use(express.json());
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static('public'));
+app.use('/img', express.static(path.join(__dirname, 'img')));
 
 
 // Configuração da sessão
@@ -26,23 +31,39 @@ app.use(session({
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, 'public', 'img')); // Pasta onde a imagem será armazenada
+        cb(null, path.join(__dirname, 'public', 'img')); 
     },
     filename: (req, file, cb) => {
         const userId = req.session.user.id;
         const ext = path.extname(file.originalname);
-        cb(null, `profile_${userId}${ext}`); // Nome do arquivo (ex: profile_1.jpg)
+        cb(null, `profile_${userId}${ext}`);
     }
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB
+    },
+    fileFilter: function (req, file, cb) {
+        const filetypes = /jpeg|jpg|png|gif/;
+        const mimetype = filetypes.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+        if (mimetype && extname) {
+            return cb(null, true);
+        }
+        cb(new Error('Apenas imagens são permitidas!'));
+    }
+});
 
 // middleware para verificar autenticação em rotas protegidas
 function verificarAutenticacao(req, res, next) {
-    if (!req.session.user) {
-        return res.status(403).send('Usuário não autenticado');
+    if (req.session.user) {
+        next(); // usuário autenticado, segue para a rota
+    } else {
+        res.redirect('/'); // redireciona para a página inicial se não estiver autenticado
     }
-    next();
 }
 
 // rota inicial
@@ -73,94 +94,6 @@ app.post('/login', (req, res) => {
     });
 });
 
-// Rota para gerar o certificado em PDF
-app.post('/gerar-certificado', verificarAutenticacao, async (req, res) => {
-    const { cursoId } = req.body; // Recebe o cursoId do frontend
-    const email = req.session.user.email;
-
-    if (!email) {
-        return res.status(400).send('Email não encontrado na sessão');
-    }
-
-    // Consulta SQL para buscar o nome do usuário
-    const query = 'SELECT nome FROM usuario WHERE email = ?';
-    connection.query(query, [email], async (err, results) => {
-        if (err) {
-            console.error('Erro ao consultar o banco de dados:', err);
-            return res.status(500).send('Erro ao consultar o banco de dados');
-        }
-
-        if (results.length === 0) {
-            return res.status(400).send('Usuário não encontrado.');
-        }
-
-        const nome = results[0].nome;
-
-        try {
-            // Escolhe o caminho do PDF com base no cursoId
-            const cursoModelos = {
-                1: 'certificado_html.pdf',
-                2: 'certificado_css.pdf',
-                3: 'certificado_js.pdf',
-                4: 'certificado_python.pdf',
-                5: 'certificado_ruby.pdf',
-                6: 'certificado_git.pdf',
-                7: 'certificado_php.pdf',
-                8: 'certificado_sql.pdf',
-                9: 'certificado_crypto.pdf'
-            };
-
-            const modeloCertificado = cursoModelos[cursoId];
-
-            if (!modeloCertificado) {
-                return res.status(400).send('Modelo de certificado não encontrado para o curso');
-            }
-
-            const pdfPath = path.join(__dirname, 'public', 'img', modeloCertificado);
-
-            // Lê o arquivo PDF do modelo
-            const pdfBytes = await fs.promises.readFile(pdfPath);
-
-            // Carregar o PDF usando pdf-lib
-            const pdfDoc = await PDFDocument.load(pdfBytes);
-
-            // Obter a primeira página do PDF
-            const pagina = pdfDoc.getPages()[0];
-
-            // Embutir a fonte Helvetica corretamente
-            const fonte = await pdfDoc.embedFont(PDFDocument.StandardFonts.Helvetica, { subset: 'latin' });
-
-            // Definir as coordenadas e tamanho da fonte
-            const tamanhoFonte = 18;
-            const campo1 = { x: 200, y: 400, text: nome };
-
-            // Inserir o nome no PDF
-            pagina.drawText(campo1.text, {
-                x: campo1.x,
-                y: campo1.y,
-                size: tamanhoFonte,
-                font: fonte,
-                color: rgb(0, 0, 0), // Cor preta
-            });
-
-            // Gerar o PDF modificado
-            const pdfBytesModificado = await pdfDoc.save();
-
-            // Enviar o PDF gerado como resposta
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `attachment; filename=certificado_${nome}.pdf`);
-            res.send(Buffer.from(pdfBytesModificado));
-
-        } catch (error) {
-            console.error('Erro ao gerar certificado:', error);
-            res.status(500).send('Erro ao gerar certificado');
-        }
-    });
-});
-
-
-
-
 // rota de cadastro
 app.post('/cadastro', (req, res) => {
     const { nome, email, senha, profilePic } = req.body;
@@ -184,30 +117,118 @@ app.post('/cadastro', (req, res) => {
     });
 });
 
+// Rota para enviar contato
+app.post('/contato', (req, res) => {
+    const { nome, email, telefone, mensagem } = req.body;
+
+    // Verificar se todos os campos foram preenchidos
+    if (!nome || !email || !telefone || !mensagem) {
+        return res.json({ success: false, message: 'Todos os campos são obrigatórios.' });
+    }
+
+    // Inserir os dados de contato no banco de dados
+    connection.query(
+        'INSERT INTO contato (nome, email, telefone, mensagem) VALUES (?, ?, ?, ?)', 
+        [nome, email, telefone, mensagem], 
+        (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.json({ success: false, message: 'Erro ao enviar a mensagem.' });
+            }
+
+            // Caso a inserção seja bem-sucedida
+            res.json({ success: true, message: 'Mensagem enviada com sucesso!' });
+        }
+    );
+});
+
+// Rota para cadastrar e-mail na newsletter
+app.post('/newsletter', (req, res) => {
+    const { email } = req.body;
+
+    // Verificar se o campo e-mail foi preenchido
+    if (!email) {
+        return res.json({ success: false, message: 'O campo de e-mail é obrigatório.' });
+    }
+
+    // Verificar se o e-mail já está cadastrado na tabela newsletter
+    connection.query('SELECT * FROM newsletter WHERE email = ?', [email], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.json({ success: false, message: 'Erro ao verificar e-mail.' });
+        }
+
+        if (results.length > 0) {
+            // E-mail já cadastrado
+            return res.json({ success: false, message: 'Este e-mail já está cadastrado.' });
+        }
+
+        // Caso o e-mail não exista, insere na tabela newsletter
+        connection.query('INSERT INTO newsletter (email) VALUES (?)', [email], (err, results) => {
+            if (err) {
+                console.error(err);
+                return res.json({ success: false, message: 'Erro ao cadastrar e-mail.' });
+            }
+
+            // E-mail cadastrado com sucesso
+            res.json({ success: true, message: 'E-mail cadastrado com sucesso!' });
+        });
+    });
+});
+
+//rota para atulizar o perfil do usuário
+app.post('/atualizarPerfil', verificarAutenticacao, (req, res) => {
+    const { nome, email, senha } = req.body;
+    const userId = req.session.user.id;
+
+    // atualiza os dados no banco de dados
+    const query = 'UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE id = ?';
+    connection.query(query, [nome, email, senha, userId], (err) => {
+        if (err) {
+            console.error('Erro ao atualizar perfil:', err);
+            return res.status(500).json({ message: 'Erro ao atualizar perfil' });
+        }
+        res.json({ message: 'Perfil atualizado com sucesso!' });
+    });
+});
+
 //rota protegida - portal do aluno
 app.get('/portalAluno', verificarAutenticacao, (req, res) => {
     res.sendFile(path.join(__dirname, 'public/portalAluno.html'));
 });
 
-app.post('/atualizarFoto', verificarAutenticacao, (req, res) => {
-    const usuarioId = req.session.user.id;
-    const profilePic = req.body.profilePic; // O caminho ou a URL da nova foto
+// Rota para atualizar a senha do usuário
+app.post('/atualizarSenha', (req, res) => {
+    const { email, newPassword } = req.body;
 
-    const query = 'UPDATE usuario SET profilePic = ? WHERE id = ?';
-    connection.query(query, [profilePic, usuarioId], (err, results) => {
-        if (err) {
-            console.error('Erro ao atualizar foto:', err);
-            return res.status(500).json({ message: 'Erro ao atualizar foto' });
+    // Usando Promises em vez de await
+    connection.query('SELECT * FROM usuario WHERE email = ?', [email], (error, results) => {
+        if (error) {
+            console.error(error);
+            return res.json({ success: false, message: 'Erro ao verificar o usuário.' });
         }
-        res.status(200).json({ message: 'Foto atualizada com sucesso!' });
+
+        if (results.length > 0) {
+            // Atualizar a senha no banco de dados
+            connection.query('UPDATE usuario SET senha = ? WHERE email = ?', [newPassword, email], (error, results) => {
+                if (error) {
+                    console.error(error);
+                    return res.json({ success: false, message: 'Erro ao atualizar a senha.' });
+                }
+
+                res.json({ success: true });
+            });
+        } else {
+            res.json({ success: false, message: 'Usuário não encontrado.' });
+        }
     });
 });
 
-//rota para verificar autenticação do usuário
+//rota para bd
 app.get('/getUserData', verificarAutenticacao, (req, res) => {
     const usuarioId = req.session.user.id;
 
-    const query = 'SELECT nome, email, telefone, foto FROM usuario WHERE id = ?';
+    const query = 'SELECT nome, email, senha, profilePic FROM usuario WHERE id = ?';
     connection.query(query, [usuarioId], (err, results) => {
         if (err) {
             return res.status(500).json({ message: 'Erro ao buscar dados do usuário' });
@@ -216,13 +237,21 @@ app.get('/getUserData', verificarAutenticacao, (req, res) => {
     });
 });
 
-
-app.get('/user', (req, res) => {
-    if (req.session.user) {
-        res.json(req.session.user);
-    } else {
-        res.status(401).json({ message: 'Usuário não autenticado' });
-    }
+//rota protegida para o usuario
+app.get('/user', verificarAutenticacao, (req, res) => {
+    const userId = req.session.user.id;
+    
+    const query = 'SELECT nome, email, senha, profilePic FROM usuario WHERE id = ?';
+    connection.query(query, [userId], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Erro ao buscar dados do usuário' });
+        }
+        if (results.length > 0) {
+            res.json(results[0]);
+        } else {
+            res.status(404).json({ message: 'Usuário não encontrado' });
+        }
+    });
 });
 
 //api para inicio do cursos, através da session do usuário e id do curso
@@ -361,63 +390,68 @@ app.post('/salvarProgresso', verificarAutenticacao, (req, res) => {
     });
 });
 
-// Função para gerar certificado PDF
-app.post('/gerar-certificado', verificarAutenticacao, async (req, res) => {
+//atualizar imagem
+app.post('/upload-profile-image', verificarAutenticacao, upload.single('profilePic'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'Nenhum arquivo foi enviado' });
+    }
+
     try {
-        const usuarioId = req.session.user.id;
-        const cursoId = req.body.cursoId;
+        const userId = req.session.user.id;
+        const imagePath = req.file.filename;
 
-        // Verifica se o progresso é 100%
-        const query = 'SELECT progresso FROM progresso WHERE usuario_id = ? AND curso_id = ?';
-        connection.query(query, [usuarioId, cursoId], async (err, results) => {
+        const query = 'UPDATE usuario SET profilePic = ? WHERE id = ?';
+        connection.query(query, [imagePath, userId], (err) => {
             if (err) {
-                return res.status(500).send('Erro ao verificar progresso');
+                console.error('Erro ao atualizar foto de perfil no banco:', err);
+                return res.status(500).json({ message: 'Erro ao atualizar foto' });
             }
-
-            const progresso = results[0].progresso;
-            if (progresso < 100) {
-                return res.status(400).send('Progresso do curso não atingiu 100%.');
-            }
-
-            // Criando o PDF
-            const pdfDoc = await PDFDocument.create();
-            const page = pdfDoc.addPage([600, 400]);
-            const { width, height } = page.getSize();
-            const font = await pdfDoc.embedFont(PDFDocument.Font.Helvetica);
-            const fontSize = 24;
-            const text = 'Certificado de Conclusão';
-            const userName = req.session.user.nome;
-
-            page.drawText(text, { x: width / 2 - 100, y: height - 100, size: 30, font });
-            page.drawText(`Este certificado é concedido a: ${userName}`, { x: width / 2 - 150, y: height - 150, size: fontSize, font });
-            
-            // Caminho para salvar o arquivo PDF
-            const pdfBytes = await pdfDoc.save();
-            const pdfPath = path.join(__dirname, 'public', 'certificados', `certificado_${usuarioId}_${cursoId}.pdf`);
-            fs.writeFileSync(pdfPath, pdfBytes);
-
-            res.status(200).json({
-                message: 'Certificado gerado com sucesso!',
-                downloadLink: `/certificados/certificado_${usuarioId}_${cursoId}.pdf`
+            res.json({
+                message: 'Imagem atualizada com sucesso!',
+                filename: imagePath
             });
         });
     } catch (error) {
-        console.error('Erro ao gerar certificado:', error);
-        res.status(500).send('Erro ao gerar certificado');
+        console.error('Erro no upload de imagem:', error);
+        res.status(500).json({ message: 'Erro no upload de imagem' });
     }
 });
 
-// Rota para servir o certificado gerado
-app.get('/certificados/:filename', (req, res) => {
-    const { filename } = req.params;
-    const filePath = path.join(__dirname, 'public', 'certificados', filename);
+//rota para imprimir e baixar o certificado
+  app.post('/gerar-certificado', verificarAutenticacao, (req, res) => {
+    const { cursoId } = req.body;
+    const usuarioId = req.session.user.id; // Obtendo o ID do usuário logado
 
-    fs.access(filePath, fs.constants.F_OK, (err) => {
+    // Você pode criar um template HTML para o certificado e preencher os dados do aluno
+    const certificadoHTML = `
+        <html>
+        <head>
+            <style>
+                /* Estilos para o certificado */
+                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                h1 { color: #4CAF50; }
+                .content { margin-top: 30px; font-size: 1.2em; }
+            </style>
+        </head>
+        <body>
+            <h1>Certificado de Conclusão</h1>
+            <div class="content">
+                <p>Este certificado atesta que <strong>${req.session.user.nome}</strong> concluiu com sucesso o curso <strong>${cursoId}</strong>.</p>
+                <p>Data: ${new Date().toLocaleDateString()}</p>
+            </div>
+        </body>
+        </html>
+    `;
+
+    // Gerando o PDF com html-pdf
+    pdf.create(certificadoHTML).toBuffer((err, buffer) => {
         if (err) {
-            return res.status(404).send('Certificado não encontrado');
+            return res.status(500).json({ message: 'Erro ao gerar certificado.' });
         }
 
-        res.sendFile(filePath);
+        // Retorna o PDF como um arquivo para download
+        res.type('pdf');
+        res.send(buffer);
     });
 });
 

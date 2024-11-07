@@ -44,7 +44,7 @@
                 </div>
                 <div class="lembrar-esquecer">
                     <label><input type="checkbox"> Lembrar-me</label>
-                    <a href="#">Esqueceu sua senha?</a>
+                    <a href="#" class="update-link">Esqueceu sua senha?</a>
                 </div>
                 <button type="submit" class="btn">Login</button>
                 <div class="login-register">
@@ -86,6 +86,31 @@
                 </div>
             </form>
         </div>
+
+        <div class="form-box update">
+            <h2>Atualizar senha</h2>
+            <form id="updatePasswordForm">
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="mail"></ion-icon></span>
+                    <input type="email" id="updateEmail" required>
+                    <label>Email</label>
+                </div>
+        
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="lock"></ion-icon></span>
+                    <input type="password" id="newPassword" required>
+                    <label>Nova Senha</label>
+                </div>
+        
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="lock"></ion-icon></span>
+                    <input type="password" id="confirmPassword" required>
+                    <label>Confirmar Nova Senha</label>
+                </div>
+                <button type="submit" class="btn">Atualizar Senha</button>
+            </form>
+        </div>        
+
     </div>
 </div>
 
@@ -361,6 +386,43 @@
        console.error('Erro ao cadastrar e-mail:', error);
        alert('Erro ao cadastrar e-mail.');
    });
+});
+   </script>
+
+<!--Atualizar senha do usuário no banco/fetch para rota-->
+   <script>
+   document.getElementById('updatePasswordForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById('updateEmail').value;
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (newPassword !== confirmPassword) {
+        alert("As senhas não coincidem. Tente novamente.");
+        return;
+    }
+
+    // Enviar a solicitação de atualização de senha
+    fetch('/atualizarSenha', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, newPassword })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert("Senha atualizada com sucesso!");
+            window.location.href = 'areaAluno.html';
+        } else {
+            alert(data.message); 
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+    });
 });
    </script>
 

@@ -3,74 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerar Certificado</title>
+    <title>Certificado de Conclusão</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .cert-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            margin: 10px;
+            cursor: pointer;
+            display: none; /* Initially hidden */
+        }
+
+        .cert-button:hover {
+            background-color: #45a049;
+        }
+
+        .loading {
+            font-size: 1rem;
+            color: #666;
+            display: none;
+        }
+
+        .info-text {
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .info-text a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .info-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <h2>Formulário de Certificado</h2>
-    <form id="certForm">
-        <!-- Botões ocultos inicialmente -->
-        <button type="button" data-curso-id="1" style="display:none;">Gerar Certificado HTML</button>
-        <button type="button" data-curso-id="2" style="display:none;">Gerar Certificado CSS</button>
-        <button type="button" data-curso-id="3" style="display:none;">Gerar Certificado JavaScript</button>
-        <button type="button" data-curso-id="4" style="display:none;">Gerar Certificado Python</button>
-        <button type="button" data-curso-id="5" style="display:none;">Gerar Certificado Ruby</button>
-        <button type="button" data-curso-id="6" style="display:none;">Gerar Certificado Git</button>
-        <button type="button" data-curso-id="7" style="display:none;">Gerar Certificado PHP</button>
-        <button type="button" data-curso-id="8" style="display:none;">Gerar Certificado SQL</button>
-        <button type="button" data-curso-id="9" style="display:none;">Gerar Certificado Crypto</button>
-    </form>
+    <div class="container">
+        <h2>Formulário de Certificado</h2>
+        <form id="certForm">
+            <button type="button" class="cert-button" data-curso-id="1">Gerar Certificado HTML</button>
+            <button type="button" class="cert-button" data-curso-id="2">Gerar Certificado CSS</button>
+            <button type="button" class="cert-button" data-curso-id="3">Gerar Certificado JavaScript</button>
+            <button type="button" class="cert-button" data-curso-id="4">Gerar Certificado Pyhton</button>
+            <button type="button" class="cert-button" data-curso-id="5">Gerar Certificado Ruby</button>
+            <button type="button" class="cert-button" data-curso-id="6">Gerar Certificado Git</button>
+            <button type="button" class="cert-button" data-curso-id="7">Gerar Certificado SQL</button>
+            <button type="button" class="cert-button" data-curso-id="8">Gerar Certificado PHP</button>
+            <button type="button" class="cert-button" data-curso-id="9">Gerar Certificado Crypto</button>
+
+        </form>
+        <div class="info-text">
+            <p>Após completar o curso, clique no botão correspondente para gerar seu certificado.</p>
+        </div>
+        <div class="loading" id="loadingMessage">Verificando progresso, por favor, aguarde...</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Função para verificar o progresso do curso
-            function verificarProgresso(cursoId) {
-                fetch('/progresso')  // Certifique-se que esse endpoint retorna o progresso do usuário
-                    .then(response => response.json())
-                    .then(data => {
-                        const progressoCurso = data.find(item => item.curso_id === parseInt(cursoId));
-                        if (progressoCurso && progressoCurso.progresso === 100) {
-                            document.querySelector(`button[data-curso-id="${cursoId}"]`).style.display = 'inline-block';
-                        } else {
-                            document.querySelector(`button[data-curso-id="${cursoId}"]`).style.display = 'none';
-                        }
-                    })
-                    .catch(error => console.error('Erro ao verificar progresso:', error));
+    const loadingMessage = document.getElementById('loadingMessage');
+    const certForm = document.getElementById('certForm');
+
+    // Função para verificar o progresso do curso
+    async function verificarProgresso(cursoId) {
+        loadingMessage.style.display = 'block';  // Exibe mensagem de carregamento
+        try {
+            const response = await fetch('/progresso');  // Endpoint para pegar o progresso do usuário
+            const data = await response.json();
+            const progressoCurso = data.find(item => item.curso_id === parseInt(cursoId));
+            const button = document.querySelector(`button[data-curso-id="${cursoId}"]`);
+            
+            if (progressoCurso && progressoCurso.progresso === 100) {
+                button.style.display = 'inline-block';  // Exibe o botão se o progresso for 100%
+            } else {
+                button.style.display = 'none';  // Esconde o botão se o progresso não for 100%
             }
+        } catch (error) {
+            console.error('Erro ao verificar progresso:', error);
+        } finally {
+            loadingMessage.style.display = 'none';
+        }
+    }
 
-            // Verificar progresso para cada curso
-            const cursoIds = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-            cursoIds.forEach(cursoId => verificarProgresso(cursoId));
+    // Verificar progresso para cada curso
+    const cursoIds = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    cursoIds.forEach(cursoId => verificarProgresso(cursoId));
 
-            // Evento para gerar certificado ao clicar
-            document.getElementById('certForm').addEventListener('click', function(e) {
-                if (e.target.tagName === 'BUTTON') {
-                    const cursoId = e.target.getAttribute('data-curso-id');
-                    
-                    fetch('/gerar-certificado', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ cursoId: cursoId })
-                    })
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const link = document.createElement('a');
-                        link.href = URL.createObjectURL(blob);
-                        link.download = `certificado_${cursoId}.pdf`;
-                        link.click();
-                    })
-                    .catch(error => {
-                        alert("Erro ao gerar o certificado. " + error);
-                    });
-                }
-            });
-        });
+    // Evento para gerar certificado ao clicar
+    certForm.addEventListener('click', async function(e) {
+        if (e.target.tagName === 'BUTTON') {
+            const cursoId = e.target.getAttribute('data-curso-id');
+            
+            try {
+                const response = await fetch('/gerar-certificado', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cursoId: cursoId })
+                });
+
+                const blob = await response.blob();
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `certificado_${cursoId}.pdf`;
+                link.click();
+            } catch (error) {
+                alert("Erro ao gerar o certificado. " + error);
+            }
+        }
+    });
+});
     </script>
 </body>
-<style>
-    body {
-        font-family: 'Helvetica', sans-serif;
-    }
-</style>
 </html>

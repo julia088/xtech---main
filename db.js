@@ -13,6 +13,6 @@ connection.connect((err) => {
         return;
     }
    
-    console.log('Conectado ao bando de dados MySQL.');
+    console.log('Conectado ao banco de dados MySQL.');
 });
 module.exports = connection;
