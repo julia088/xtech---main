@@ -427,17 +427,117 @@ app.post('/upload-profile-image', verificarAutenticacao, upload.single('profileP
         <html>
         <head>
             <style>
-                /* Estilos para o certificado */
-                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-                h1 { color: #4CAF50; }
-                .content { margin-top: 30px; font-size: 1.2em; }
+                @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+                body {
+                    font-family: 'Roboto', sans-serif;
+                    background-color: #f4f6f9;
+                    margin: 0;
+                    padding: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                    text-align: center;
+                }
+
+                .container {
+                    background-color: #ffffff;
+                    padding: 40px;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                    width: 100%;
+                    max-width: 600px;
+                    text-align: center;
+                    position: relative;
+                    box-sizing: border-box;
+                }
+
+                h2 {
+                    color: #333;
+                    font-size: 2.2rem;
+                    font-weight: 700;
+                    margin-bottom: 30px;
+                }
+
+                .certificado-info {
+                    font-size: 1.4rem;
+                    color: #333;
+                    margin-bottom: 25px;
+                    line-height: 1.6;
+                }
+
+                .certificado-info strong {
+                    color: #4CAF50;
+                    font-weight: 700;
+                }
+
+                .info-text {
+                    font-size: 1.1rem;
+                    color: #666;
+                    margin-top: 30px;
+                    line-height: 1.5;
+                }
+
+                .signature {
+                    font-size: 1.2rem;
+                    margin-top: 40px;
+                    text-align: left;
+                    font-style: italic;
+                    color: #333;
+                }
+
+                .footer {
+                    position: absolute;
+                    bottom: 20px;
+                    width: 100%;
+                    text-align: center;
+                    font-size: 1rem;
+                    color: #999;
+                }
+
+                .logo {
+                    width: 100px;
+                    height: auto;
+                    margin-bottom: 30px;
+                }
+
+                .date {
+                    font-size: 1rem;
+                    color: #666;
+                    margin-top: 20px;
+                }
+
+                /* Estilo para a borda do certificado */
+                .certificate-border {
+                    border: 5px solid #4CAF50;
+                    padding: 20px;
+                    border-radius: 12px;
+                    margin-bottom: 20px;
+                }
+
             </style>
         </head>
         <body>
-            <h1>Certificado de Conclusão</h1>
-            <div class="content">
-                <p>Este certificado atesta que <strong>${req.session.user.nome}</strong> concluiu com sucesso o curso <strong>${cursoId}</strong>.</p>
-                <p>Data: ${new Date().toLocaleDateString()}</p>
+            <div class="container">
+                <div class="certificate-border">
+                    <h2>Certificado de Conclusão</h2>
+                    <div class="certificado-info">
+                        <p>Certificamos que <strong>${req.session.user.nome}</strong></p>
+                        <p>concluiu com sucesso o curso de <strong>${cursoId}</strong></p>
+                        <p> na intituição CAPS - Centro de Aprendizado de Programação e Sistemas.</p>
+                        <p class="date">Data de Conclusão: ${new Date().toLocaleDateString()}</p>
+                    </div>
+
+                    <div class="info-text">
+                        <p>Este certificado é válido para fins educacionais e comprova a conclusão do curso mencionado.</p>
+                    </div>
+                </div>
+
+                <!-- Rodapé com informações adicionais -->
+                <div class="footer">
+                    <p>Emitido pelo CAPS - Centro de Aprendizado de Programação e Sistemas</p>
+                </div>
             </div>
         </body>
         </html>
