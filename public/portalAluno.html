@@ -54,6 +54,13 @@
 
      <!-- Seção de Conteúdo Principal -->
      <main id="main-content">
+
+        
+        <button onclick="mentoriaOnline()">Solicitar mentoria online</button>
+        <button onclick="eventos()">Acesso a eventos</button>
+        <button onclick="cursosCapacitacao()">Cursos de Capacitação</button>
+        <button onclick="modelagemNegocios()">Modelagem de Negócios</button>
+
         <div class="main-titulo">
         <h1><span id="userName">Usuário</span>, Bem-vindo(a) ao Portal do Aluno!</h1>
         <p>Esteja por dentro do seu progresso em nossos cursos!</p>
@@ -124,6 +131,7 @@
                 <div class="swiper-slide-button swiper-button-next"></div>
             </div>
         </div>
+
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="card.js"></script>
         <br>
@@ -148,7 +156,7 @@
                 <div class="box-line-footer">
                     <h3>Menu</h3>
                     <div class="links-footer">
-                        <a href="areaAluno.html">Home</a>
+                        <a href="areaPrincipal.html">Home</a>
                         <a href="cursos.html">Cursos</a>
                     </div>
                 </div>
@@ -181,130 +189,129 @@
 </body>
 
 <!--Funções de foto, curso e logoutS-->
-<script>
-    document.getElementById('open-btn').addEventListener('click', function(){
-    document.getElementById('menu-lateral').classList.toggle('open-menu');
-});
-
-window.onload = function() {
-    // Faz uma requisição ao backend para obter os dados do usuário logado
-    fetch('/user')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Usuário não autenticado');
-            }
-            return response.json();
-        })
-        .then(data => {
-            // Define o caminho da imagem de perfil; usa default se profilePic não estiver disponível
-            const profilePicPath = data.profilePic ? `img/${data.profilePic}` : 'img/default.jpg';
-            const profilePicElement = document.getElementById('profilePic');
-        
-            document.getElementById('userName').textContent = data.nome || 'Usuário';
-
-            // Define o caminho da imagem no elemento
-            profilePicElement.src = profilePicPath;
-
-            // Garante que o elemento seja visível
-            profilePicElement.style.display = 'block';
-        })
-        .catch(error => {
-            console.error('Erro ao carregar os dados do usuário:', error);
-            // Define uma imagem padrão caso ocorra um erro
-            document.getElementById('profilePic').src = 'img/default.jpg';
-            document.getElementById('userName').textContent = 'Usuário';
+    <script>
+        document.getElementById('open-btn').addEventListener('click', function(){
+        document.getElementById('menu-lateral').classList.toggle('open-menu');
         });
-};
 
-function redirectToCourse(button) {
-    // Captura o cursoId e o data-url do botão clicado
-    const cursoId = button.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
-    const url = button.getAttribute('data-url');
-    
-    // Redireciona para a página do curso com o cursoId como parâmetro
-    window.location.href = `${url}?cursoId=${cursoId}`;
-}
+        window.onload = function() {
+            // Faz uma requisição ao backend para obter os dados do usuário logado
+            fetch('/user')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Usuário não autenticado');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const profilePicPath = data.profilePic ? `img/${data.profilePic}` : 'img/default.jpg';
+                    const profilePicElement = document.getElementById('profilePic');
+                
+                    document.getElementById('userName').textContent = data.nome || 'Usuário';
 
-// Adiciona o evento de clique a todos os botões com a classe 'card-button'
-document.querySelectorAll('.card-button').forEach(button => {
-    button.addEventListener('click', function() {
-        redirectToCourse(this);
-    });
-});
+                    // Define o caminho da imagem no elemento
+                    profilePicElement.src = profilePicPath;
 
-function iniciarCurso(usuarioId, cursoId) {
-    fetch('/api/iniciar-curso', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuarioId, cursoId })
-    })
-    .then(response => response.text())
-    .then(data => console.log(data))
-    .catch(error => console.error('Erro:', error));
-}
+                    // Garante que o elemento seja visível
+                    profilePicElement.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar os dados do usuário:', error);
+                    // Define uma imagem padrão caso ocorra um erro
+                    document.getElementById('profilePic').src = 'img/default.jpg';
+                    document.getElementById('userName').textContent = 'Usuário';
+                });
+        };
 
-// Adiciona o evento de clique a todos os botões com a classe 'card-button'
-document.querySelectorAll('.card-button').forEach(button => {
-    button.addEventListener('click', function() {
-        const cursoId = this.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
-        iniciarCurso( usuarioId , cursoId);
-        redirectToCourse(this);
-    });
-});
+        function redirectToCourse(button) {
+            // Captura o cursoId e o data-url do botão clicado
+            const cursoId = button.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
+            const url = button.getAttribute('data-url');
+            
+            // Redireciona para a página do curso com o cursoId como parâmetro
+            window.location.href = `${url}?cursoId=${cursoId}`;
+        }
 
-async function handleLogout() {
-    if (confirm('Tem certeza que deseja sair?')) {
-        try {
-            const response = await fetch('/logout', {
+        // Adiciona o evento de clique a todos os botões com a classe 'card-button'
+        document.querySelectorAll('.card-button').forEach(button => {
+            button.addEventListener('click', function() {
+                redirectToCourse(this);
+            });
+        });
+
+        function iniciarCurso(usuarioId, cursoId) {
+            fetch('/api/iniciar-curso', {
                 method: 'POST',
-                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ usuarioId, cursoId })
+            })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Erro:', error));
+        }
+
+        // Adiciona o evento de clique a todos os botões com a classe 'card-button'
+        document.querySelectorAll('.card-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const cursoId = this.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
+                iniciarCurso( usuarioId , cursoId);
+                redirectToCourse(this);
+            });
+        });
+
+        async function handleLogout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                try {
+                    const response = await fetch('/logout', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        window.location.href = 'areaAluno.html';
+                    } else {
+                        throw new Error('Falha no logout');
+                    }
+                } catch (error) {
+                    console.error('Erro durante o logout:', error);
+                    alert('Erro ao fazer logout. Por favor, tente novamente.');
+                }
+            }
+        }
+    </script>
+
+    <!--Email cadastrado para mensganes footer-->
+    <script>
+        document.getElementById('form-newsletter').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email-newsletter').value;
+
+            fetch('/newsletter', {
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Email cadastrado com sucesso!');
+                    document.getElementById('email-newsletter').value = '';
+                } else {
+                    alert('Erro ao cadastrar e-mail: ' + data.message);
                 }
+            })
+            .catch(error => {
+                console.error('Erro ao cadastrar e-mail:', error);
+                alert('Erro ao cadastrar e-mail.');
             });
-
-            if (response.ok) {
-                window.location.href = 'areaAluno.html';
-            } else {
-                throw new Error('Falha no logout');
-            }
-        } catch (error) {
-            console.error('Erro durante o logout:', error);
-            alert('Erro ao fazer logout. Por favor, tente novamente.');
-        }
-    }
-}
-</script>
-
-<!--Email cadastrado para mensganes footer-->
-<script>
-    document.getElementById('form-newsletter').addEventListener('submit', function(event) {
-event.preventDefault();
-
-const email = document.getElementById('email-newsletter').value;
-
-fetch('/newsletter', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email: email })
-})
-.then(response => response.json())
-.then(data => {
-    if (data.success) {
-        alert('Email cadastrado com sucesso!');
-        document.getElementById('email-newsletter').value = '';
-    } else {
-        alert('Erro ao cadastrar e-mail: ' + data.message);
-    }
-})
-.catch(error => {
-    console.error('Erro ao cadastrar e-mail:', error);
-    alert('Erro ao cadastrar e-mail.');
-});
-});
-</script>
+        });
+    </script>
 
 <style>
     * {

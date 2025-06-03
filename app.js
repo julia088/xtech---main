@@ -89,10 +89,6 @@ app.get('/curso4', verificarAutenticacao, (req,res) =>{
     res.sendFile(path.join(__dirname, 'public/curso4.html'));
 });
 
-app.get('/curso5', verificarAutenticacao, (req,res) =>{
-    res.sendFile(path.join(__dirname, 'public/curso5.html'));
-});
-
 app.get('/certificado', verificarAutenticacao, (req,res) =>{
     res.sendFile(path.join(dir__name, 'public/certificado.html'));
 })
@@ -344,6 +340,26 @@ app.get('/api/curso/:id', (req, res) => {
             res.status(404).send('Curso não encontrado');
         }
     });
+});
+
+// Rota para obter os cursos do usuário (com progresso)
+app.get('/api/cursos-do-usuario/:usuarioId', async (req, res) => {
+    try {
+        const { usuarioId } = req.params;
+
+        // Busca os cursos do usuário com progresso
+        const [cursos] = await db.execute(`
+            SELECT c.id, c.nome, c.descricao, c.imagem, p.progresso 
+            FROM curso c
+            LEFT JOIN progresso p ON c.id = p.curso_id AND p.usuario_id = ?
+            WHERE p.usuario_id IS NOT NULL
+        `, [usuarioId]);
+
+        res.json(cursos);
+    } catch (error) {
+        console.error('Erro ao buscar cursos do usuário:', error);
+        res.status(500).send('Erro ao buscar cursos');
+    }
 });
 
 // rota para progresso (proteção incluída)
