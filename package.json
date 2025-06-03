@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "debug": "^4.3.7",
     "express": "^4.21.1",
@@ -10,6 +11,7 @@
     "html-pdf": "^3.0.1",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.2",
+    "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.3",
     "nodejs": "^0.0.0",

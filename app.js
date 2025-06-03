@@ -6,7 +6,7 @@ const multer = require('multer');
 const session = require('express-session');
 const fs = require('fs');
 const { promisify } = require('util');
-const pdf = require('html-pdf');  // Instale a biblioteca 'html-pdf'
+const pdf = require('html-pdf');
 const certificadoPath = path.join(__dirname, 'img', 'certificado_1.png');
 
 const app = express();
@@ -57,19 +57,45 @@ const upload = multer({
     }
 });
 
-// middleware para verificar autenticação em rotas protegidas
 function verificarAutenticacao(req, res, next) {
     if (req.session.user) {
-        next(); // usuário autenticado, segue para a rota
+        next(); 
     } else {
-        res.redirect('/'); // redireciona para a página inicial se não estiver autenticado
+        res.redirect('/'); 
     }
 }
 
-// rota inicial
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/areaAluno.html'));
+    res.sendFile(path.join(__dirname, 'public/areaPrincipal.html'));
 });
+
+app.get('/portalAluno', verificarAutenticacao, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/portalAluno.html'));
+});
+
+app.get('/curso1', verificarAutenticacao, (req,res) =>{
+    res.sendFile(path.join(__dirname, 'public/curso1.html'));
+});
+
+app.get('/curso2', verificarAutenticacao, (req,res) =>{
+    res.sendFile(path.join(__dirname, 'public/curso2.html'));
+});
+
+app.get('/curso3', verificarAutenticacao, (req,res) =>{
+    res.sendFile(path.join(__dirname, 'public/curso3.html'));
+});
+
+app.get('/curso4', verificarAutenticacao, (req,res) =>{
+    res.sendFile(path.join(__dirname, 'public/curso4.html'));
+});
+
+app.get('/curso5', verificarAutenticacao, (req,res) =>{
+    res.sendFile(path.join(__dirname, 'public/curso5.html'));
+});
+
+app.get('/certificado', verificarAutenticacao, (req,res) =>{
+    res.sendFile(path.join(dir__name, 'public/certificado.html'));
+})
 
 // rota de login
 app.post('/login', (req, res) => {
@@ -82,10 +108,11 @@ app.post('/login', (req, res) => {
         if (results.length > 0) {
             req.session.user = { 
                 id: 
-                 results[0].id,nome:
-                 results[0].nome, senha: 
-                 results[0].senha, email:
-                 results[0].email };
+                 results[0].id,
+                 nome: results[0].nome, 
+                 senha: results[0].senha, 
+                 email: results[0].email 
+                };
             console.log('Usuário logado:', req.session.user);
             return res.redirect('/portalAluno');
         } else {
@@ -96,24 +123,51 @@ app.post('/login', (req, res) => {
 
 // rota de cadastro
 app.post('/cadastro', (req, res) => {
-    const { nome, email, senha, profilePic } = req.body;
+    const { tipo, nome, email, senha, telefone, profilePic } = req.body;
 
-    const checkUserQuery = 'SELECT * FROM usuario WHERE email = ?';
-    connection.query(checkUserQuery, [email], (err, results) => {
-        if (err) throw err;
+    // Validação básica
+    if (!tipo || !nome || !email || !senha || !telefone) {
+        return res.status(400).send('Todos os campos obrigatórios devem ser preenchidos');
+    }
 
-        if (results.length > 0) {
-            return res.status(409).send('Usuário já existe');
+    const checkUserQuery = 'SELECT * FROM usuario WHERE email = ? OR telefone = ?';
+    connection.query(checkUserQuery, [email, telefone], (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Erro no servidor');
         }
 
-        const insertUserQuery = 'INSERT INTO usuario (nome, email, senha, profilePic) VALUES (?, ?, ?, ?)';
-        connection.query(insertUserQuery, [nome, email, senha, profilePic], (err, results) => {
-            if (err) throw err;
+        if (results.length > 0) {
+            return res.status(409).send('Email ou telefone já cadastrado');
+        }
 
-            req.session.user = { id: results.insertId, email };
-            console.log('Usuário registrado:', req.session.user);
-            res.redirect('/portalAluno');
-        });
+        const insertUserQuery = 'INSERT INTO usuario (tipo, nome, email, senha, telefone, profilePic) VALUES (?, ?, ?, ?, ?, ?)';
+        connection.query(insertUserQuery, 
+            [tipo, nome, email, senha, telefone, profilePic || null], 
+            (err, results) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).send('Erro ao cadastrar usuário');
+                }
+
+                req.session.user = { 
+                    id: results.insertId, 
+                    email, 
+                    tipo,
+                    nome
+                };
+                
+                console.log('Usuário registrado:', req.session.user);
+                
+                // Redirecionamento seguro
+                const redirects = {
+                    'Aluno': '/portalAluno',
+                    'Professor': '/portalProfessor',
+                    'Administrador': '/portalAdmin'
+                };
+                
+                res.redirect(redirects[tipo] || '/');
+            });
     });
 });
 
@@ -190,11 +244,6 @@ app.post('/atualizarPerfil', verificarAutenticacao, (req, res) => {
         }
         res.json({ message: 'Perfil atualizado com sucesso!' });
     });
-});
-
-//rota protegida - portal do aluno
-app.get('/portalAluno', verificarAutenticacao, (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/portalAluno.html'));
 });
 
 // Rota para atualizar a senha do usuário

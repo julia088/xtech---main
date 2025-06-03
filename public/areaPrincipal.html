@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
     <link rel="stylesheet" href="login.css">  
     <script src="script.js"></script>
-    <title>Área do Aluno</title>
+    <title>CAPS</title>
 </head>
 <body>
     <header>
         <nav class="navigation">
-            <a href="areaAluno.html">Home</a>
+            <a href="areaPrincipal.html">Home</a>
             <a href="cursos.html">Cursos</a>
             <a href="contato.html">Contato</a>
             <button class="btnLogin-popup">Login</button>
@@ -59,22 +59,38 @@
             <h2>Cadastro</h2>
             <form action="#">
                 <div class="input-box">
+                    <select name="tipo" id="tipo" required>
+                        <option value="" disabled selected>Selecione seu tipo</option>
+                        <option value="Aluno">Aluno</option>
+                        <option value="Professor">Professor</option>
+                        <option value="Administrador">Administrador</option>
+                    </select>
+                </div>
+                
+                <div class="input-box">
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
-                    <input type="text" required>
+                    <input type="text" name="nome" required>
                     <label>Nome</label>
                 </div>
 
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail"></ion-icon></span>
-                    <input type="email" required>
+                    <input type="email" name="email" required>
                     <label>Email</label>
                 </div>
 
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock"></ion-icon></span>
-                    <input type="password" required>
+                    <input type="password" name="senha" required>
                     <label>Senha</label>
                 </div>
+
+                <div class="input-box">
+                    <span class="icon"><ion-icon name="phone"></ion-icon></span>
+                    <input type="tel" name="telefone" required> <!-- Alterado para type="tel" -->
+                    <label>Telefone</label>
+                </div>
+
                 <div class="lembrar-esquecer">
                     <label><input type="checkbox"> Eu aceito os termos e condições</label>
                 </div>
@@ -167,38 +183,6 @@
                             <button class="card-button material-symbols-rounded">arrow_forward</button>
                         </a>
                     </li>
-                    <li class="card-item swiper-slide">
-                        <a class="card-link">
-                            <img src="img/git.png" alt="Card Image" class="card-image">
-                            <p class="badge">GIT</p>
-                            <h2 class="card-title">Domine o controle de versões com nosso curso de Git! Aprenda a gerenciar seu código de forma eficiente e a colaborar em projetos em equipe. Com aulas práticas, você ganhará confiança para trabalhar em qualquer projeto. Junte-se a nós!</h2>
-                            <button class="card-button material-symbols-rounded">arrow_forward</button>
-                        </a>
-                    </li>
-                    <li class="card-item swiper-slide">
-                        <a class="card-link">
-                            <img src="img/php.jpg" alt="Card Image" class="card-image">
-                            <p class="badge">PHP</p>
-                            <h2 class="card-title">Dê vida ao desenvolvimento web com nosso curso de PHP! Aprenda a criar aplicações dinâmicas e interativas, dominando os fundamentos. Com exercícios práticos, você estará pronto para desenvolver projetos. Venha explorar o mundo do PHP!</h2>
-                            <button class="card-button material-symbols-rounded">arrow_forward</button>
-                        </a>
-                    </li>
-                    <li class="card-item swiper-slide">
-                        <a class="card-link">
-                            <img src="img/sql.webp" alt="Card Image" class="card-image">
-                            <p class="badge">SQL</p>
-                            <h2 class="card-title">Desvende o poder dos dados com nosso curso de SQL! Aprenda a manipular e consultar bancos de dados de forma eficiente. Com aulas práticas, você desenvolverá habilidades essenciais para análise. Venha aprimorar sua carreira!</h2>
-                            <button class="card-button material-symbols-rounded">arrow_forward</button>
-                        </a>
-                    </li>
-                    <li class="card-item swiper-slide">
-                        <a class="card-link">
-                            <img src="img/crypto.jpg" alt="Card Image" class="card-image">
-                            <p class="badge">CRYPTO</p>
-                            <h2 class="card-title">Mergulhe no mundo das criptomoedas com nosso curso de Crypto! Aprenda sobre blockchain, investimentos e segurança neste universo inovador. Com aulas práticas, você ganhará confiança para navegar. Venha explorar as possibilidades!</h2>
-                            <button class="card-button material-symbols-rounded">arrow_forward</button>
-                        </a>
-                    </li>
                 </ul>
 
                 <div class="swiper-pagination"></div>
@@ -210,48 +194,6 @@
         
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
         <script src="card.js"></script>
-
-        <br>
-<!--sobre a equipe-->
-        <section class="vantagens">
-            <div class="interface">
-                <article class="itens-container">
-
-                    <div class="txt-itens">
-                        <h3>Resolução de problemas</h3>
-                        <p>A programação ajuda a desenvolver habilidades lógicas, permitindo dividir problemas complexos em partes menores.</p>
-                    </div>
-                    <div class="img-itens">
-                        <img src="img/resize.png" alt="">
-                    </div>
-
-                </article>
-
-                <article class="itens-container">
-
-                    <div class="img-itens">
-                        <img src="img/vantagem2.png" alt="">
-                    </div>
-                    <div class="txt-itens">
-                        <h3>Oportunidades na carreira</h3>
-                        <p>A demanda por programadores está em alta, oferecendo boas perspectivas de emprego e salários competitivos.</p>
-                    </div>
-
-                </article>
-
-                <article class="itens-container">
-
-                    <div class="txt-itens">
-                        <h3>Criatividade ativa</h3>
-                        <p>Programar permite transformar ideias em aplicativos ou sites, incentivando a inovação e a solução de problemas.</p>
-                    </div>
-                    <div class="img-itens">
-                        <img src="img/idea.jpg" alt="">
-                    </div>
-
-                </article>
-            </div>
-        </section>
     </main>
 
 <!--rodapé-->
@@ -262,7 +204,7 @@
                 <p>Digite o seu e-mail abaixo para notificarmos</p>
                 <form id="form-newsletter">
                     <input type="email" name="email" id="email-newsletter" required placeholder="Digite seu e-mail">
-                    <input type="submit" value="Cadastrar">
+                    <input type="submit" value="Cadastrar" onclick="enviarEmail()">
                 </form>
             </div>            
 
@@ -334,29 +276,49 @@
     
     document.querySelector('.form-box.register form').addEventListener('submit', function(e) {
         e.preventDefault();
-    
-        const nome = this.querySelector('input[type="text"]').value;
-        const email = this.querySelector('input[type="email"]').value;
-        const senha = this.querySelector('input[type="password"]').value;
-    
+        
+        // Obter os valores corretamente
+        const tipo = this.querySelector('#tipo').value;
+        const nome = this.querySelector('input[name="nome"]').value;
+        const email = this.querySelector('input[name="email"]').value;
+        const senha = this.querySelector('input[name="senha"]').value;
+        const telefone = this.querySelector('input[name="telefone"]').value;
+        
+        // Verificar se todos os campos obrigatórios estão preenchidos
+        if (!tipo || !nome || !email || !senha || !telefone) {
+            alert('Por favor, preencha todos os campos obrigatórios!');
+            return;
+        }
+
         fetch('/cadastro', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nome, email, senha }),
+            body: JSON.stringify({ 
+                tipo, 
+                nome, 
+                email, 
+                senha, 
+                telefone 
+            }),
         })
         .then(response => {
-            if (response.ok) {
-                alert('Cadastro realizado com sucesso! Você pode fazer login agora.');
-                location.reload();
-            } else {
-                alert('Erro ao cadastrar: ' + response.statusText);
+            if (!response.ok) {
+                return response.json().then(err => { throw err; });
             }
+            return response.json();
         })
-        .catch(error => console.error('Erro:', error));
+        .then(data => {
+            alert('Cadastro realizado com sucesso! Você pode fazer login agora.');
+            window.location.href = '/login'; // Redireciona para a página de login
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao cadastrar: ' + (error.message || 'Erro desconhecido'));
+        });
     });
-    </script>
+</script>
 
 <!--Email cadastrado para mensganes footer-->
    <script>
