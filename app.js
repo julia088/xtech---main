@@ -282,46 +282,199 @@ app.get('/getUserData', verificarAutenticacao, (req, res) => {
     });
 });
 
-//rota protegida para o usuario
+// Rota protegida para obter dados completos do usuário
 app.get('/user', verificarAutenticacao, (req, res) => {
     const userId = req.session.user.id;
     
-    const query = 'SELECT nome, email, senha, profilePic FROM usuario WHERE id = ?';
+    const query = `
+        SELECT 
+            u.id,
+            u.nome, 
+            u.email, 
+            u.profilePic,
+            u.tipo,
+            a.plano,
+            a.data_assinatura,
+            a.data_expiracao,
+            a.progresso_global,
+            p.especializacao,
+            p.bio
+        FROM usuario u
+        LEFT JOIN aluno a ON u.id = a.usuario_id
+        LEFT JOIN professor p ON u.id = p.usuario_id
+        WHERE u.id = ?
+    `;
+    
     connection.query(query, [userId], (err, results) => {
         if (err) {
-            return res.status(500).json({ message: 'Erro ao buscar dados do usuário' });
+            console.error('Erro ao buscar dados do usuário:', err);
+            return res.status(500).json({ 
+                success: false,
+                message: 'Erro interno ao buscar dados do usuário' 
+            });
         }
-        if (results.length > 0) {
-            res.json(results[0]);
-        } else {
-            res.status(404).json({ message: 'Usuário não encontrado' });
+        
+        if (results.length === 0) {
+            return res.status(404).json({ 
+                success: false,
+                message: 'Usuário não encontrado' 
+            });
         }
+        
+        const userData = {
+            id: results[0].id,
+            nome: results[0].nome,
+            email: results[0].email,
+            profilePic: results[0].profilePic,
+            tipo: results[0].tipo,
+            plano: results[0].plano || null,
+            dataAssinatura: results[0].data_assinatura,
+            dataExpiracao: results[0].data_expiracao,
+            progressoGlobal: results[0].progresso_global,
+            especializacao: results[0].especializacao,
+            bio: results[0].bio
+        };
+        
+        // Remove a senha mesmo que não esteja sendo selecionada
+        delete userData.senha;
+        
+        res.json({
+            success: true,
+            data: userData
+        });
     });
 });
 
-//api para inicio do cursos, através da session do usuário e id do curso
-app.post('/api/iniciar-curso', async (req, res) => {
+app.get('/api/cursos', verificarAutenticacao, async (req, res) => {
     try {
-        const { usuarioId, cursoId } = req.body;
+        const userId = req.session.user.id;
+        
+        // Primeiro obtém o plano do usuário
+        const [userResults] = await db.execute(`
+            SELECT a.plano 
+            FROM usuario u
+            LEFT JOIN aluno a ON u.id = a.usuario_id
+            WHERE u.id = ?
+        `, [userId]);
+        
+        const userPlan = userResults[0]?.plano || null;
+        
+        // Consulta os cursos com base no plano
+        let query = `
+            SELECT c.*, 
+                   CASE 
+                     WHEN at.aluno_id IS NOT NULL THEN TRUE
+                     ELSE FALSE
+                   END AS matriculado
+            FROM curso c
+            LEFT JOIN aluno_turma at ON c.id = at.curso_id AND at.aluno_id = ?
+        `;
+        
+        const params = [userId];
+        
+        if (userPlan === 'Basico') {
+            query += ' WHERE c.preco_base <= 100';
+        } else if (userPlan === 'Empreendedor') {
+            query += ' WHERE c.preco_base <= 300';
+        }
+        // Startup tem acesso a todos os cursos
+        
+        const [cursos] = await db.execute(query, params);
+        
+        res.json({
+            success: true,
+            data: cursos,
+            userPlan: userPlan
+        });
+    } catch (error) {
+        console.error('Erro ao buscar cursos:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno ao buscar cursos'
+        });
+    }
+});
 
-        // Verifique se o progresso já existe para o usuário e o curso
-        const [resultado] = await db.execute(
-            'SELECT id FROM progresso WHERE usuario_id = ? AND curso_id = ?',
-            [usuarioId, cursoId]
+app.post('/api/iniciar-curso', verificarAutenticacao, async (req, res) => {
+    try {
+        const userId = req.session.user.id;
+        const { cursoId } = req.body;
+
+        // Verifica se o usuário é aluno
+        const [userResults] = await db.execute(
+            'SELECT plano FROM aluno WHERE usuario_id = ?',
+            [userId]
         );
 
-        if (resultado.length === 0) {
-            // Se não existe, insere um novo registro com progresso inicial de 0%
-            await db.execute(
-                'INSERT INTO progresso (usuario_id, curso_id, progresso) VALUES (?, ?, ?)',
-                [usuarioId, cursoId, 0]
-            );
+        if (userResults.length === 0) {
+            return res.status(403).json({
+                success: false,
+                message: 'Apenas alunos podem iniciar cursos'
+            });
         }
 
-        res.status(200).send('Curso iniciado com sucesso');
+        // Verifica se o curso está disponível para o plano
+        const [cursoResults] = await db.execute(
+            'SELECT preco_base FROM curso WHERE id = ?',
+            [cursoId]
+        );
+
+        if (cursoResults.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Curso não encontrado'
+            });
+        }
+
+        const userPlan = userResults[0].plano;
+        const cursoPreco = cursoResults[0].preco_base;
+
+        // Validação por plano
+        if ((userPlan === 'Basico' && cursoPreco > 100) ||
+            (userPlan === 'Empreendedor' && cursoPreco > 300)) {
+            return res.status(403).json({
+                success: false,
+                message: 'Curso não disponível para seu plano atual'
+            });
+        }
+
+        // Restante da lógica para iniciar curso...
+        const [progresso] = await db.execute(
+            'SELECT id FROM progresso_aluno WHERE aluno_id = ? AND aula_id IN ' +
+            '(SELECT id FROM aula WHERE modulo_id IN ' +
+            '(SELECT id FROM modulo WHERE curso_id = ?))',
+            [userId, cursoId]
+        );
+
+        if (progresso.length === 0) {
+            // Insere registro inicial para cada aula do curso
+            const [aulas] = await db.execute(
+                'SELECT id FROM aula WHERE modulo_id IN ' +
+                '(SELECT id FROM modulo WHERE curso_id = ?)',
+                [cursoId]
+            );
+
+            for (const aula of aulas) {
+                await db.execute(
+                    'INSERT INTO progresso_aluno ' +
+                    '(aluno_id, aula_id, data_inicio, percentual_assistido, status) ' +
+                    'VALUES (?, ?, NOW(), 0, "nao_iniciado")',
+                    [userId, aula.id]
+                );
+            }
+        }
+
+        res.json({
+            success: true,
+            message: 'Curso iniciado com sucesso'
+        });
+
     } catch (error) {
-        console.error('Erro ao iniciar o curso:', error);
-        res.status(500).send('Erro ao iniciar o curso');
+        console.error('Erro ao iniciar curso:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Erro interno ao iniciar curso'
+        });
     }
 });
 
@@ -340,26 +493,6 @@ app.get('/api/curso/:id', (req, res) => {
             res.status(404).send('Curso não encontrado');
         }
     });
-});
-
-// Rota para obter os cursos do usuário (com progresso)
-app.get('/api/cursos-do-usuario/:usuarioId', async (req, res) => {
-    try {
-        const { usuarioId } = req.params;
-
-        // Busca os cursos do usuário com progresso
-        const [cursos] = await db.execute(`
-            SELECT c.id, c.nome, c.descricao, c.imagem, p.progresso 
-            FROM curso c
-            LEFT JOIN progresso p ON c.id = p.curso_id AND p.usuario_id = ?
-            WHERE p.usuario_id IS NOT NULL
-        `, [usuarioId]);
-
-        res.json(cursos);
-    } catch (error) {
-        console.error('Erro ao buscar cursos do usuário:', error);
-        res.status(500).send('Erro ao buscar cursos');
-    }
 });
 
 // rota para progresso (proteção incluída)
