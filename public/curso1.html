@@ -28,15 +28,15 @@
         <br><br>
         <h1>
            
-            HTML
+            NEGÓCIOS
            
         </h1>
         <br>
         <br><br><br>
         <div class="button-group">
-            <button onclick="html1()">Aula 1</button>
-            <button onclick="html2()">Aula 2</button>
-            <button onclick="html3()">Aula 3</button>
+            <button onclick="negocios1()">Aula 1</button>
+            <button onclick="negocios2()">Aula 2</button>
+            <button onclick="negocios3()">Aula 3</button>
             <button onclick="completeExercises()">Exercícios</button>
         </div>
 
@@ -62,38 +62,38 @@
             <h3>Responda as perguntas a seguir:</h3>
             <form id="quiz-form">
                 <div class="question">
-                    <label>1. O que significa a sigla HTML e qual é sua principal função?</label><br>
-                    <input type="radio" name="q1" value="correta" required> HTML significa "HyperText Markup Language" e é a linguagem padrão usada para criar e estruturar páginas da web.<br>
-                    <input type="radio" name="q1" value="link"> HTML significa "HyperText Multi Language" e é utilizado apenas para links.<br>
-                    <input type="radio" name="q1" value="imagem"> HTML significa "HyperText Markup Language" e é usado apenas para inserir imagens.<br>
+                    <label>1. Qual é o principal fator que diferencia um empreendedor de sucesso, segundo os vídeos?</label><br>
+                    <input type="radio" name="q1" value="correta" required> Ter resiliência e capacidade de adaptação às mudanças<br>
+                    <input type="radio" name="q1" value="link"> Ter um grande capital inicial para investir<br>
+                    <input type="radio" name="q1" value="imagem"> Possuir uma rede de contatos influentes desde o início<br>
                 </div>
                 <br>
                 <div class="question">
-                    <label>2. Quais são as principais diferenças entre elementos de bloco e elementos em linha?</label><br>
-                    <input type="radio" name="q2" value="correta" required> Elementos de bloco ocupam toda a largura disponível e começam em uma nova linha, enquanto elementos em linha ocupam apenas o espaço necessário e não iniciam uma nova linha.<br>
-                    <input type="radio" name="q2" value="background-color"> Elementos de bloco são sempre invisíveis, enquanto elementos em linha são sempre visíveis.<br>
-                    <input type="radio" name="q2" value="border"> Elementos de bloco podem ser empilhados, enquanto elementos em linha não podem ser empilhados.<br>
+                    <label>2. Segundo os casos apresentados, qual estratégia é essencial para validar um negócio antes de escalá-lo?</label><br>
+                    <input type="radio" name="q2" value="correta" required> Testar o produto/serviço com um público pequeno e iterar com feedbacks<br>
+                    <input type="radio" name="q2" value="background-color"> Investir pesado em marketing antes de lançar o produto <br>
+                    <input type="radio" name="q2" value="border"> Copiar modelos de negócios já consagrados no mercado<br>
                 </div>
                 <br>
                 <div class="question">
-                    <label>3. O que é a tag &lt;!DOCTYPE&gt; e por que é importante incluí-la em um documento HTML?</label><br>
-                    <input type="radio" name="q3" value="correta" required> Informa ao navegador sobre a versão do HTML utilizada, garantindo que a página seja renderizada corretamente.<br>
-                    <input type="radio" name="q3" value="background-color"> É uma tag obrigatória para todos os elementos HTML.<br>
-                    <input type="radio" name="q3" value="border"> Serve para definir o estilo da página web.<br>
+                    <label>3. Qual desses elementos os vídeos destacam como crucial para inovar em tecnologia?</label><br>
+                    <input type="radio" name="q3" value="correta" required> Resolver problemas reais das pessoas com soluções simples<br>
+                    <input type="radio" name="q3" value="background-color"> Ter equipamentos de última geração<br>
+                    <input type="radio" name="q3" value="border"> Esperar que o governo financie projetos disruptivos<br>
                 </div>
                 <br>
                 <div class="question">
-                    <label>4. Como você pode criar um link para uma outra página web usando HTML?</label><br>
-                    <input type="radio" name="q4" value="correta" required> < a href="pagina.html">Clique aqui< /a><br>
-                    <input type="radio" name="q4" value="background-color"> < link href="pagina.html">Clique aqui< /link><br>
-                    <input type="radio" name="q4" value="border"> < url href="pagina.html">Clique aqui< /url><br>
+                    <label>4. Como os vídeos sugerem que empreendedores devem lidar com o fracasso?</label><br>
+                    <input type="radio" name="q4" value="correta" required> Aprender com os erros e usar como oportunidade para pivotar<br>
+                    <input type="radio" name="q4" value="background-color">  Evitar ao máximo cometer erros para não perder credibilidade<br>
+                    <input type="radio" name="q4" value="border"> Esconder os fracassos para não desanimar a equipe<br>
                 </div>
                 <br>
                 <div class="question">
-                    <label>5. O que são atributos em HTML?</label><br>
-                    <input type="radio" name="q5" value="correta" required> Atributos fornecem informações adicionais sobre um elemento HTML.<br>
-                    <input type="radio" name="q5" value="background-color"> Atributos são sinônimos de tags HTML.<br>
-                    <input type="radio" name="q5" value="border"> Atributos são apenas valores de estilo CSS.<br>
+                    <label>5. Qual conselho é comum aos três vídeos para quem quer empreender em negócios digitais?</label><br>
+                    <input type="radio" name="q5" value="correta" required> Iniciar pequeno, validar a ideia e escalar progressivamente<br>
+                    <input type="radio" name="q5" value="background-color"> Esperar o momento perfeito para começar<br>
+                    <input type="radio" name="q5" value="border"> Copiar empresas estrangeiras bem-sucedidas sem adaptações<br>
                 </div>
                 <br>
                 <button type="submit">Enviar Respostas</button>
@@ -164,36 +164,30 @@
         salvarProgresso(cursoId, progress);
         }
 
-        function html1() {
+        function negocios1() {
             const videoContainer = document.querySelector('.video-container');
             advanceProgress('lesson1');
             videoContainer.innerHTML = `
                 <div class="click-overlay" onclick="advanceProgress('lesson1')"></div>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/Fhy-5CtVkiM?si=O2Lv3VQ0GfDPQc2s"
-                    title="Aula 1 - HTML" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/QtuX97OCJrU?si=7V8wuYfXrzGiSC6d" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             `;
         }
 
-        function html2() {
+        function negocios2() {
             const videoContainer = document.querySelector('.video-container');
             advanceProgress('lesson2');
             videoContainer.innerHTML = `
                 <div class="click-overlay" onclick="advanceProgress('lesson2')"></div>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/sj0p9O85AIg?si=mdpJ2ISILU-zJsz0"
-                    title="Aula 2 - HTML" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/61NriUEBH9s?si=MiZPorjW_r_hahE6" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             `;
         }
 
-        function html3() {
+        function negocios3() {
             const videoContainer = document.querySelector('.video-container');
             advanceProgress('lesson3');
             videoContainer.innerHTML = `
                 <div class="click-overlay" onclick="advanceProgress('lesson3')"></div>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/MOd8PCyEB88?si=69tmLKJgOS43Nnig"
-                    title="Aula 3 - HTML" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/Q7WeIVjQoCo?si=2wZ2nSklIkFEaFR7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             `;
         }
 
