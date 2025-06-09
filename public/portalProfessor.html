@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma EAD - Painel do Professor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            height: calc(100vh - 60px);
+            position: fixed;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            padding: 15px;
+            border-bottom: 1px solid #2c3e50;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .sidebar-menu li:hover {
+            background-color: #2c3e50;
+        }
+        .sidebar-menu li.active {
+            background-color: #2980b9;
+        }
+        .sidebar-menu li i {
+            margin-right: 10px;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .classes-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .classes-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .classes-table th, .classes-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .classes-table th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+        .classes-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: #2980b9;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #7f8c8d;
+            color: white;
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        .badge-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="logo-cimatec.png" alt="Senai Cimatec">
+            <h2>Plataforma EAD</h2>
+        </div>
+        <div class="user-info">
+            <img src="professor-avatar.jpg" alt="Professor">
+            <span>Prof. João Silva</span>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li><i class="fas fa-users"></i> Minhas Turmas</li>
+            <li><i class="fas fa-book"></i> Conteúdos</li>
+            <li><i class="fas fa-tasks"></i> Atividades</li>
+            <li><i class="fas fa-chart-bar"></i> Desempenho dos Alunos</li>
+            <li><i class="fas fa-comments"></i> Mensagens</li>
+            <li><i class="fas fa-calendar-alt"></i> Agenda</li>
+            <li><i class="fas fa-cog"></i> Configurações</li>
+            <li><i class="fas fa-sign-out-alt"></i> Sair</li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <h1>Painel do Professor</h1>
+        
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>Turmas Ativas</h3>
+                <p class="value">5</p>
+                <p>Total de alunos: 127</p>
+            </div>
+            <div class="card">
+                <h3>Atividades Pendentes</h3>
+                <p class="value">23</p>
+                <p>Para correção</p>
+            </div>
+            <div class="card">
+                <h3>Mensagens</h3>
+                <p class="value">8</p>
+                <p>Não lidas</p>
+            </div>
+        </div>
+        
+        <div class="classes-section">
+            <h2>Minhas Turmas</h2>
+            <table class="classes-table">
+                <thead>
+                    <tr>
+                        <th>Turma</th>
+                        <th>Curso</th>
+                        <th>Alunos</th>
+                        <th>Progresso Médio</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ADS-2023-01</td>
+                        <td>Desenvolvimento de Jogos</td>
+                        <td>28</td>
+                        <td>
+                            <div style="background-color: #ecf0f1; border-radius: 4px; height: 20px;">
+                                <div style="background-color: #27ae60; width: 75%; height: 100%; border-radius: 4px;"></div>
+                            </div>
+                            <span>75%</span>
+                        </td>
+                        <td><span class="badge badge-success">Ativa</span></td>
+                        <td>
+                            <button class="btn btn-primary">Acessar</button>
+                            <button class="btn btn-secondary">Relatório</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>EMP-2023-02</td>
+                        <td>Empreendedorismo Digital</td>
+                        <td>35</td>
+                        <td>
+                            <div style="background-color: #ecf0f1; border-radius: 4px; height: 20px;">
+                                <div style="background-color: #27ae60; width: 42%; height: 100%; border-radius: 4px;"></div>
+                            </div>
+                            <span>42%</span>
+                        </td>
+                        <td><span class="badge badge-success">Ativa</span></td>
+                        <td>
+                            <button class="btn btn-primary">Acessar</button>
+                            <button class="btn btn-secondary">Relatório</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>TEC-2023-03</td>
+                        <td>Tecnologia para Startups</td>
+                        <td>19</td>
+                        <td>
+                            <div style="background-color: #ecf0f1; border-radius: 4px; height: 20px;">
+                                <div style="background-color: #f39c12; width: 15%; height: 100%; border-radius: 4px;"></div>
+                            </div>
+                            <span>15%</span>
+                        </td>
+                        <td><span class="badge badge-warning">Iniciando</span></td>
+                        <td>
+                            <button class="btn btn-primary">Acessar</button>
+                            <button class="btn btn-secondary">Relatório</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="card" style="margin-top: 20px;">
+            <h2>Próximas Mentorias</h2>
+            <p>Você tem 3 mentorias agendadas para esta semana:</p>
+            <ul>
+                <li><strong>05/06 - 14:00:</strong> Mentoria com turma ADS-2023-01 (Plano Startup)</li>
+                <li><strong>07/06 - 10:30:</strong> Mentoria individual com Maria Oliveira (Plano Empreendedor)</li>
+                <li><strong>08/06 - 16:00:</strong> Mentoria com turma EMP-2023-02 (Plano Empreendedor)</li>
+            </ul>
+            <button class="btn btn-primary">Ver Agenda Completa</button>
+        </div>
+    </div>
+</body>
+<script>
+    window.onload = function() {
+             console.log("Iniciando carregamento dos dados do usuário...");
+            fetch('/user')
+                .then(response => {
+                    console.log("Resposta recebida:", response);
+                    if (!response.ok) {
+                        console.error("Resposta não OK:", response.status);
+                        throw new Error('Usuário não autenticado');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Dados recebidos:", data);
+                    
+                    if (!data.success) {
+                        console.error("Resposta sem sucesso:", data.message);
+                        throw new Error(data.message || 'Erro ao carregar dados');
+                    }
+
+                    const user = data.data;
+                    console.log("Dados do usuário:", user);
+                    const profilePicPath = user.profilePic ? `img/${user.profilePic}` : 'img/default.jpg';
+
+                    document.getElementById('profilePic').src = profilePicPath;
+                    document.getElementById('userName').textContent = user.nome || 'Usuário';
+
+                    // Armazena os dados do usuário
+                    window.userData = {
+                        id: user.id,
+                        tipo: user.tipo,
+                        dataExpiracao: user.dataExpiracao
+                    };
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados:', error);
+                    document.getElementById('profilePic').src = 'img/default.jpg';
+                    document.getElementById('userName').textContent = 'Usuário';
+                });
+        };
+
+
+    async function handleLogout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                try {
+                    const response = await fetch('/logout', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        window.location.href = 'areaPrincipal.html';
+                    } else {
+                        throw new Error('Falha no logout');
+                    }
+                } catch (error) {
+                    console.error('Erro durante o logout:', error);
+                    alert('Erro ao fazer logout. Por favor, tente novamente.');
+                }
+            }
+        }
+</script>
+</html>

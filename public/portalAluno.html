@@ -8,70 +8,489 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
     <title>Portal do Aluno</title>
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #2980b9;
+            --light-blue: #deebff;
+            --light-bg: #f5f5f5;
+            --white: #ffffff;
+            --dark-text: #333333;
+            --light-text: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        /* Reset e Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-text);
+        }
+
+        /* Menu Lateral */
+        #menu-lateral {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: var(--white);
+            height: 100vh;
+            position: relative;
+            transition: var(--transition);
+            min-width: 80px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #menu-content {
+            padding: 1rem;
+        }
+
+        #user {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        #profilePic {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-color);
+            transition: var(--transition);
+        }
+
+        #side-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            list-style: none;
+        }
+
+        .item-menu {
+            padding: 0.75rem;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .item-menu.active {
+            background-color: var(--accent-color);
+        }
+
+        .item-menu:hover:not(.active) {
+            background-color: rgba(41, 128, 185, 0.1);
+        }
+
+        .item-menu a {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            color: var(--dark-text);
+            gap: 0.75rem;
+        }
+
+        .item-menu.active a {
+            color: var(--light-text);
+        }
+
+        .item-menu .icon {
+            font-size: 1.2rem;
+            min-width: 20px;
+        }
+
+        .item-description {
+            width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: width 0.3s;
+            font-size: 0.9rem;
+        }
+
+        #logout {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+        }
+
+        #logout-btn {
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        #logout-btn:hover {
+            background-color: rgba(41, 128, 185, 0.1);
+        }
+
+        #open-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: -0.75rem;
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            border-radius: 50%;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            box-shadow: var(--shadow);
+        }
+
+        #open-btn-icon {
+            transition: var(--transition);
+        }
+
+        #menu-lateral.open-menu {
+            min-width: 220px;
+        }
+
+        #menu-lateral.open-menu .item-description {
+            width: 140px;
+        }
+
+        /* Conteúdo Principal */
+        #main-content {
+            flex: 1;
+            background-color: var(--light-blue);
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .main-titulo {
+            margin-bottom: 2rem;
+            padding: 1rem;
+        }
+
+        .main-titulo h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .main-titulo p {
+            color: var(--secondary-color);
+            font-size: 1rem;
+        }
+
+        /* Action Buttons */
         .action-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
         }
 
         .action-buttons button {
-            padding: 12px 15px;
-            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border-radius: var(--border-radius);
             border: none;
-            background-color: #4a6bff;
-            color: white;
+            background-color: var(--accent-color);
+            color: var(--light-text);
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            box-shadow: var(--shadow);
         }
 
         .action-buttons button:hover {
-            background-color: #3a56d4;
+            background-color: #1a68b3;
             transform: translateY(-2px);
         }
 
         .action-buttons button i {
-            font-size: 1.2em;
+            font-size: 1rem;
         }
 
-        .plan-benefits-container {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-left: 5px solid #4a6bff;
+        /* Carrossel de Cursos */
+        .container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
         }
 
-        .plan-benefits-container h3 {
-            color: #4a6bff;
-            margin-bottom: 15px;
+        .card-wrapper {
+            padding: 1.5rem 0;
         }
 
-        .plan-benefits-container ul {
-            padding-left: 20px;
-            margin-bottom: 15px;
+        .card-list {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
         }
 
-        .plan-benefits-container li {
-            margin-bottom: 8px;
+        .card-item {
+            flex: 0 0 auto;
+            width: 300px;
         }
 
-        .upgrade-btn {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
+        .card-link {
+            display: block;
+            background: var(--white);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            height: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .card-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            border-color: var(--accent-color);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+            margin-bottom: 0.75rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--light-text);
+            background-color: var(--accent-color);
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            color: var(--dark-text);
+            font-weight: 500;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            height: 3.5rem;
+            overflow: hidden;
+        }
+
+        .card-button {
+            height: 2.5rem;
+            width: 2.5rem;
+            color: var(--accent-color);
+            border-radius: 50%;
+            margin: 0.5rem 0;
+            background: none;
             cursor: pointer;
-            font-weight: bold;
+            border: 2px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
         }
 
-        .upgrade-btn:hover {
-            background-color: #218838;
+        .card-link:hover .card-button {
+            color: var(--light-text);
+            background: var(--accent-color);
+            transform: rotate(0deg);
+        }
+
+        /* Barra de Progresso */
+        .bar {
+            background-color: #e0e0e0;
+            width: 100%;
+            height: 0.75rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--accent-color);
+            color: var(--light-text);
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: width 0.5s ease;
+        }
+
+        /* Rodapé */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--light-text);
+            padding: 2.5rem 0;
+            width: 100%;
+        }
+
+        .line-footer1 {
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .line-footer1 h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .line-footer1 p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .line-footer1 form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .line-footer1 input[type="email"] {
+            width: 300px;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--light-text);
+        }
+
+        .line-footer1 input[type="submit"] {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            background-color: var(--accent-color);
+            border: none;
+            color: var(--light-text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .line-footer1 input[type="submit"]:hover {
+            background-color: #1a68b3;
+        }
+
+        .line-footer2 {
+            display: flex;
+            justify-content: space-around;
+            padding: 0 2rem;
+        }
+
+        .box-line-footer {
+            max-width: 25%;
+            padding: 0 1rem;
+        }
+
+        .box-line-footer h3 {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .box-line-footer a {
+            color: var(--light-text);
+            display: block;
+            margin-bottom: 0.75rem;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .box-line-footer a:hover {
+            opacity: 1;
+            color: var(--accent-color);
+        }
+
+        /* Responsividade */
+        @media (max-width: 992px) {
+            .line-footer2 {
+                flex-wrap: wrap;
+            }
+            
+            .box-line-footer {
+                max-width: 50%;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #menu-lateral {
+                position: fixed;
+                z-index: 100;
+                transform: translateX(-100%);
+            }
+            
+            #menu-lateral.open-menu {
+                transform: translateX(0);
+            }
+            
+            #main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .card-list {
+                flex-direction: column;
+            }
+            
+            .card-item {
+                width: 100%;
+            }
+            
+            .line-footer2 {
+                flex-direction: column;
+            }
+            
+            .box-line-footer {
+                max-width: 100%;
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Swiper Overrides */
+        .swiper-pagination-bullet {
+            background: var(--primary-color);
+            opacity: 0.5;
+        }
+
+        .swiper-pagination-bullet-active {
+            opacity: 1;
+            background: var(--accent-color);
+        }
+
+        .swiper-button-next, 
+        .swiper-button-prev {
+            color: var(--accent-color);
         }
     </style>
 </head>
@@ -80,7 +499,7 @@
         <div id="menu-content">
             <div id="user">
             <a href="perfilUsuario.html">
-                <img src="profile-picture.jpg" alt="Foto de Perfil" id="profilePic">
+                <img src="/public/img/default.jpg" alt="Foto de Perfil" id="profilePic">
             </a>
             </div>
             <ul id="side-items">
@@ -215,21 +634,29 @@
 
         document.getElementById('logout-btn').addEventListener('click', handleLogout);
 
-        // Funções de plano e conteúdo
         window.onload = function() {
+             console.log("Iniciando carregamento dos dados do usuário...");
             fetch('/user')
                 .then(response => {
-                    if (!response.ok) throw new Error('Usuário não autenticado');
+                    console.log("Resposta recebida:", response);
+                    if (!response.ok) {
+                        console.error("Resposta não OK:", response.status);
+                        throw new Error('Usuário não autenticado');
+                    }
                     return response.json();
                 })
                 .then(data => {
+                    console.log("Dados recebidos:", data);
+                    
                     if (!data.success) {
+                        console.error("Resposta sem sucesso:", data.message);
                         throw new Error(data.message || 'Erro ao carregar dados');
                     }
 
                     const user = data.data;
+                    console.log("Dados do usuário:", user);
                     const profilePicPath = user.profilePic ? `img/${user.profilePic}` : 'img/default.jpg';
-                    
+
                     document.getElementById('profilePic').src = profilePicPath;
                     document.getElementById('userName').textContent = user.nome || 'Usuário';
 
@@ -262,6 +689,9 @@
         };
 
         function filterContentByPlan(plano) {
+            console.log('Filtrando conteúdo para o plano:', plano);
+            
+            // Mapeamento dos botões de ação
             const actionButtons = {
                 mentoria: document.getElementById('mentoria-btn'),
                 eventos: document.getElementById('eventos-btn'),
@@ -271,166 +701,185 @@
                 incubacao: document.getElementById('incubacao-btn')
             };
 
-            // Esconde todos os botões inicialmente
-            Object.values(actionButtons).forEach(button => {
-                if (button) button.style.display = 'none';
+            // Primeiro, esconder todos os botões
+            Object.values(actionButtons).forEach(btn => {
+                if (btn) btn.style.display = 'none';
             });
 
-            // Mostra os elementos de acordo com o plano
-            switch (plano.toLowerCase()) {
-                case 'startup':
-                    // Plano Startup tem acesso a tudo + recursos exclusivos
-                    Object.values(actionButtons).forEach(button => {
-                        if (button) button.style.display = 'inline-block';
+            // Sempre mostrar o botão de cursos
+            if (actionButtons.cursos) actionButtons.cursos.style.display = 'block';
+
+            // Mostrar cursos conforme o plano
+            const cursos = document.querySelectorAll('.card-item');
+            cursos.forEach((curso, index) => {
+                curso.style.display = 'block'; // Mostra todos os cursos visualmente
+                
+                const button = curso.querySelector('.card-button');
+                if (button) {
+                    button.onclick = function() {
+                        // Verifica acesso baseado no plano
+                        if (plano === 'Startup' || 
+                            (plano === 'Empreendedor' && index < 2) || 
+                            (plano === 'Basico' && index === 0)) {
+                            window.location.href = this.getAttribute('data-url');
+                        } else {
+                            showUpgradeModal();
+                        }
+                    };
+                }
+            });
+
+            // Mostrar botões conforme o plano
+            switch (plano) {
+                case 'Startup':
+                    // Mostrar todos os botões
+                    Object.values(actionButtons).forEach(btn => {
+                        if (btn) btn.style.display = 'block';
                     });
                     break;
-                case 'empreendedor':
-                    // Plano Empreendedor tem acesso a cursos, mentorias e eventos
-                    if (actionButtons.mentoria) actionButtons.mentoria.style.display = 'inline-block';
-                    if (actionButtons.eventos) actionButtons.eventos.style.display = 'inline-block';
-                    if (actionButtons.cursos) actionButtons.cursos.style.display = 'inline-block';
-                    if (actionButtons.grupos) actionButtons.grupos.style.display = 'inline-block';
+                    
+                case 'Empreendedor':
+                    // Mostrar botões específicos
+                    if (actionButtons.mentoria) actionButtons.mentoria.style.display = 'block';
+                    if (actionButtons.eventos) actionButtons.eventos.style.display = 'block';
+                    if (actionButtons.grupos) actionButtons.grupos.style.display = 'block';
                     break;
+                    
+                case 'Basico':
                 default:
-                    // Plano gratuito ou não reconhecido - acesso limitado
-                    if (actionButtons.cursos) {
-                        actionButtons.cursos.style.display = 'inline-block';
-                        actionButtons.cursos.onclick = function() {
-                            showUpgradeModal();
-                            return false;
-                        };
-                    }
+                    // Apenas o botão de cursos já está visível
                     break;
             }
-        }
-
-        function updateUIByPlan(plano) {
-            const planBenefits = document.getElementById('plan-benefits');
-            if (!planBenefits) return;
-
-            switch (plano.toLowerCase()) {
-                case 'startup':
-                    planBenefits.innerHTML = `
-                        <h3>Seus benefícios (Plano Startup):</h3>
-                        <ul>
-                            <li>Acesso completo a todos os módulos EAD</li>
-                            <li>Mentorias online com especialistas</li>
-                            <li>Participação em eventos exclusivos</li>
-                            <li>Modelagem de negócios e incubação</li>
-                            <li>Acompanhamento especializado</li>
-                            <li>Acesso a grupos exclusivos no WhatsApp</li>
-                            <li>Possibilidade de parceria com a plataforma</li>
-                            <li>Programa de aceleração para seu negócio</li>
-                        </ul>
-                        <p>Você tem acesso a todos os recursos, incluindo o programa de aceleração!</p>
-                    `;
-                    break;
-                case 'empreendedor':
-                    planBenefits.innerHTML = `
-                        <h3>Seus benefícios (Plano Empreendedor):</h3>
-                        <ul>
-                            <li>Acesso completo a todos os módulos EAD</li>
-                            <li>Mentorias online com especialistas</li>
-                            <li>Participação em eventos exclusivos</li>
-                            <li>Acesso a grupos de discussão no WhatsApp</li>
-                            <li>Cursos de capacitação gratuitos</li>
-                            <li>Apostilas e roteiros de práticas</li>
-                            <li>Avaliações de aprendizagem</li>
-                        </ul>
-                    `;
-                    break;
-                default:
-                    planBenefits.innerHTML = `
-                        <h3>Seu plano atual oferece:</h3>
-                        <ul>
-                            <li>Acesso limitado a alguns módulos</li>
-                            <li>Conteúdo básico de aprendizagem</li>
-                        </ul>
-                        <button onclick="showUpgradeOptions()" class="upgrade-btn">Conheça nossos planos premium</button>
-                    `;
-                    break;
-            }
-        }
-
-        function showUpgradeModal() {
-            // Implementar modal de upgrade
-            alert('Este recurso está disponível apenas para assinantes dos planos Empreendedor ou Startup. Deseja fazer upgrade agora?');
-            // Redirecionar para página de planos
-            // window.location.href = '/planos';
-        }
-
-        function showUpgradeOptions() {
-            // Mostrar opções de upgrade
-            const upgradeMessage = `
-                <h3>Planos Disponíveis:</h3>
-                <div class="plan-option">
-                    <h4>Plano Empreendedor</h4>
-                    <ul>
-                        <li>Acesso completo aos cursos EAD</li>
-                        <li>Mentorias online com especialistas</li>
-                        <li>Participação em eventos exclusivos</li>
-                        <li>Acesso a grupos de WhatsApp</li>
-                        <li>Apostilas e materiais completos</li>
-                    </ul>
-                </div>
-                <div class="plan-option">
-                    <h4>Plano Startup</h4>
-                    <ul>
-                        <li>Todos os benefícios do Plano Empreendedor</li>
-                        <li>Modelagem de negócios</li>
-                        <li>Programa de incubação e aceleração</li>
-                        <li>Acompanhamento especializado</li>
-                        <li>Possibilidade de parceria</li>
-                    </ul>
-                </div>
-                <button onclick="window.location.href='/planos'" class="upgrade-btn">Quero fazer upgrade agora!</button>
-            `;
-            
-            document.getElementById('plan-benefits').innerHTML = upgradeMessage;
-        }
-
-        // Funções de ação dos botões
-        function mentoriaOnline() {
-            alert('Redirecionando para agendamento de mentoria...');
-            // window.location.href = '/mentoria';
-        }
-
-        function eventos() {
-            alert('Redirecionando para página de eventos...');
-            // window.location.href = '/eventos';
-        }
-
-        function cursosCapacitacao() {
-            alert('Redirecionando para cursos de capacitação...');
-            // window.location.href = '/cursos';
-        }
-
-        function modelagemNegocios() {
-            alert('Redirecionando para modelagem de negócios...');
-            // window.location.href = '/modelagem';
-        }
-
-        function gruposWhatsapp() {
-            alert('Redirecionando para grupos exclusivos...');
-            // window.location.href = '/grupos';
-        }
-
-        function programaIncubacao() {
-            alert('Redirecionando para programa de incubação...');
-            // window.location.href = '/incubacao';
         }
 
         function redirectToCourse(button) {
-            const cursoId = button.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
+            const cursoId = button.getAttribute('data-curso-id') || 
+                        button.closest('.card-item').querySelector('.progress').getAttribute('data-curso-id');
             const url = button.getAttribute('data-url');
             
-            // Verifica se o usuário tem acesso ao curso
-            if (window.userData && (window.userData.plano.toLowerCase() === 'startup' || 
-                                  window.userData.plano.toLowerCase() === 'empreendedor')) {
-                window.location.href = `${url}?cursoId=${cursoId}`;
-            } else {
+            // Todos podem acessar os cursos, então redireciona diretamente
+            window.location.href = `${url}?cursoId=${cursoId}`;
+        }
+
+        // Funções de ação dos botões atualizadas
+        function mentoriaOnline() {
+            if (!window.userData || !window.userData.plano) {
                 showUpgradeModal();
+                return;
             }
+
+            const plano = window.userData.plano;
+            
+            if (plano === 'Empreendedor' || plano === 'Startup') {
+                // Redireciona para a página de mentorias
+                window.location.href = 'mentorias.html';
+            } else {
+                showUpgradeModal('Este recurso está disponível apenas para assinantes dos planos Empreendedor ou Startup');
+            }
+        }
+
+        function eventos() {
+            if (!window.userData || !window.userData.plano) {
+                showUpgradeModal();
+                return;
+            }
+
+            const plano = window.userData.plano;
+            
+            if (plano === 'Empreendedor' || plano === 'Startup') {
+                // Redireciona para a página de eventos
+                window.location.href = 'eventos.html';
+            } else {
+                showUpgradeModal('Este recurso está disponível apenas para assinantes dos planos Empreendedor ou Startup');
+            }
+        }
+
+        function cursosCapacitacao() {
+            if (!window.userData || !window.userData.plano) {
+                showUpgradeModal();
+                return;
+            }
+
+            const plano = window.userData.plano;
+            
+            if (plano === 'Empreendedor' || plano === 'Startup') {
+                // Redireciona para a página de cursos
+                window.location.href = 'cursos.html';
+            } else {
+                showUpgradeModal('Acesso completo aos cursos requer assinatura dos planos Empreendedor ou Startup');
+            }
+        }
+
+        function modelagemNegocios() {
+            if (!window.userData || !window.userData.plano) {
+                showUpgradeModal();
+                return;
+            }
+
+            const plano = window.userData.plano;
+            
+            if (plano === 'Startup') {
+                // Redireciona para a página de modelagem
+                window.location.href = 'modelagem.html';
+            } else {
+                showUpgradeModal('Este recurso está disponível apenas para assinantes do plano Startup');
+            }
+        }
+
+        function gruposWhatsapp() {
+            if (!window.userData || !window.userData.plano) {
+                showUpgradeModal();
+                return;
+            }
+
+            const plano = window.userData.plano;
+            
+            if (plano === 'Empreendedor' || plano === 'Startup') {
+                // Redireciona para os grupos (ou abre link do WhatsApp)
+                window.location.href = 'https://chat.whatsapp.com/SEUCODIGODEGRUPO';
+            } else {
+                showUpgradeModal('Acesso aos grupos exclusivos requer assinatura dos planos Empreendedor ou Startup');
+            }
+        }
+
+        function programaIncubacao() {
+            if (!window.userData || !window.userData.plano) {
+                showUpgradeModal();
+                return;
+            }
+
+            const plano = window.userData.plano;
+            
+            if (plano === 'Startup') {
+                // Redireciona para a página de incubação
+                window.location.href = 'incubacao.html';
+            } else {
+                showUpgradeModal('Este recurso está disponível apenas para assinantes do plano Startup');
+            }
+        }
+
+        // Atualize também a função showUpgradeModal para aceitar mensagem personalizada
+        function showUpgradeModal(message = null) {
+            const modalHTML = `
+                <div class="upgrade-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;display:flex;justify-content:center;align-items:center;">
+                    <div style="background:white;padding:2rem;border-radius:10px;max-width:500px;">
+                        <h2>Upgrade necessário</h2>
+                        <p>${message || 'Este recurso requer assinatura de plano superior'}</p>
+                        <ul>
+                            <li><strong>Empreendedor:</strong> Acesso a mentorias, eventos e grupos</li>
+                            <li><strong>Startup:</strong> Acesso completo a todos os recursos</li>
+                        </ul>
+                        <button onclick="window.location.href='planos.html'" style="padding:10px 20px;background:#0066cc;color:white;border:none;border-radius:5px;cursor:pointer;">
+                            Ver Planos
+                        </button>
+                        <button onclick="document.querySelector('.upgrade-modal').remove()" style="margin-left:10px;padding:10px 20px;background:#ccc;border:none;border-radius:5px;cursor:pointer;">
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
         }
 
         async function handleLogout() {
@@ -445,7 +894,7 @@
                     });
 
                     if (response.ok) {
-                        window.location.href = 'areaAluno.html';
+                        window.location.href = 'areaPrincipal.html';
                     } else {
                         throw new Error('Falha no logout');
                     }
@@ -455,483 +904,5 @@
                 }
             }
         }
-
-        // Newsletter
-        document.getElementById('form-newsletter').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const email = document.getElementById('email-newsletter').value;
-
-            fetch('/newsletter', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: email })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Email cadastrado com sucesso!');
-                    document.getElementById('email-newsletter').value = '';
-                } else {
-                    alert('Erro ao cadastrar e-mail: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao cadastrar e-mail:', error);
-                alert('Erro ao cadastrar e-mail.');
-            });
-        });
     </script>
-
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        display: flex;
-        min-height: 100vh;
-        background-color: #e3e9f7;
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    #user-avatar {
-        width: 50px;
-        height: 50px;
-        object-fit: cover;
-        border-radius: 20px;
-    }
-
-    #menu-lateral {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        background-color: white;
-        height: 105vh;
-        border-radius: 0px 18px ;
-        position:relative;
-        transition: all .5s;
-        min-width: 82px;
-    }
-
-    #side-items {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        list-style: none;
-    }
-
-    .item-menu {
-        padding: 14px;
-        cursor: pointer;
-        border-radius: 8px;
-    }
-
-    .item-menu.active {
-        background-color: rgb(16, 34, 121);
-    }
-
-    .item-menu:hover:not(.active),
-    #logout-btn {
-        background-color: #e3e9f7;
-    }
-
-    .item-menu a {
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #0a0a0a;
-    }
-
-    .item-menu.active a {
-        color: #e3e9f7;
-    }
-
-    .item-menu a i {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 20px;
-        height: 20px;
-    }
-
-    #logout {
-        border-top: 1px solid #e3e9f7;
-        padding: 17px;
-    }
-
-    #logout-btn {
-        border: none;
-        padding: 12px;
-        font-size: 14px;
-        display: flex;
-        gap: 20px;
-        align-items: center;
-        border-radius: 8px;
-        text-align: start;
-        cursor: pointer;
-        background-color: transparent;
-    }
-
-    #open-btn {
-        position: absolute;
-        top: 30px;
-        right: -10px;
-        background-color: rgb(16, 34, 121);
-        color: #e3e9f7;
-        border-radius: 100%;
-        width: 20px;
-        height: 20px;
-        border: none;
-        cursor: pointer;
-    }
-
-    #open-btn-icon {
-        transition: transform .3s ease;
-    }
-
-    .open-menu #open-btn-icon {
-        transform: rotate(180deg);
-    }
-
-    .item-description {
-        width: 0px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        font-size: 14px;
-        transition: width .6s;
-        height: 0px;
-    }
-
-    #menu-lateral.open-menu {
-        min-width: 15%;
-    }
-
-    #menu-lateral.open-menu .item-description {
-        width: 150px;
-        height: auto;
-    }
-
-    #menu-lateral.open-menu .item-menu {
-        justify-content: flex-start;
-        gap: 14px;
-    }
-
-    #menu-content {
-        padding: 12px;
-    }
-
-    #user {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 24px;
-    }
-
-    #user-info {
-        display: flex;
-        flex-direction: column;
-    }
-
-    #user-info span:last-child {
-        color: grey;
-        font-size: 12px;
-    }
-
-    #main-content {
-        flex: 1;
-        background-color: #deebff;
-        border-radius: 0 18px 18px 0;
-    }
-
-    .main-titulo{
-        color:black;
-        padding: 20px;
-        margin: 45px;
-    }
-
-/*css do carrosel*/
-    .card-list .card-item {
-list-style: none;
-}
-
-.card-list .card-item .card-link {
-user-select: none;
-display: block;
-background: white;
-padding: 12px;
-border-radius: 12px;
-text-decoration: none;
-border: 2px solid transparent;
-box-shadow: 0 10px 10px black;
-transition: 0.2s ease;
-height: 470px; 
-}
-
-.card-list .card-item .card-link:active {
-cursor: grabbing;
-}
-
-.card-list .card-item .card-link:hover {
-border-color: #00218d;
-}
-
-.card-list .card-link .card-image {
-width: 100%;
-aspect-ratio: 16/9;
-object-fit: cover;
-border-radius: 10px;
-}
-
-.card-list .card-link .badge {
-color: white;
-padding: 8px 16px;
-font-size: 0.85rem;
-font-weight: 300;
-margin: 16px 0 18px;
-background: #3371e4;
-width: fit-content;
-border-radius: 25px;
-}
-
-.card-list .card-link .card-title {
-font-size: 1.19rem;
-color: black;
-font-weight: 600;
-}
-
-.card-list .card-link .card-button {
-height: 35px;
-width: 35px;
-color: #00218d;
-border-radius: 50%;
-margin: 30px 0 5px;
-background: none;
-cursor: pointer;
-border: 2px solid #00218d;
-transform: rotate(-30deg);
-transition: 0.4s ease;
-}
-
-.card-list .card-link:hover .card-button {
-color: white;
-background: #00218d;
-}
-
-.card-wrapper {
-max-width: 1100px;
-margin: 0 60px 35px;
-padding: 10px 10px;
-overflow: hidden;
-}
-
-.card-wrapper .swiper-pagination-bullet {
-height: 13px;
-width: 13px;
-opacity: 0.5;
-background: #ffffff;
-}
-
-.card-wrapper .swiper-pagination-bullet-active {
-opacity: 1;
-}
-
-.card-wrapper .swiper-slide-button {
-color: #ffffff;
-margin-top: -35px;
-}
-
-@media screen and (max-width: 768px) {
-.card-wrapper {
-    margin: 0 10px 25px;
-}
-
-.card-wrapper .swiper-slide-button {
-    display: none;
-}
-}
-
-.container {
-display: flex;
-}
-
-/* css da barra*/
-.bar{
-background-color: #bed5ff;
-width: 100%;
-margin: 20px auto;
-height: 20px;
-overflow: hidden;
-border-radius: 15px;
-}
-
-.progress{
-width: 1%;
-background-color: #3371e4;
-color: #000000;
-text-align: center;
-height: 100%;
-line-height: 20px;
-transition: width 0.5s ease-in-out;
-}
-
-.video-container {
-position: relative;
-display: inline-block;
-}
-
-.click-overlay {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-/* background-color: rgba(0, 0, 0, 0.5);*/
-z-index: 10;
-cursor: pointer;
-}
-
-.questionnaire {
-color: white;
-text-align: left;
-max-width: 600px;
-margin: 20px auto;
-padding: 30px;
-background-color: rgba(255, 255, 255, 0.055);
-width: 70%;
-border-radius: 10px;
-}
-
-.question {
-margin-bottom: 20px;
-}
-
-.questionnaire h3 {
-color: white;
-}
-
-.questionnaire button {
-background-color: #4682B4;
-color: white;
-border: none;
-padding: 10px 20px;
-cursor: pointer;
-border-radius: 5px;
-}
-
-.questionnaire button:hover {
-background-color: #3b6a9b;
-}
-
-/*rodapé*/
-footer{
-background-color: rgb(97, 137, 255);
-color: white;
-padding: 40px 0 ;
-width: 100%;
-bottom: 0;
-z-index: 10;
-position: relative;
-}
-
-footer .line-footer1{
-text-align: center;
-border-bottom: 2px solid white;
-padding-bottom: 30px;
-}
-
-.line-footer1 h2{
-font-size: 2rem;   
-}
-
-.line-footer1 p{
-font-size: 1.2rem;
-margin: 10px 0 20px 0;
-}
-
-.line-footer1 form{
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-.line-footer1 form input[type=email]{
-width: 300px;
-height: 30px;
-border-radius: 10px 10px 10px 10px;
-background: transparent;
-border: 2px solid white;
-color: white;
-padding: 10px; 
-}
-
-.line-footer1 form input[type=submit]{
-width: 80px;
-height: 30px;
-border-radius: 10px 10px 10px 10px;
-background-color: #57a7ec;
-border: 0;
-color:rgb(255, 255, 255);
-cursor: pointer;
-transition: .2s;
-margin: 5px;
-}
-
-.line-footer1 form input[type=submit]:hover{
-background-color: #4687ff;
-color: white;
-}
-
-footer .line-footer2{
-padding: 20px 0;
-display: flex;
-justify-content: space-evenly;
-}
-
-footer .line-footer2 .box-line-footer{
-max-width: calc(100%/4);
-}
-
-footer .box-line-footer img{
-max-width: 200px;
-margin-bottom: 10px;   
-}
-
-.line-footer2 .box-line-footer h3{
-color: white;
-margin-bottom: 20px;
-} 
-
-.line-footer2 .box-line-footer a{
-color:white; 
-display: block;
-margin-bottom: 20px;
-text-decoration: none;
-font-size: .9rem;
-}
-
-.line-footer2 .box-line-footer .btnicon {
-display: inline-block;
-}
-
-
-.line-footer2 .box-line-footer a:hover{
-color: #4687ff;
-}
-
-#profilePic {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-   margin-bottom: 15px;
-}
-
-</style>
 </html>

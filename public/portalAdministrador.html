@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma EAD - Painel Administrativo</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+        .user-info img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #34495e;
+            color: white;
+            height: calc(100vh - 60px);
+            position: fixed;
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu li {
+            padding: 15px;
+            border-bottom: 1px solid #2c3e50;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .sidebar-menu li:hover {
+            background-color: #2c3e50;
+        }
+        .sidebar-menu li.active {
+            background-color: #2980b9;
+        }
+        .sidebar-menu li i {
+            margin-right: 10px;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .card .value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .data-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table th, .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .data-table th {
+            background-color: #f8f9fa;
+            color: #2c3e50;
+        }
+        .data-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: #2980b9;
+            color: white;
+        }
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #7f8c8d;
+            color: white;
+        }
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-success {
+            background-color: #27ae60;
+            color: white;
+        }
+        .badge-warning {
+            background-color: #f39c12;
+            color: white;
+        }
+        .badge-info {
+            background-color: #3498db;
+            color: white;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .tab.active {
+            border-bottom: 3px solid #2980b9;
+            color: #2980b9;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <img src="logo-cimatec.png" alt="Senai Cimatec">
+            <h2>Plataforma EAD - Admin</h2>
+        </div>
+        <div class="user-info">
+            <img src="admin-avatar.jpg" alt="Administrador">
+            <span>Administrador</span>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <ul class="sidebar-menu">
+            <li class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
+            <li><i class="fas fa-users"></i> Usuários</li>
+            <li><i class="fas fa-chalkboard-teacher"></i> Professores</li>
+            <li><i class="fas fa-graduation-cap"></i> Alunos</li>
+            <li><i class="fas fa-book"></i> Cursos</li>
+            <li><i class="fas fa-layer-group"></i> Módulos</li>
+            <li><i class="fas fa-file-alt"></i> Conteúdos</li>
+            <li><i class="fas fa-chart-line"></i> Relatórios</li>
+            <li><i class="fas fa-cog"></i> Configurações</li>
+            <li><i class="fas fa-sign-out-alt"></i> Sair</li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <h1>Painel Administrativo</h1>
+        
+        <div class="dashboard-cards">
+            <div class="card">
+                <h3>Usuários Ativos</h3>
+                <p class="value">1,243</p>
+                <p>+15% este mês</p>
+            </div>
+            <div class="card">
+                <h3>Professores</h3>
+                <p class="value">28</p>
+                <p>5 novos este mês</p>
+            </div>
+            <div class="card">
+                <h3>Cursos Ativos</h3>
+                <p class="value">12</p>
+                <p>3 em desenvolvimento</p>
+            </div>
+            <div class="card">
+                <h3>Faturamento</h3>
+                <p class="value">R$ 84,720</p>
+                <p>Este mês</p>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('tab1')">Visão Geral</div>
+            <div class="tab" onclick="openTab('tab2')">Estatísticas</div>
+            <div class="tab" onclick="openTab('tab3')">Ações Rápidas</div>
+        </div>
+        
+        <div id="tab1" class="tab-content active">
+            <div class="data-section">
+                <h2>Últimos Usuários Cadastrados</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th>Plano</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Carlos Eduardo</td>
+                            <td>carlos@email.com</td>
+                            <td>Aluno</td>
+                            <td><span class="badge badge-info">Startup</span></td>
+                            <td>02/06/2023</td>
+                            <td><span class="badge badge-success">Ativo</span></td>
+                            <td>
+                                <button class="btn btn-secondary">Editar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ana Paula</td>
+                            <td>ana@email.com</td>
+                            <td>Aluno</td>
+                            <td><span class="badge badge-warning">Empreendedor</span></td>
+                            <td>01/06/2023</td>
+                            <td><span class="badge badge-success">Ativo</span></td>
+                            <td>
+                                <button class="btn btn-secondary">Editar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Roberto Almeida</td>
+                            <td>roberto@email.com</td>
+                            <td>Professor</td>
+                            <td>-</td>
+                            <td>30/05/2023</td>
+                            <td><span class="badge badge-success">Ativo</span></td>
+                            <td>
+                                <button class="btn btn-secondary">Editar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="data-section">
+                <h2>Cursos Mais Populares</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Curso</th>
+                            <th>Inscritos</th>
+                            <th>Progresso Médio</th>
+                            <th>Taxa de Conclusão</th>
+                            <th>Avaliação</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Desenvolvimento de Jogos</td>
+                            <td>328</td>
+                            <td>64%</td>
+                            <td>42%</td>
+                            <td>4.8 ★</td>
+                            <td>
+                                <button class="btn btn-primary">Ver Detalhes</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Empreendedorismo Digital</td>
+                            <td>275</td>
+                            <td>58%</td>
+                            <td>37%</td>
+                            <td>4.6 ★</td>
+                            <td>
+                                <button class="btn btn-primary">Ver Detalhes</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tecnologia para Startups</td>
+                            <td>198</td>
+                            <td>49%</td>
+                            <td>31%</td>
+                            <td>4.5 ★</td>
+                            <td>
+                                <button class="btn btn-primary">Ver Detalhes</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="tab2" class="tab-content">
+            <div class="data-section">
+                <h2>Estatísticas de Uso</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="card">
+                        <h3>Distribuição de Planos</h3>
+                        <div style="height: 200px; background-color: #f8f9fa; display: flex; justify-content: center; align-items: center;">
+                            [Gráfico de Pizza: 45% Básico, 35% Empreendedor, 20% Startup]
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Crescimento Mensal</h3>
+                        <div style="height: 200px; background-color: #f8f9fa; display: flex; justify-content: center; align-items: center;">
+                            [Gráfico de Linhas: Crescimento de usuários nos últimos 6 meses]
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>Engajamento por Curso</h3>
+                        <div style="height: 300px; background-color: #f8f9fa; display: flex; justify-content: center; align-items: center;">
+                            [Gráfico de Barras: Tempo médio de estudo por curso]
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tab3" class="tab-content">
+            <div class="data-section">
+                <h2>Ações Rápidas</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="card">
+                        <h3>Adicionar Novo Usuário</h3>
+                        <div class="form-group">
+                            <label>Nome Completo</label>
+                            <input type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email">
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Usuário</label>
+                            <select>
+                                <option>Aluno</option>
+                                <option>Professor</option>
+                                <option>Administrador</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-success">Cadastrar</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Criar Novo Curso</h3>
+                        <div class="form-group">
+                            <label>Nome do Curso</label>
+                            <input type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select>
+                                <option>Negócios</option>
+                                <option>Empreendedorismo</option>
+                                <option>Tecnologia</option>
+                                <option>Desenvolvimento de Jogos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <textarea rows="3"></textarea>
+                        </div>
+                        <button class="btn btn-success">Criar Curso</button>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <div class="card">
+                        <h3>Enviar Notificação em Massa</h3>
+                        <div class="form-group">
+                            <label>Destinatários</label>
+                            <select>
+                                <option>Todos os usuários</option>
+                                <option>Todos os alunos</option>
+                                <option>Todos os professores</option>
+                                <option>Usuários de um curso específico</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Assunto</label>
+                            <input type="text">
+                        </div>
+                        <div class="form-group">
+                            <label>Mensagem</label>
+                            <textarea rows="5"></textarea>
+                        </div>
+                        <button class="btn btn-primary">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+
+        window.onload = function() {
+             console.log("Iniciando carregamento dos dados do usuário...");
+            fetch('/user')
+                .then(response => {
+                    console.log("Resposta recebida:", response);
+                    if (!response.ok) {
+                        console.error("Resposta não OK:", response.status);
+                        throw new Error('Usuário não autenticado');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Dados recebidos:", data);
+                    
+                    if (!data.success) {
+                        console.error("Resposta sem sucesso:", data.message);
+                        throw new Error(data.message || 'Erro ao carregar dados');
+                    }
+
+                    const user = data.data;
+                    console.log("Dados do usuário:", user);
+                    const profilePicPath = user.profilePic ? `img/${user.profilePic}` : 'img/default.jpg';
+
+                    document.getElementById('profilePic').src = profilePicPath;
+                    document.getElementById('userName').textContent = user.nome || 'Usuário';
+
+                    // Armazena os dados do usuário
+                    window.userData = {
+                        id: user.id,
+                        tipo: user.tipo,
+                        dataExpiracao: user.dataExpiracao
+                    };
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar dados:', error);
+                    document.getElementById('profilePic').src = 'img/default.jpg';
+                    document.getElementById('userName').textContent = 'Usuário';
+                });
+
+        };
+
+        function openTab(tabId) {
+            // Esconde todos os conteúdos de tab
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove a classe active de todas as tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Mostra o conteúdo da tab selecionada e marca como active
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        async function handleLogout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                try {
+                    const response = await fetch('/logout', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (response.ok) {
+                        window.location.href = 'areaPrincipal.html';
+                    } else {
+                        throw new Error('Falha no logout');
+                    }
+                } catch (error) {
+                    console.error('Erro durante o logout:', error);
+                    alert('Erro ao fazer logout. Por favor, tente novamente.');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

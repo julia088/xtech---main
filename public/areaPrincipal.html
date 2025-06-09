@@ -232,27 +232,44 @@
 <!--Login-->
 <script>
     document.querySelector('.form-box.login form').addEventListener('submit', function(e) {
-        e.preventDefault();
-    
-        const email = this.querySelector('input[type="email"]').value;
-        const senha = this.querySelector('input[type="password"]').value;
-    
-        fetch('/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, senha }),
-        })
-        .then(response => {
-            if (response.ok) {
-                window.location.href = "portalAluno.html";
-            } else {
-                alert('E-mail ou senha incorretos!');
-            }
-        })
-        .catch(error => console.error('Erro:', error));
+    e.preventDefault();
+
+    const email = this.querySelector('input[type="email"]').value;
+    const senha = this.querySelector('input[type="password"]').value;
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, senha }),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Credenciais inválidas');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Redireciona de acordo com o tipo de usuário
+            const redirectPaths = {
+                'Aluno': '/portalAluno',
+                'Professor': '/portalProfessor',
+                'Administrador': '/portalAdministrador'
+            };
+            
+            const redirectPath = redirectPaths[data.user.tipo] || '/';
+            window.location.href = redirectPath;
+        } else {
+            alert(data.message || 'Erro no login');
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        alert(error.message || 'Erro ao fazer login');
     });
+});
     
     document.querySelector('.form-box.register form').addEventListener('submit', function(e) {
         e.preventDefault();

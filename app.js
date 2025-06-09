@@ -57,21 +57,55 @@ const upload = multer({
     }
 });
 
-function verificarAutenticacao(req, res, next) {
-    if (req.session.user) {
-        next(); 
-    } else {
-        res.redirect('/'); 
-    }
+function verificarAutenticacao(opcoes = {}) {
+    return (req, res, next) => {
+        // 1. Verificação básica de autenticação
+        if (!req.session.user.id) {
+            console.log('Acesso negado: usuário não autenticado');
+            return res.redirect('/');
+        }
+
+        // 2. Verificação do tipo de usuário (se especificado)
+        if (opcoes.tiposPermitidos) {
+            const tipoUsuario = req.session.user.tipo;
+            
+            if (!opcoes.tiposPermitidos.includes(tipoUsuario)) {
+                console.log(`Acesso negado: usuário do tipo ${tipoUsuario} tentou acessar rota restrita`);
+                return res.status(403).send('Acesso não autorizado para seu tipo de usuário');
+            }
+        }
+
+        next();
+    };
 }
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/areaPrincipal.html'));
 });
 
-app.get('/portalAluno', verificarAutenticacao, (req, res) => {
+app.get('/portalAluno', verificarAutenticacao({
+    tiposPermitidos: ['Aluno']
+}), (req, res) => {
     res.sendFile(path.join(__dirname, 'public/portalAluno.html'));
 });
+
+app.get('/portalAdministrador', verificarAutenticacao({
+    tiposPermitidos: ['Administrador']
+}), (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/portalAdministrador.html'));
+});
+
+app.get('/portalProfessor', verificarAutenticacao({
+    tiposPermitidos: ['Professor']
+}), (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/portalProfessor.html'));
+});
+
+app.get('/planos', verificarAutenticacao({
+tiposPermitidos: ['Aluno']
+}), (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/planos.html'));
+})
 
 app.get('/curso1', verificarAutenticacao, (req,res) =>{
     res.sendFile(path.join(__dirname, 'public/curso1.html'));
@@ -85,35 +119,61 @@ app.get('/curso3', verificarAutenticacao, (req,res) =>{
     res.sendFile(path.join(__dirname, 'public/curso3.html'));
 });
 
-app.get('/curso4', verificarAutenticacao, (req,res) =>{
-    res.sendFile(path.join(__dirname, 'public/curso4.html'));
-});
-
 app.get('/certificado', verificarAutenticacao, (req,res) =>{
     res.sendFile(path.join(dir__name, 'public/certificado.html'));
-})
+});
 
-// rota de login
+// rota de login - Versão melhorada
 app.post('/login', (req, res) => {
     const { email, senha } = req.body;
 
-    const query = 'SELECT * FROM usuario WHERE email = ? AND senha = ?';
-    connection.query(query, [email, senha], (err, results) => {
-        if (err) throw err;
+    // 1. Validação básica dos campos
+    if (!email || !senha) {
+        return res.status(400).json({ 
+            success: false,
+            message: 'E-mail e senha são obrigatórios' 
+        });
+    }
 
-        if (results.length > 0) {
-            req.session.user = { 
-                id: 
-                 results[0].id,
-                 nome: results[0].nome, 
-                 senha: results[0].senha, 
-                 email: results[0].email 
-                };
-            console.log('Usuário logado:', req.session.user);
-            return res.redirect('/portalAluno');
-        } else {
-            res.status(401).send('E-mail ou senha incorretos!');
+    // 2. Consulta segura ao banco de dados
+    const query = 'SELECT id, nome, email, tipo FROM usuario WHERE email = ? AND senha = ?';
+    connection.query(query, [email, senha], (err, results) => {
+        // 3. Tratamento de erros do banco de dados
+        if (err) {
+            console.error('Erro no banco de dados:', err);
+            return res.status(500).json({ 
+                success: false,
+                message: 'Erro interno no servidor' 
+            });
         }
+
+        // 4. Verificação de credenciais
+        if (results.length === 0) {
+            return res.status(401).json({ 
+                success: false,
+                message: 'E-mail ou senha incorretos!' 
+            });
+        }
+
+        // 5. Criação da sessão (sem armazenar senha)
+        const user = results[0];
+        req.session.user = { 
+            id: user.id,
+            nome: user.nome,
+            email: user.email,
+            tipo: user.tipo
+        };
+
+        console.log('Usuário logado:', req.session.user);
+
+        // 6. Resposta JSON para o frontend redirecionar
+        res.json({
+            success: true,
+            user: {
+                tipo: user.tipo,
+                nome: user.nome
+            }
+        });
     });
 });
 
@@ -159,7 +219,7 @@ app.post('/cadastro', (req, res) => {
                 const redirects = {
                     'Aluno': '/portalAluno',
                     'Professor': '/portalProfessor',
-                    'Administrador': '/portalAdmin'
+                    'Administrador': '/portalAdministrador'
                 };
                 
                 res.redirect(redirects[tipo] || '/');
@@ -228,7 +288,6 @@ app.post('/newsletter', (req, res) => {
 
 //rota para atulizar o perfil do usuário
 app.post('/atualizarPerfil', verificarAutenticacao, (req, res) => {
-    const { nome, email, senha } = req.body;
     const userId = req.session.user.id;
 
     // atualiza os dados no banco de dados
@@ -271,10 +330,10 @@ app.post('/atualizarSenha', (req, res) => {
 
 //rota para bd
 app.get('/getUserData', verificarAutenticacao, (req, res) => {
-    const usuarioId = req.session.user.id;
+    const userId = req.session.user.id;
 
     const query = 'SELECT nome, email, senha, profilePic FROM usuario WHERE id = ?';
-    connection.query(query, [usuarioId], (err, results) => {
+    connection.query(query, [userId], (err, results) => {
         if (err) {
             return res.status(500).json({ message: 'Erro ao buscar dados do usuário' });
         }
@@ -282,67 +341,106 @@ app.get('/getUserData', verificarAutenticacao, (req, res) => {
     });
 });
 
-// Rota protegida para obter dados completos do usuário
 app.get('/user', verificarAutenticacao, (req, res) => {
+    console.log('Sessão recebida:', req.session); // Log para depuração
+    
     const userId = req.session.user.id;
+    console.log(`Buscando dados para usuário ID: ${userId}`);
     
     const query = `
         SELECT 
             u.id,
+            u.tipo,
             u.nome, 
             u.email, 
+            u.telefone,
             u.profilePic,
-            u.tipo,
             a.plano,
-            a.data_assinatura,
-            a.data_expiracao,
-            a.progresso_global,
-            p.especializacao,
-            p.bio
+            a.data_expiracao as dataExpiracao
         FROM usuario u
-        LEFT JOIN aluno a ON u.id = a.usuario_id
-        LEFT JOIN professor p ON u.id = p.usuario_id
+        LEFT JOIN assinatura a ON u.id = a.usuario_id
         WHERE u.id = ?
     `;
     
     connection.query(query, [userId], (err, results) => {
         if (err) {
-            console.error('Erro ao buscar dados do usuário:', err);
+            console.error('Erro no banco de dados:', err);
             return res.status(500).json({ 
                 success: false,
-                message: 'Erro interno ao buscar dados do usuário' 
+                message: 'Erro interno no servidor' 
             });
         }
         
         if (results.length === 0) {
+            console.log('Usuário não encontrado para ID:', userId);
             return res.status(404).json({ 
                 success: false,
                 message: 'Usuário não encontrado' 
             });
         }
         
-        const userData = {
-            id: results[0].id,
-            nome: results[0].nome,
-            email: results[0].email,
-            profilePic: results[0].profilePic,
-            tipo: results[0].tipo,
-            plano: results[0].plano || null,
-            dataAssinatura: results[0].data_assinatura,
-            dataExpiracao: results[0].data_expiracao,
-            progressoGlobal: results[0].progresso_global,
-            especializacao: results[0].especializacao,
-            bio: results[0].bio
-        };
-        
-        // Remove a senha mesmo que não esteja sendo selecionada
-        delete userData.senha;
+        const userData = results[0];
+        console.log('Dados encontrados:', userData); // Log dos dados
         
         res.json({
             success: true,
-            data: userData
+            data: {
+                id: userData.id,
+                tipo: userData.tipo,
+                nome: userData.nome,
+                email: userData.email,
+                telefone: userData.telefone || '',
+                profilePic: userData.profilePic || null,
+                plano: userData.plano || null,
+                dataExpiracao: userData.dataExpiracao || null
+            }
         });
     });
+});
+
+
+// Atualizar plano do usuário
+app.post('/update-plan', verificarAutenticacao(), async (req, res) => {
+    const { userId, planoId } = req.body;
+
+    try {
+        // Verificar se o plano existe
+        const [plano] = await db.execute('SELECT id FROM plano WHERE id = ?', [planoId]);
+        if (!plano.length) {
+            return res.status(400).json({ 
+                success: false,
+                message: 'Plano inválido' 
+            });
+        }
+
+        // Criar nova assinatura
+        const dataInicio = new Date();
+        const dataFim = new Date();
+        dataFim.setMonth(dataFim.getMonth() + 1); // 1 mês de assinatura
+
+        await db.execute(
+            'INSERT INTO assinatura (usuario_id, plano_id, data_inicio, data_fim, ativa) VALUES (?, ?, ?, ?, ?)',
+            [userId, planoId, dataInicio, dataFim, true]
+        );
+
+        // Atualizar plano do usuário
+        const [planoInfo] = await db.execute('SELECT tipo FROM plano WHERE id = ?', [planoId]);
+        await db.execute('UPDATE usuario SET plano = ? WHERE id = ?', [planoInfo[0].tipo, userId]);
+
+        req.session.user.plano = planoInfo[0].tipo;
+        
+        res.json({ 
+            success: true,
+            message: `Plano atualizado para ${planoInfo[0].tipo}`,
+            plano: planoInfo[0].tipo
+        });
+    } catch (error) {
+        console.error('Erro ao atualizar plano:', error);
+        res.status(500).json({ 
+            success: false,
+            message: 'Erro ao atualizar plano' 
+        });
+    }
 });
 
 app.get('/api/cursos', verificarAutenticacao, async (req, res) => {
