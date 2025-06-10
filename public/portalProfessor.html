@@ -160,13 +160,9 @@
         <ul class="sidebar-menu">
             <li class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
             <li><i class="fas fa-users"></i> Minhas Turmas</li>
-            <li><i class="fas fa-book"></i> Conteúdos</li>
-            <li><i class="fas fa-tasks"></i> Atividades</li>
-            <li><i class="fas fa-chart-bar"></i> Desempenho dos Alunos</li>
             <li><i class="fas fa-comments"></i> Mensagens</li>
             <li><i class="fas fa-calendar-alt"></i> Agenda</li>
-            <li><i class="fas fa-cog"></i> Configurações</li>
-            <li><i class="fas fa-sign-out-alt"></i> Sair</li>
+            <li id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</li>
         </ul>
     </div>
     
@@ -311,7 +307,9 @@
         };
 
 
-    async function handleLogout() {
+     document.getElementById('logout-btn').addEventListener('click', handleLogout);
+
+        async function handleLogout() {
             if (confirm('Tem certeza que deseja sair?')) {
                 try {
                     const response = await fetch('/logout', {

@@ -444,28 +444,352 @@
             }
         }
 
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0,0,0,0.7);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
+    /* Modal de Upgrade - Versão Integrada */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease-out;
+}
 
-    .modal-content {
-        background: white;
-        border-radius: 10px;
-        padding: 30px;
-        width: 90%;
-        max-width: 500px;
-        position: relative;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+.modal-content {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    padding: 2rem;
+    position: relative;
+    transform: translateY(0);
+    animation: slideUp 0.4s ease-out;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.modal-content h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.modal-content p {
+    color: var(--secondary-color);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.plan-comparison {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+@media (min-width: 600px) {
+    .plan-comparison {
+        flex-direction: row;
     }
+}
+
+.plan-option {
+    flex: 1;
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.2rem;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.plan-option:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.plan-option h4 {
+    color: var(--accent-color);
+    margin-top: 0;
+    font-size: 1.2rem;
+    text-align: center;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.plan-option ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.plan-option li {
+    padding: 0.5rem 0;
+    color: var(--secondary-color);
+    position: relative;
+    padding-left: 1.5rem;
+    line-height: 1.4;
+    font-size: 0.9rem;
+}
+
+.plan-option li:before {
+    content: "✓";
+    color: var(--success-color);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.modal-buttons button {
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 0.9rem;
+}
+
+.modal-buttons button:first-child {
+    background-color: #f1f1f1;
+    color: var(--secondary-color);
+}
+
+.modal-buttons button:first-child:hover {
+    background-color: #e0e0e0;
+}
+
+.modal-buttons button.primary {
+    background: linear-gradient(to right, var(--accent-color), var(--success-color));
+    color: var(--light-text);
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
+}
+
+.modal-buttons button.primary:hover {
+    background: linear-gradient(to right, #2980b9, #27ae60);
+    box-shadow: 0 6px 12px rgba(46, 204, 113, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Modal de seleção de upgrade */
+.upgrade-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.upgrade-option {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition);
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.upgrade-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    border-color: var(--accent-color);
+}
+
+.upgrade-option h4 {
+    color: var(--accent-color);
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.upgrade-option ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.upgrade-option li {
+    padding: 0.5rem 0;
+    color: var(--secondary-color);
+    position: relative;
+    padding-left: 1.5rem;
+    line-height: 1.4;
+}
+
+.upgrade-option li:before {
+    content: "•";
+    color: var(--accent-color);
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.upgrade-option .upgrade-btn {
+    width: 100%;
+    margin-top: 1rem;
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.upgrade-option .upgrade-btn:hover {
+    background-color: #1a68b3;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        transform: translateY(20px);
+        opacity: 0.7;
+    }
+    to { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .modal-buttons {
+        flex-direction: column;
+    }
+    
+    .modal-buttons button {
+        width: 100%;
+    }
+}
+
+/* Integração com os estilos existentes de pagamento */
+.plano-price {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    font-weight: bold;
+    margin: 15px 0;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--secondary-color);
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: var(--transition);
+}
+
+.form-group input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.2);
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.btn-pagar {
+    background: var(--accent-color);
+    color: var(--light-text);
+    border: none;
+    padding: 14px;
+    width: 100%;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: var(--transition);
+    font-weight: 600;
+}
+
+.btn-pagar:hover {
+    background: #1a68b3;
+    transform: translateY(-2px);
+}
+
+.btn-pagar i {
+    margin-right: 8px;
+}
+
+.payment-error {
+    color: var(--danger-color);
+    background: #f8d7da;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+}
+
+.success-icon {
+    font-size: 60px;
+    color: var(--success-color);
+    margin-bottom: 20px;
+}
+
+.btn-ok {
+    background: var(--success-color);
+    color: var(--light-text);
+    border: none;
+    padding: 12px 25px;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: var(--transition);
+}
+
+.btn-ok:hover {
+    background: #219653;
+    transform: translateY(-2px);
+}
 
     .close-btn {
         position: absolute;
@@ -706,6 +1030,26 @@
                 </ul>
             </div>
         </div>
+
+                <!-- Código do seu conteúdo principal... -->
+    </main>
+    <!-- Popup de pagamento -->
+    <div class="modal-overlay" id="payment-modal" style="display: none;">
+        <div class="modal-content">
+            <h3>Pagamento</h3>
+            <form class="payment-form">
+                <input type="text" placeholder="Número do Cartão" required />
+                <input type="text" placeholder="Data de Validade (MM/AA)" required />
+                <input type="text" placeholder="CVV" required />
+                <input type="text" placeholder="Nome do Titular" required />
+            </form>
+            <div class="modal-buttons">
+                <button onclick="closePaymentPopup()">Cancelar</button>
+                <button class="pay-button" onclick="submitPayment()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
@@ -888,32 +1232,79 @@
         return;
     }
 
-    const upgradeMessage = `
-        <h3>Planos Disponíveis:</h3>
-        <div class="plan-option">
-            <h4>Plano Empreendedor</h4>
-            <ul>
-                <li>Acesso completo aos cursos EAD</li>
-                <li>Mentorias online com especialistas</li>
-                <li>Participação em eventos exclusivos</li>
-                <li>Acesso a grupos de WhatsApp</li>
-                <li>Apostilas e materiais completos</li>
-            </ul>
-        </div>
-        <div class="plan-option">
-            <h4>Plano Startup</h4>
-            <ul>
-                <li>Todos os benefícios do Plano Empreendedor</li>
-                <li>Modelagem de negócios</li>
-                <li>Programa de incubação e aceleração</li>
-                <li>Acompanhamento especializado</li>
-                <li>Possibilidade de parceria</li>
-            </ul>
-        </div>
-        <button onclick="window.location.href='/planos'" class="upgrade-btn">Quero fazer upgrade agora!</button>
+    // Verifica o plano atual do usuário (assumindo que está armazenado em window.userData.plano)
+    const currentPlan = window.userData?.plano || 'Basico';
+    
+    // Determina quais planos estão disponíveis para upgrade
+    let availableUpgrades = [];
+    
+    switch(currentPlan) {
+        case 'Basico':
+            availableUpgrades = ['Empreendedor', 'Startup'];
+            break;
+        case 'Empreendedor':
+            availableUpgrades = ['Startup'];
+            break;
+        case 'Startup':
+            // Se já é o plano mais alto, mostra mensagem diferente
+            planBenefits.innerHTML = `
+                <h3>Você já tem nosso plano mais completo!</h3>
+                <p>O Plano Startup inclui todos os benefícios disponíveis em nossa plataforma.</p>
+                <p>Se precisar de algo especial, entre em contato com nosso suporte.</p>
+            `;
+            return;
+        default:
+            availableUpgrades = ['Empreendedor', 'Startup'];
+    }
+
+    // Monta o HTML com os planos disponíveis para upgrade
+    let upgradeHTML = `
+        <h3>Faça upgrade do seu plano atual (${currentPlan})</h3>
+        <p>Escolha para qual plano deseja fazer upgrade:</p>
+        <div class="upgrade-options-container">
     `;
     
-    planBenefits.innerHTML = upgradeMessage;
+    // Adiciona cada opção de upgrade disponível
+    availableUpgrades.forEach(plan => {
+        upgradeHTML += `
+            <div class="upgrade-option" onclick="selectUpgradePlan('${plan}')">
+                <h4>Plano ${plan}</h4>
+                ${getPlanFeaturesHTML(plan)}
+                <button onclick="showPaymentPopup()"class="upgrade-btn">Selecionar Plano</button>
+            </div>
+        `;
+    });
+    
+    upgradeHTML += `</div>`;
+    
+    planBenefits.innerHTML = upgradeHTML;
+}
+
+function getPlanFeaturesHTML(plan) {
+    const features = {
+        'Empreendedor': [
+            'Mentorias semanais com especialistas',
+            'Participação em eventos exclusivos',
+            'Acesso completo a todos os cursos',
+            'Grupos de networking no WhatsApp',
+            'Apostilas e materiais complementares',
+            'R$250/mês'
+        ],
+        'Startup': [
+            'Tudo do Plano Empreendedor +',
+            'Modelagem de negócios personalizada',
+            'Programa de incubação/aceleração',
+            'Acompanhamento especializado 24/7',
+            'Possibilidade de parceria (25% do negócio)',
+            'R$500/mês'
+        ]
+    };
+    
+    return `
+        <ul>
+            ${features[plan].map(item => `<li>${item}</li>`).join('')}
+        </ul>
+    `;
 }
 
         // Funções de ação dos botões atualizadas para mostrar popups em vez de redirecionar
@@ -1091,6 +1482,21 @@
         document.getElementById('upgrade-modal').remove();
         showUpgradeOptions();
     }
+
+    // Função para mostrar o popup de pagamento
+        function showPaymentPopup() {
+            document.getElementById('payment-modal').style.display = 'flex';
+        }
+        // Função para fechar o popup de pagamento
+        function closePaymentPopup() {
+            document.getElementById('payment-modal').style.display = 'none';
+        }
+        // Função para simular o envio do pagamento
+        function submitPayment() {
+            alert('Pagamento enviado com sucesso! (Ilustrativo)');
+            closePaymentPopup();
+        }
+
 
         async function handleLogout() {
             if (confirm('Tem certeza que deseja sair?')) {

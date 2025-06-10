@@ -209,14 +209,8 @@
         <ul class="sidebar-menu">
             <li class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</li>
             <li><i class="fas fa-users"></i> Usuários</li>
-            <li><i class="fas fa-chalkboard-teacher"></i> Professores</li>
-            <li><i class="fas fa-graduation-cap"></i> Alunos</li>
             <li><i class="fas fa-book"></i> Cursos</li>
-            <li><i class="fas fa-layer-group"></i> Módulos</li>
-            <li><i class="fas fa-file-alt"></i> Conteúdos</li>
-            <li><i class="fas fa-chart-line"></i> Relatórios</li>
-            <li><i class="fas fa-cog"></i> Configurações</li>
-            <li><i class="fas fa-sign-out-alt"></i> Sair</li>
+            <li id="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</li>
         </ul>
     </div>
     
@@ -518,6 +512,9 @@
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
         }
+
+        
+        document.getElementById('logout-btn').addEventListener('click', handleLogout);
 
         async function handleLogout() {
             if (confirm('Tem certeza que deseja sair?')) {
