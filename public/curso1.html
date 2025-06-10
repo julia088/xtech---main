@@ -1,18 +1,478 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
-    <link rel="stylesheet" href="barra.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
-    <link rel="stylesheet" href="estrela.css">
-    <link rel="stylesheet" href="cursos.css">
-    <script src="barra.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <title>Curso de Negócios</title>
-</head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px;
+            background: rgba(30, 60, 114, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .card-seta {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-seta:hover {
+            background: white;
+            color: #1e3c72;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Main Container */
+        .main-container {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+
+        /* Title Section */
+        .titulocurso {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 0 20px 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .titulocurso h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        /* Course Content */
+        .backcont {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin: 40px 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        h1::before,
+        h1::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, white, transparent);
+        }
+
+        h1::before {
+            left: -100px;
+        }
+
+        h1::after {
+            right: -100px;
+        }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+
+        .button-group button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            min-width: 140px;
+        }
+
+        .button-group button:hover {
+            background: white;
+            color: #1e3c72;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Video Container */
+        .video-container {
+            position: relative;
+            max-width: 800px;
+            margin: 40px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+            border-radius: 15px;
+        }
+
+        .video-placeholder {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        .click-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            cursor: pointer;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            max-width: 600px;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        .progress-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            height: 30px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress {
+            background: linear-gradient(90deg, #4CAF50, #45a049);
+            height: 100%;
+            width: 0;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            border-radius: 25px;
+            position: relative;
+        }
+
+        .progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Exercise Container */
+        .exercise-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            color: #333;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .questionnaire h3 {
+            color: #1e3c72;
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .question {
+            background: rgba(30, 60, 114, 0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 5px solid #1e3c72;
+        }
+
+        .question label {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #1e3c72;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .question input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .question label:not(:first-child) {
+            font-weight: 400;
+            font-size: 1rem;
+            color: #555;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .question label:not(:first-child):hover {
+            color: #1e3c72;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 30px auto;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+        }
+
+        /* Rating System */
+        .rating {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            transform: rotateY(180deg);
+        }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            display: block;
+            cursor: pointer;
+            width: 50px;
+            padding: 0 5px;
+        }
+
+        .rating label::before {
+            content: '\f005';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 40px;
+            color: #ddd;
+            transition: color 0.3s ease;
+        }
+
+        .rating label::after {
+            content: '\f005';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 40px;
+            position: absolute;
+            top: 0;
+            opacity: 0;
+            color: #ffd700;
+            transition: opacity 0.3s ease;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .rating label:hover::after,
+        .rating label:hover ~ label::after,
+        .rating input:checked ~ label::after {
+            opacity: 1;
+        }
+
+        /* Popup Styles */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .popup-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            animation: popupAppear 0.3s ease;
+        }
+
+        @keyframes popupAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.8) translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .popup-content h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: #1e3c72;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+                letter-spacing: 2px;
+            }
+
+            h1::before,
+            h1::after {
+                display: none;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .video-container iframe {
+                height: 300px;
+            }
+
+            .exercise-container {
+                margin: 20px;
+                padding: 25px;
+            }
+
+            .titulocurso {
+                margin: 0 15px 30px;
+            }
+
+            .titulocurso h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
 
 <body data-curso-id="1">
     <header>
@@ -21,123 +481,118 @@
         </nav>
     </header>
 
-
-    <div class="titulocurso"><h2>CAPS - Centro de Assistência a Programadores de Sistemas</h2></div>
-    <center>
-    <div class="backcont">
-        <br><br>
-        <h1>
-           
-            NEGÓCIOS
-           
-        </h1>
-        <br>
-        <br><br><br>
-        <div class="button-group">
-            <button onclick="negocios1()">Aula 1</button>
-            <button onclick="negocios2()">Aula 2</button>
-            <button onclick="negocios3()">Aula 3</button>
-            <button onclick="completeExercises()">Exercícios</button>
+    <div class="main-container">
+        <div class="titulocurso">
+            <h2>CAPS - Centro de Assistência a Programadores de Sistemas</h2>
         </div>
 
+        <div class="backcont">
+            <h1>NEGÓCIOS</h1>
+            
+            <div class="button-group">
+                <button onclick="negocios1()">Aula 1</button>
+                <button onclick="negocios2()">Aula 2</button>
+                <button onclick="negocios3()">Aula 3</button>
+                <button onclick="completeExercises()">Exercícios</button>
+            </div>
 
-        <br><br>
-
-
-        <div class="video-container">
-            <div class="click-overlay" onclick="advanceProgress(this)"></div>
-        </div>
-        <br><br>
-        <div class="bar">
-            <div class="progress">0%</div>
-        </div>
-        <br><br>
-    </div>
-    </center>
-
-
-    <div class="container swiper" id="exercise-container" style="display: none;">
-        <br><br>
-        <div class="questionnaire">
-            <h3>Responda as perguntas a seguir:</h3>
-            <form id="quiz-form">
-                <div class="question">
-                    <label>1. Qual é o principal fator que diferencia um empreendedor de sucesso, segundo os vídeos?</label><br>
-                    <input type="radio" name="q1" value="correta" required> Ter resiliência e capacidade de adaptação às mudanças<br>
-                    <input type="radio" name="q1" value="link"> Ter um grande capital inicial para investir<br>
-                    <input type="radio" name="q1" value="imagem"> Possuir uma rede de contatos influentes desde o início<br>
+            <div class="video-container">
+                <div class="click-overlay" onclick="advanceProgress(this)"></div>
+                <div class="video-placeholder">
+                    Selecione uma aula para começar
                 </div>
-                <br>
-                <div class="question">
-                    <label>2. Segundo os casos apresentados, qual estratégia é essencial para validar um negócio antes de escalá-lo?</label><br>
-                    <input type="radio" name="q2" value="correta" required> Testar o produto/serviço com um público pequeno e iterar com feedbacks<br>
-                    <input type="radio" name="q2" value="background-color"> Investir pesado em marketing antes de lançar o produto <br>
-                    <input type="radio" name="q2" value="border"> Copiar modelos de negócios já consagrados no mercado<br>
-                </div>
-                <br>
-                <div class="question">
-                    <label>3. Qual desses elementos os vídeos destacam como crucial para inovar em tecnologia?</label><br>
-                    <input type="radio" name="q3" value="correta" required> Resolver problemas reais das pessoas com soluções simples<br>
-                    <input type="radio" name="q3" value="background-color"> Ter equipamentos de última geração<br>
-                    <input type="radio" name="q3" value="border"> Esperar que o governo financie projetos disruptivos<br>
-                </div>
-                <br>
-                <div class="question">
-                    <label>4. Como os vídeos sugerem que empreendedores devem lidar com o fracasso?</label><br>
-                    <input type="radio" name="q4" value="correta" required> Aprender com os erros e usar como oportunidade para pivotar<br>
-                    <input type="radio" name="q4" value="background-color">  Evitar ao máximo cometer erros para não perder credibilidade<br>
-                    <input type="radio" name="q4" value="border"> Esconder os fracassos para não desanimar a equipe<br>
-                </div>
-                <br>
-                <div class="question">
-                    <label>5. Qual conselho é comum aos três vídeos para quem quer empreender em negócios digitais?</label><br>
-                    <input type="radio" name="q5" value="correta" required> Iniciar pequeno, validar a ideia e escalar progressivamente<br>
-                    <input type="radio" name="q5" value="background-color"> Esperar o momento perfeito para começar<br>
-                    <input type="radio" name="q5" value="border"> Copiar empresas estrangeiras bem-sucedidas sem adaptações<br>
-                </div>
-                <br>
-                <button type="submit">Enviar Respostas</button>
-            </form>
-        </div>
+            </div>
 
-
-        <div id="popup" class="popup hidden">
-            <div class="popup-content">
-                <span class="close-btn" onclick="closePopup()">&times;</span>
-                <h2>Obrigado por enviar suas respostas!</h2>
-                <h2>Gostaria de avaliar nosso curso?</h2>
-                <div class="rating">
-                    <input type="radio" id="star1" name="rating" value="1" onclick="rateCourse(5)"><label for="star1"></label>
-                    <input type="radio" id="star2" name="rating" value="2" onclick="rateCourse(4)"><label for="star2"></label>
-                    <input type="radio" id="star3" name="rating" value="3" onclick="rateCourse(3)"><label for="star3"></label>
-                    <input type="radio" id="star4" name="rating" value="4" onclick="rateCourse(2)"><label for="star4"></label>
-                    <input type="radio" id="star5" name="rating" value="5" onclick="rateCourse(1)"><label for="star5"></label>
-                </div>                            
+            <div class="progress-section">
+                <div class="progress-label">Progresso do Curso</div>
+                <div class="bar">
+                    <div class="progress">0%</div>
+                </div>
             </div>
         </div>
 
+        <div class="exercise-container" id="exercise-container" style="display: none;">
+            <div class="questionnaire">
+                <h3>Responda as perguntas a seguir:</h3>
+                <form id="quiz-form">
+                    <div class="question">
+                        <label>1. Qual é o principal fator que diferencia um empreendedor de sucesso, segundo os vídeos?</label>
+                        <label><input type="radio" name="q1" value="correta" required> Ter resiliência e capacidade de adaptação às mudanças</label>
+                        <label><input type="radio" name="q1" value="link"> Ter um grande capital inicial para investir</label>
+                        <label><input type="radio" name="q1" value="imagem"> Possuir uma rede de contatos influentes desde o início</label>
+                    </div>
+
+                    <div class="question">
+                        <label>2. Segundo os casos apresentados, qual estratégia é essencial para validar um negócio antes de escalá-lo?</label>
+                        <label><input type="radio" name="q2" value="correta" required> Testar o produto/serviço com um público pequeno e iterar com feedbacks</label>
+                        <label><input type="radio" name="q2" value="background-color"> Investir pesado em marketing antes de lançar o produto</label>
+                        <label><input type="radio" name="q2" value="border"> Copiar modelos de negócios já consagrados no mercado</label>
+                    </div>
+
+                    <div class="question">
+                        <label>3. Qual desses elementos os vídeos destacam como crucial para inovar em tecnologia?</label>
+                        <label><input type="radio" name="q3" value="correta" required> Resolver problemas reais das pessoas com soluções simples</label>
+                        <label><input type="radio" name="q3" value="background-color"> Ter equipamentos de última geração</label>
+                        <label><input type="radio" name="q3" value="border"> Esperar que o governo financie projetos disruptivos</label>
+                    </div>
+
+                    <div class="question">
+                        <label>4. Como os vídeos sugerem que empreendedores devem lidar com o fracasso?</label>
+                        <label><input type="radio" name="q4" value="correta" required> Aprender com os erros e usar como oportunidade para pivotar</label>
+                        <label><input type="radio" name="q4" value="background-color"> Evitar ao máximo cometer erros para não perder credibilidade</label>
+                        <label><input type="radio" name="q4" value="border"> Esconder os fracassos para não desanimar a equipe</label>
+                    </div>
+
+                    <div class="question">
+                        <label>5. Qual conselho é comum aos três vídeos para quem quer empreender em negócios digitais?</label>
+                        <label><input type="radio" name="q5" value="correta" required> Iniciar pequeno, validar a ideia e escalar progressivamente</label>
+                        <label><input type="radio" name="q5" value="background-color"> Esperar o momento perfeito para começar</label>
+                        <label><input type="radio" name="q5" value="border"> Copiar empresas estrangeiras bem-sucedidas sem adaptações</label>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Enviar Respostas</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup" class="popup hidden">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2>Obrigado por enviar suas respostas!</h2>
+            <h2>Gostaria de avaliar nosso curso?</h2>
+            <div class="rating">
+                <input type="radio" id="star1" name="rating" value="1" onclick="rateCourse(5)"><label for="star1"></label>
+                <input type="radio" id="star2" name="rating" value="2" onclick="rateCourse(4)"><label for="star2"></label>
+                <input type="radio" id="star3" name="rating" value="3" onclick="rateCourse(3)"><label for="star3"></label>
+                <input type="radio" id="star4" name="rating" value="4" onclick="rateCourse(2)"><label for="star4"></label>
+                <input type="radio" id="star5" name="rating" value="5" onclick="rateCourse(1)"><label for="star5"></label>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Captura o id do curso do atributo data-curso-id
-    const cursoId = document.body.getAttribute('data-curso-id');
-
-    // Função para enviar o ID do curso ao backend (exemplo usando fetch)
-    function enviarCursoId() {
-    fetch('/api/curso/' + cursoId)
-        .then(response => response.json())
-        .then(data => {
-            console.log('Dados do curso:', data);
-            // Aqui você pode manipular os dados recebidos
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-        });
+        // Função para voltar à página anterior
+        function backToPage() {
+            window.history.back();
         }
-        // Chame a função quando necessário, por exemplo, ao carregar a página
-        window.onload = enviarCursoId;
 
+        // Captura o id do curso do atributo data-curso-id
+        const cursoId = document.body.getAttribute('data-curso-id');
 
+        // Função para enviar o ID do curso ao backend
+        function enviarCursoId() {
+            fetch('/api/curso/' + cursoId)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Dados do curso:', data);
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                });
+        }
+
+        // Variáveis de controle
         let progress = 0;
         const lessonsCompleted = {
             lesson1: false,
@@ -148,20 +603,17 @@
 
         // Função para calcular e enviar o progresso atualizado ao backend
         function updateAndSaveProgress() {
-        const cursoId = document.body.getAttribute('data-curso-id');
-        
-        // Limitar o progresso a 100%
-        if (progress > 100) {
-            progress = 100;
-        }
+            const cursoId = document.body.getAttribute('data-curso-id');
+            
+            if (progress > 100) {
+                progress = 100;
+            }
 
-        // Atualizar a barra de progresso
-        const progressBar = document.querySelector('.progress');
-        progressBar.style.width = progress + '%';
-        progressBar.textContent = progress + '%';
+            const progressBar = document.querySelector('.progress');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = progress + '%';
 
-        // Enviar o progresso atualizado para o backend
-        salvarProgresso(cursoId, progress);
+            salvarProgresso(cursoId, progress);
         }
 
         function negocios1() {
@@ -191,59 +643,57 @@
             `;
         }
 
-
         function completeExercises() {
-            const videoContainer = document.querySelector('.video-container');
             document.getElementById('exercise-container').style.display = 'block';
+            document.getElementById('exercise-container').scrollIntoView({ behavior: 'smooth' });
         }
 
         document.getElementById('quiz-form').addEventListener('submit', function(event) {
             event.preventDefault();
             verificarRespostas();
+            openPopup();
         });
 
         function verificarRespostas() {
-        let acertos = 0;
-        let totalQuestoes = Object.keys(respostasCorretas).length;
+            let acertos = 0;
+            let totalQuestoes = Object.keys(respostasCorretas).length;
 
-
-        for (let pergunta in respostasCorretas) {
-            const respostaSelecionada = document.querySelector(`input[name="${pergunta}"]:checked`);
-            if (respostaSelecionada && respostaSelecionada.value === respostasCorretas[pergunta]) {
-                acertos++;
+            for (let pergunta in respostasCorretas) {
+                const respostaSelecionada = document.querySelector(`input[name="${pergunta}"]:checked`);
+                if (respostaSelecionada && respostaSelecionada.value === respostasCorretas[pergunta]) {
+                    acertos++;
+                }
             }
-        }
 
-        const erros = totalQuestoes - acertos;
+            const erros = totalQuestoes - acertos;
 
-        // Atualizar progresso com base nos acertos, evitando retrocesso
-    if (acertos > 0) {
-        const progressoAdicional = acertos * 5; // Avança 5% para cada resposta correta
-        if (progress + progressoAdicional <= 100) { 
-            progress += progressoAdicional;
-        } else {
-            progress = 100; // Garante que o progresso não ultrapasse 100%
+            if (acertos > 0) {
+                const progressoAdicional = acertos * 5;
+                if (progress + progressoAdicional <= 100) { 
+                    progress += progressoAdicional;
+                } else {
+                    progress = 100;
+                }
+                updateAndSaveProgress(); 
+            }
+            
+            alert(`Você acertou ${acertos} de ${totalQuestoes} perguntas e errou ${erros}.`);
         }
-        
-        updateAndSaveProgress(); 
-    }
-        alert(`Você acertou ${acertos} de ${totalQuestoes} perguntas e errou ${erros}.`);
-    }
 
         function advanceProgress(lesson) {
             if (!lessonsCompleted[lesson]) {
                 progress += 25;
                 lessonsCompleted[lesson] = true;
                 updateAndSaveProgress(); 
-                const progressBar = document.querySelector('.progress');
+                
                 if (progress > 100) {
                     progress = 100;
                 }
-                progressBar.textContent = progress + '%';
-                progressBar.style.width = progress + '%';
 
                 if (progress === 100) {
-                openPopup();
+                    setTimeout(() => {
+                        openPopup();
+                    }, 1000);
                 }
             }
         }
@@ -255,7 +705,6 @@
             q4: "correta",
             q5: "correta"
         };
-
 
         function openPopup() {
             document.getElementById("popup").classList.remove("hidden");
@@ -271,76 +720,67 @@
                 closePopup();
             }
         }
-   
-        document.getElementById("quiz-form").addEventListener("submit", function(event) {
-            event.preventDefault();
-            openPopup();
-        });
        
-    function rateCourse(rating) {
-    const ratingInputs = document.querySelectorAll('input[name="rating"]');
-    ratingInputs.forEach(input => input.disabled = true);
+        function rateCourse(rating) {
+            const ratingInputs = document.querySelectorAll('input[name="rating"]');
+            ratingInputs.forEach(input => input.disabled = true);
 
-    // Extraindo o cursoId do body
-    const cursoId = document.body.getAttribute('data-curso-id');
+            const cursoId = document.body.getAttribute('data-curso-id');
 
-    // Validando o rating
-    if (rating < 1 || rating > 5) {
-        alert('Rating deve estar entre 1 e 5.');
-        return;
-    }
+            if (rating < 1 || rating > 5) {
+                alert('Rating deve estar entre 1 e 5.');
+                return;
+            }
 
-    console.log('Enviando avaliação:', { curso_id: cursoId, rating });
+            console.log('Enviando avaliação:', { curso_id: cursoId, rating });
 
-    // Enviar a avaliação para o backend
-    fetch('/avaliacao', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ curso_id: cursoId, rating })
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => {
-                console.error('Erro ao salvar a avaliação:', err.message);
-                alert(`Erro: ${err.message}`); // Alerta ao usuário
-                throw new Error(err.message);
+            fetch('/avaliacao', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ curso_id: cursoId, rating })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => {
+                        console.error('Erro ao salvar a avaliação:', err.message);
+                        alert(`Erro: ${err.message}`);
+                        throw new Error(err.message);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                window.location.href = "portalAluno.html";
+            })
+            .catch(error => {
+                console.error('Erro ao salvar a avaliação:', error);
+                alert('Houve um erro ao salvar sua avaliação. Tente novamente.');
             });
         }
-        return response.json();
-    })
-    .then(data => {
-        console.log(data);
-        // Redirecionar para portalAluno.html após salvar a avaliação
-        window.location.href = "portalAluno.html";
-    })
-    .catch(error => {
-        console.error('Erro ao salvar a avaliação:', error);
-        alert('Houve um erro ao salvar sua avaliação. Tente novamente.');
-    });
-}
 
-function salvarProgresso(cursoId, progresso) {
+        function salvarProgresso(cursoId, progresso) {
+            const usuarioId = sessionStorage.getItem('usuarioId');
+            fetch('/salvarProgresso', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ usuario_id: usuarioId, curso_id: cursoId, progresso: progresso }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message);
+            })
+            .catch((error) => {
+                console.error('Erro ao salvar progresso:', error);
+            });
+        }
 
-    const usuarioId = sessionStorage.getItem('usuarioId');
-    fetch('/salvarProgresso', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ usuario_id: usuarioId, curso_id: cursoId, progresso: progresso }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.message);
-        // Redirecionar ou fazer outras ações
-    })
-    .catch((error) => {
-        console.error('Erro ao salvar progresso:', error);
-    });
-}
+        // Inicializar a página
+        window.onload = enviarCursoId;
     </script>
-   
 </body>
 </html>
